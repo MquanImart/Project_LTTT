@@ -1,5 +1,5 @@
 
-export const Colors = {
+const Colors = {
     text: '#11181C',
     background: '#fff',
     mainColor1: '',
@@ -9,3 +9,5 @@ export const Colors = {
     tabIconDefault: '#687076',
     tabIconSelected: '',
 };
+
+export default Colors;
