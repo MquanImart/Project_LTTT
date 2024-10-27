@@ -1,19 +1,28 @@
-import HomeCustomer from "@/src/features/home/containers/home-customer/HomeCustomer";
+// src/navigations/FavouriteNavigation.tsx
+
+import FavoriteEmployeeScreen from "@/src/features/favorite/containers/favorite-employee/FavoriteEmployeeScreen";
+import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 const Stack = createStackNavigator();
 
+export type RootStackParamList = {
+    FavoriteEmployee: undefined;
+};
 
-function FavouriteNavigation() {
+export function FavouriteNavigation() {
+  const navigationRef = React.useRef<NavigationContainerRef<RootStackParamList>>(null);
+  
   return (
-    <Stack.Navigator initialRouteName="HomeCustomer" screenOptions={{
-           headerShown: false,
-        }}>
-          <Stack.Screen name="HomeCustomer" component={HomeCustomer} />
-            
-          
-    </Stack.Navigator>
+    <NavigationContainer ref={navigationRef}>
+      <Stack.Navigator initialRouteName="FavoriteEmployee" screenOptions={{
+        headerShown: false,
+      }}>
+        <Stack.Screen name="FavoriteEmployee" component={FavoriteEmployeeScreen} />
+        {/* Thêm các màn hình khác vào đây nếu cần */}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

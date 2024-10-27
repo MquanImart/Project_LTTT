@@ -1,9 +1,9 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 
 const ResetPassword = () => {
     return (
         <View>
-            
+            <Text>Hello, World!</Text> 
         </View>
     )
 }
