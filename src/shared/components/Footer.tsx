@@ -20,9 +20,14 @@ const Footer: React.FC = () => {
         <Icon name="chat" size={24} color={Colors.icon} />
         <Text style={styles.footerText}>Chat</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('Appointment')}>
+      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('Complete')}>
         <Icon name="calendar-today" size={24} color={Colors.icon} />
         <Text style={styles.footerText}>Appointment</Text>
+      </TouchableOpacity>
+      {/* Thêm nút chuyển hướng đến màn hình Services */}
+      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('ServicesScreen')}>
+        <Icon name="build" size={24} color={Colors.icon} />
+        <Text style={styles.footerText}>Services</Text>
       </TouchableOpacity>
     </View>
   );

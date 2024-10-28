@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import Header from '@/src/shared/components/Header'; // Đảm bảo bạn đã import đúng
+import Header from '@/src/shared/components/Header';
 import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
-import AppointmentCard from '@/src/features/appointment/components/AppointmentCard';
+import AppointmentCard from '@/src/features/appointment/components/AppointmentCompleteCard';
 import Footer from '@/src/shared/components/Footer';
+import Colors from '@/src/styles/Color';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '@/src/shared/routes/MainNavigator';
 
 const appointments = [
   { id: '1', name: 'Olivia Turner, M.D.', service: 'Clean House', rating: 3, avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg' },
   { id: '2', name: 'Olivia Turner, M.D.', service: 'Clean House', rating: 4, avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg' },
 ];
 
-const AppointmentScreen = () => {
+const CompleteAppointmentScreen = () => {
   const [selectedTab, setSelectedTab] = useState<string>('Complete');
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleTabPress = (tab: string) => {
     setSelectedTab(tab);
@@ -28,7 +32,7 @@ const AppointmentScreen = () => {
             appointment={item}
             onChatPress={() => console.log('Chat pressed')}
             onRebookPress={() => console.log('Re-Book pressed')}
-            onReviewPress={() => console.log('Add Review pressed')}
+            onReviewPress={() => navigation.navigate('Review', { appointment: item })}
           />
         )}
         keyExtractor={(item) => item.id}
@@ -41,8 +45,8 @@ const AppointmentScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.background,
   },
 });
 
-export default AppointmentScreen;
+export default CompleteAppointmentScreen;

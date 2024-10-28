@@ -1,4 +1,3 @@
-// src/features/chat/containers/ChatDetailScreen.tsx
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import Colors from '@/src/styles/Color';
@@ -25,14 +24,14 @@ const messages: Message[] = [
   {
     id: '1',
     type: 'text',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     time: '09:00',
     sender: 'user',
   },
   {
     id: '2',
     type: 'text',
-    content: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+    content: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
     time: '09:30',
     sender: 'contact',
   },
@@ -43,13 +42,6 @@ const messages: Message[] = [
     time: '09:50',
     sender: 'contact',
     avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg',
-  },
-  {
-    id: '4',
-    type: 'text',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    time: '09:55',
-    sender: 'user',
   },
 ];
 
@@ -97,7 +89,7 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
           onChangeText={setInputText}
         />
         <TouchableOpacity style={styles.sendButton}>
-          <Icon name="send" size={24} color="#fff" />
+          <Icon name="send" size={24} color={Colors.white} />
         </TouchableOpacity>
       </View>
     </View>

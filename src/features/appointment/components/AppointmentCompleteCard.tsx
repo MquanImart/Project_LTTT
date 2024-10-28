@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Colors from '@/src/styles/Color';
 
 interface Appointment {
   id: string;
@@ -45,7 +46,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onChatPr
       </View>
       <View style={styles.actionColumn}>
         <TouchableOpacity style={styles.favoriteButton}>
-          <Icon name="favorite-border" size={24} color="#ff0000" />
+          <Icon name="favorite-border" size={24} color={Colors.red} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.chatButton} onPress={onChatPress}>
           <Text style={styles.buttonText}>Chat</Text>
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.background,
   },
   avatar: {
     width: 60,
@@ -79,11 +80,11 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#4CAF50',
+    color: Colors.mainColor1,
   },
   service: {
     fontSize: 14,
-    color: '#333',
+    color: Colors.text,
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -92,38 +93,37 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     marginTop: 5,
-    justifyContent: 'space-between',
   },
   rebookButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.mainColor1,
     borderRadius: 5,
     padding: 10,
     flex: 1,
     marginRight: 5,
   },
   reviewButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.mainColor1,
     borderRadius: 5,
     padding: 10,
     flex: 1,
   },
   actionColumn: {
-    position: 'absolute', // Đặt cố định
-    right: 10, // Căn lề phải
-    top: 10, // Căn cao hơn để nằm trên các nút
+    position: 'absolute',
+    right: 10,
+    top: 10,
     alignItems: 'center',
   },
   favoriteButton: {
     marginBottom: 8,
   },
   chatButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.mainColor1,
     borderRadius: 5,
     paddingVertical: 7,
     paddingHorizontal: 15,
   },
   buttonText: {
-    color: '#fff',
+    color: Colors.white,
     fontSize: 12,
     textAlign: 'center',
   },
