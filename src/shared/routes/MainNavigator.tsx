@@ -1,4 +1,4 @@
-// src/navigations/FavouriteNavigation.tsx
+// src/shared/routes/MainNavigator.tsx
 
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -10,21 +10,21 @@ import AppointmentScreen from '@/src/features/appointment/containers/complete-ap
 export type RootStackParamList = {
   FavoriteEmployee: undefined;
   ChatScreen: undefined;
-  ChatDetailScreen: { contactId: string; contactName: string }; 
-  Appointment: undefined; 
+  ChatDetailScreen: { contactId: string; contactName: string };
+  Appointment: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const FavouriteNavigation = () => {
+const MainNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="FavoriteEmployee" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="FavoriteEmployee" component={FavoriteEmployeeScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="ChatDetailScreen" component={ChatDetailScreen} />
-      <Stack.Screen name="Appointment" component={AppointmentScreen} /> {/* Thêm AppointmentScreen */}
+      <Stack.Screen name="Appointment" component={AppointmentScreen} />
     </Stack.Navigator>
   );
 };
 
-export default FavouriteNavigation;
+export default MainNavigator;

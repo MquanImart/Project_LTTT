@@ -1,10 +1,12 @@
+// App.tsx
 import * as React from 'react';
-import { LoginNavigator } from './src/shared/routes/LoginNavigation';
-import FavouriteNavigation from './src/shared/routes/FavouriteNavigation';
+import { NavigationContainer } from '@react-navigation/native';
+import MainNavigator from './src/shared/routes/MainNavigator';
+
 export default function App() {
   return (
-    < >
-      <FavouriteNavigation />
-    </>
+    <NavigationContainer>
+      <MainNavigator />
+    </NavigationContainer>
   );
 }
