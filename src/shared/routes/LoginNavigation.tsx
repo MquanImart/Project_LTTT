@@ -6,7 +6,8 @@ import RegisterInfomation from "@/src/features/authentication/containers/registe
 import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import HomeTabNavigation from "./HomeTabNavigation";
+import HomeTabEmployee from "./HomeTabEmployee";
+import HomeTabCustomer from "./HomeTabCustomer";
 
 const Stack = createStackNavigator();
 
@@ -16,8 +17,9 @@ export type RootStackParamList = {
     Register: undefined;
     Verify: undefined;
     ResetPassword: undefined;
-    HomeTab: undefined;
+    HomeTabCustomer: undefined;
     DetailsEmployee: {id: string};
+    HomeTabEmployee: undefined;
 };
 
 export function LoginNavigator() {
@@ -32,7 +34,8 @@ export function LoginNavigator() {
           <Stack.Screen name="RegisterInfomation" component={RegisterInfomation} />
           <Stack.Screen name="Verify" component={Verify} />
           <Stack.Screen name="ResetPassword" component={ResetPassword} />
-          <Stack.Screen name="HomeTab" component={HomeTabNavigation} />
+          <Stack.Screen name="HomeTabCustomer" component={HomeTabCustomer} />
+          <Stack.Screen name="HomeTabEmployee" component={HomeTabEmployee} />
       </Stack.Navigator>
       </NavigationContainer>
   );

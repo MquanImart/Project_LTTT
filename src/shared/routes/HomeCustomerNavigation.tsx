@@ -5,7 +5,7 @@ import React from "react";
 const Stack = createStackNavigator();
 
 
-function HomeNavigation() {
+function HomeCustomerNavigation() {
   return (
     <Stack.Navigator initialRouteName="HomeCustomer" screenOptions={{
            headerShown: false,
@@ -17,4 +17,4 @@ function HomeNavigation() {
   );
 }
 
-export default HomeNavigation;
+export default HomeCustomerNavigation;
