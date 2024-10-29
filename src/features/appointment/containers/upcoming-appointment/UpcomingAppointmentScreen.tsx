@@ -3,7 +3,6 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import Header from '@/src/shared/components/Header';
 import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
 import AppointmentUpcomingCard from '@/src/features/appointment/components/AppointmentUpcomingCard';
-import Footer from '@/src/shared/components/Footer';
 import Colors from '@/src/styles/Color'; // Đảm bảo đường dẫn chính xác
 
 const appointments = [
@@ -53,7 +52,6 @@ const UpcomingAppointmentScreen = () => {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
       />
-      <Footer />
     </View>
   );
 };
@@ -61,10 +59,10 @@ const UpcomingAppointmentScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background, // Sử dụng màu nền từ Colors
+    backgroundColor: Colors.background, 
   },
   listContainer: {
-    paddingBottom: 70, // Để tạo khoảng trống cho Footer
+    paddingBottom: 70, 
   },
 });
 

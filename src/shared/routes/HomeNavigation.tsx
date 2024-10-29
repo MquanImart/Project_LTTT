@@ -4,15 +4,10 @@ import React from "react";
 
 const Stack = createStackNavigator();
 
-
 function HomeNavigation() {
   return (
-    <Stack.Navigator initialRouteName="HomeCustomer" screenOptions={{
-           headerShown: false,
-        }}>
-          <Stack.Screen name="HomeCustomer" component={HomeCustomer} />
-          
-          
+    <Stack.Navigator initialRouteName="HomeCustomer" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="HomeCustomer" component={HomeCustomer} />
     </Stack.Navigator>
   );
 }

@@ -3,7 +3,6 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import Header from '@/src/shared/components/Header';
 import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
 import AppointmentCancelCard from '@/src/features/appointment/components/AppointmentCancelCard';
-import Footer from '@/src/shared/components/Footer';
 import Colors from '@/src/styles/Color';
 
 const appointments = [
@@ -52,7 +51,6 @@ const CancelAppointmentScreen = () => {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
       />
-      <Footer />
     </View>
   );
 };

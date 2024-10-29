@@ -3,7 +3,6 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import Header from '@/src/shared/components/Header';
 import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
 import AppointmentCard from '@/src/features/appointment/components/AppointmentCompleteCard';
-import Footer from '@/src/shared/components/Footer';
 import Colors from '@/src/styles/Color';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/shared/routes/MainNavigator';
@@ -37,7 +36,6 @@ const CompleteAppointmentScreen = () => {
         )}
         keyExtractor={(item) => item.id}
       />
-      <Footer />
     </View>
   );
 };

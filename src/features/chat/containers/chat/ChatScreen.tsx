@@ -5,7 +5,6 @@ import Colors from '@/src/styles/Color';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import Header from '@/src/shared/components/Header';
-import Footer from '@/src/shared/components/Footer';
 import { ChatStackParamList } from '@/src/shared/routes/ChatNavigation';
 
 type Message = {
@@ -66,7 +65,6 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.messageList}
       />
-      <Footer />
     </View>
   );
 };

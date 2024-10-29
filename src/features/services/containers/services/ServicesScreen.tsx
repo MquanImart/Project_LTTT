@@ -3,7 +3,6 @@ import { View, TouchableOpacity, StyleSheet, Modal, Text, TextInput, Button } fr
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from '@/src/styles/Color';
 import Header from '@/src/shared/components/Header';
-import Footer from '@/src/shared/components/Footer';
 import ServiceList from '@/src/features/services/components/ServiceList';
 
 interface Service {
@@ -61,7 +60,6 @@ const ServicesScreen = () => {
       <TouchableOpacity style={styles.addButton} onPress={toggleAddModal}>
         <Icon name="add" size={24} color={Colors.white} />
       </TouchableOpacity>
-      <Footer />
 
       {/* Modal thêm dịch vụ */}
       <Modal

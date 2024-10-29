@@ -5,7 +5,6 @@ import Colors from '@/src/styles/Color';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/shared/routes/MainNavigator';
 import Header from '@/src/shared/components/Header';
-import Footer from '@/src/shared/components/Footer';
 
 type ReviewScreenRouteProp = RouteProp<RootStackParamList, 'Review'>;
 
@@ -50,8 +49,6 @@ const ReviewScreen: React.FC = () => {
           <Text style={styles.submitButtonText}>Add Review</Text>
         </TouchableOpacity>
       </View>
-
-      <Footer />
     </View>
   );
 };
