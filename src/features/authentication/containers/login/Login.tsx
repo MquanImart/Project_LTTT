@@ -11,7 +11,10 @@ const Login = () => {
     return (
         <View style={{display: 'flex', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <TouchableOpacity onPress={()=>{navigation.navigate("HomeTabEmployee")}}>
-                <Text>Button</Text>
+                <Text>Employee</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>{navigation.navigate("HomeTabCustomer")}}>
+                <Text>Customer</Text>
             </TouchableOpacity>
         </View>
     )

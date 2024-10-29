@@ -1,20 +1,19 @@
-import HomeCustomer from "@/src/features/home/containers/home-customer/HomeCustomer";
-import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import FavoriteEmployeeScreen from '@/src/features/favorite/containers/favorite-employee/FavoriteEmployeeScreen';
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+  FavoriteEmployee: undefined;
+};
 
+const Stack = createStackNavigator<RootStackParamList>();
 
-function FavouriteNavigation() {
+const FavouriteNavigation = () => {
   return (
-    <Stack.Navigator initialRouteName="HomeCustomer" screenOptions={{
-           headerShown: false,
-        }}>
-          <Stack.Screen name="HomeCustomer" component={HomeCustomer} />
-            
-          
+    <Stack.Navigator initialRouteName="FavoriteEmployee" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="FavoriteEmployee" component={FavoriteEmployeeScreen} />
     </Stack.Navigator>
   );
-}
+};
 
 export default FavouriteNavigation;

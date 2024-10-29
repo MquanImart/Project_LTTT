@@ -1,32 +1,83 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { Text } from "react-native";
 import FavouriteNavigation from "./FavouriteNavigation";
+
+import ServiceNavigation from "./ServiceNavigation";
+import Colors from "@/src/styles/Color";
+import HomeCustomerNavigation from "./HomeCustomerNavigation";
 import OrderNavigation from "./OrderNavigation";
 import ChatNavigation from "./ChatNavigation";
-import HomeCustomerNavigation from "./HomeCustomerNavigation";
+import AppointmentNavigation from "./AppointmentNavigation";
 
 const Tab = createBottomTabNavigator();
 
-function HomeTabCustomer() {
+function HomeTabCustomerNavigation() {
   return (
     <Tab.Navigator
-      initialRouteName="Trang Chủ"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: 'green', // Thay 'green' bằng mã màu bạn muốn, ví dụ '#4CAF50'
+      initialRouteName="Home"
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ color, size }) => {
+          // Gán giá trị mặc định cho iconName để tránh lỗi "used before being assigned"
+          let iconName = "home"; // Giá trị mặc định
+
+          // Xác định biểu tượng cho từng tab dựa trên tên route
+          if (route.name === "Home") {
+            iconName = "home";
+          } else if (route.name === "Favorite") {
+            iconName = "favorite";
+          } else if (route.name === "Order") {
+            iconName = "shopping-cart";
+          } else if (route.name === "Chat") {
+            iconName = "chat";
+          } else if (route.name === "Service") {
+            iconName = "build";
+          }
+
+          return <Icon name={iconName} size={size} color={color} />;
         },
-        headerTintColor: '#fff', // Màu của văn bản header
-        headerTitleStyle: {
-          fontWeight: 'bold', // Điều chỉnh kiểu chữ nếu muốn
+        tabBarLabel: ({ focused }) => {
+          let label = ""; // Giá trị mặc định
+
+          if (route.name === "Home") {
+            label = "Home";
+          } else if (route.name === "Favorite") {
+            label = "Favorite";
+          } else if (route.name === "Order") {
+            label = "Order";
+          } else if (route.name === "Chat") {
+            label = "Chat";
+          } else if (route.name === "Service") {
+            label = "Service";
+          }
+
+          return (
+            <Text style={{ color: focused ? Colors.mainColor1 : Colors.icon, fontSize: 12 }}>
+              {label}
+            </Text>
+          );
         },
-      }}
+        tabBarActiveTintColor: Colors.mainColor1,
+        tabBarInactiveTintColor: Colors.icon,
+        tabBarStyle: {
+          backgroundColor: Colors.white,
+          borderTopWidth: 1,
+          borderTopColor: Colors.icon,
+          paddingBottom: 5,
+          paddingTop: 5,
+        },
+      })}
     >
       <Tab.Screen name="Home" component={HomeCustomerNavigation} />
-      <Tab.Screen name="Favourite" component={FavouriteNavigation} />
+      <Tab.Screen name="Favorite" component={FavouriteNavigation} />
+      <Tab.Screen name="Appointment" component={AppointmentNavigation} />
       <Tab.Screen name="Order" component={OrderNavigation} />
       <Tab.Screen name="Chat" component={ChatNavigation} />
+      <Tab.Screen name="Service" component={ServiceNavigation} />
     </Tab.Navigator>
   );
 }
 
-export default HomeTabCustomer;
+export default HomeTabCustomerNavigation;
