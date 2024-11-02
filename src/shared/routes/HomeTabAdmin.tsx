@@ -2,17 +2,16 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { Text } from "react-native";
-import FavouriteNavigation from "./FavouriteNavigation";
 
+import ServiceNavigation from "./ServiceNavigation";
 import Colors from "@/src/styles/Color";
 import HomeCustomerNavigation from "./HomeCustomerNavigation";
 import ChatNavigation from "./ChatNavigation";
 import AppointmentNavigation from "./AppointmentNavigation";
-import Profile from "@/src/features/profile/containers/Profile";
 
 const Tab = createBottomTabNavigator();
 
-function HomeTabCustomerNavigation() {
+function HomeTabAdminNavigation() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -25,14 +24,12 @@ function HomeTabCustomerNavigation() {
           // Xác định biểu tượng cho từng tab dựa trên tên route
           if (route.name === "Home") {
             iconName = "home";
-          } else if (route.name === "Favorite") {
-            iconName = "favorite";
           } else if (route.name === "Appointment") {
             iconName = "shopping-cart";
           } else if (route.name === "Chat") {
             iconName = "chat";
-          } else if (route.name === "Profile") {
-            iconName = "person";
+          } else if (route.name === "Service") {
+            iconName = "build";
           }
 
           return <Icon name={iconName} size={size} color={color} />;
@@ -42,14 +39,12 @@ function HomeTabCustomerNavigation() {
 
           if (route.name === "Home") {
             label = "Home";
-          } else if (route.name === "Favorite") {
-            label = "Favorite";
           } else if (route.name === "Appointment") {
             label = "Appointment";
           } else if (route.name === "Chat") {
             label = "Chat";
-          } else if (route.name === "Profile") {
-            label = "person";
+          } else if (route.name === "Service") {
+            label = "Service";
           }
 
           return (
@@ -70,12 +65,11 @@ function HomeTabCustomerNavigation() {
       })}
     >
       <Tab.Screen name="Home" component={HomeCustomerNavigation} />
-      <Tab.Screen name="Favorite" component={FavouriteNavigation} />
       <Tab.Screen name="Appointment" component={AppointmentNavigation} />
       <Tab.Screen name="Chat" component={ChatNavigation} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Service" component={ServiceNavigation} />
     </Tab.Navigator>
   );
 }
 
-export default HomeTabCustomerNavigation;
+export default HomeTabAdminNavigation;

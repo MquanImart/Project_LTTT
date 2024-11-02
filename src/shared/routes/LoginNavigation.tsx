@@ -8,6 +8,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import HomeTabEmployee from "./HomeTabEmployee";
 import HomeTabCustomer from "./HomeTabCustomer";
+import HomeTabAdminNavigation from "./HomeTabAdmin";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export type RootStackParamList = {
     HomeTabCustomer: undefined;
     DetailsEmployee: {id: string};
     HomeTabEmployee: undefined;
+    HomeTabAdmin: undefined;
 };
 
 export function LoginNavigator() {
@@ -36,6 +38,7 @@ export function LoginNavigator() {
           <Stack.Screen name="ResetPassword" component={ResetPassword} />
           <Stack.Screen name="HomeTabCustomer" component={HomeTabCustomer} />
           <Stack.Screen name="HomeTabEmployee" component={HomeTabEmployee} />
+          <Stack.Screen name="HomeTabAdmin" component={HomeTabAdminNavigation} />
       </Stack.Navigator>
       </NavigationContainer>
   );

@@ -132,6 +132,9 @@ const Login = () => {
                 <TouchableOpacity onPress={() => navigation.navigate("HomeTabCustomer")} style={{ marginTop: 10 }}>
                     <Text style={{ color: "#4CAF50" }}>Customer</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("HomeTabAdmin")} style={{ marginTop: 10 }}>
+                    <Text style={{ color: "#4CAF50" }}>ADmin</Text>
+                </TouchableOpacity>
             </View>
         </TouchableWithoutFeedback>
     );
