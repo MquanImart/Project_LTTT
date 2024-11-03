@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/src/shared/routes/LoginNavigation";
+import Styles from "./Styles";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, "Register">;
 
@@ -39,42 +40,27 @@ const Register = () => {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20, backgroundColor: "white" }}>
+            <View style={Styles.container}>
                 <Image
                     source={require("../../../../assets/images/login.png")}
                     style={{ width: 150, height: 150, marginBottom: 20, alignContent: "center" }}
                 />
 
-                <Text style={{ fontSize: 30, marginBottom: 20, textAlign: "center" }}>Đăng ký</Text>
+                <Text style={Styles.texttitle}>Đăng ký</Text>
 
-                <Text style={{ alignSelf: "flex-start", fontSize: 15, marginBottom: 5 }}>Số điện thoại</Text>
+                <Text style={Styles.textfield}>Số điện thoại</Text>
                 <TextInput
-                    style={{
-                        width: "100%",
-                        borderColor: "#ddd",
-                        borderWidth: 1,
-                        borderRadius: 5,
-                        padding: 10,
-                        marginBottom: 10,
-                    }}
+                    style={Styles.textinput}
                     placeholder="Nhập số điện thoại"
                     keyboardType="phone-pad"
                     value={phoneNumber}
                     onChangeText={setPhoneNumber}
                 />
 
-                <Text style={{ alignSelf: "flex-start", fontSize: 15, marginBottom: 5, marginTop: 10 }}>Mật khẩu</Text>
+                <Text style={Styles.textfield}>Mật khẩu</Text>
                 <View style={{ width: "100%", position: "relative" }}>
                     <TextInput
-                        style={{
-                            width: "100%",
-                            borderColor: "#ddd",
-                            borderWidth: 1,
-                            borderRadius: 5,
-                            padding: 10,
-                            paddingRight: 40,
-                            marginBottom: 10,
-                        }}
+                        style={Styles.textinput}
                         placeholder="Nhập mật khẩu"
                         secureTextEntry={!isPasswordVisible}
                         value={password}
@@ -82,28 +68,16 @@ const Register = () => {
                     />
                     <TouchableOpacity
                         onPress={togglePasswordVisibility}
-                        style={{
-                            position: "absolute",
-                            right: 10,
-                            top: 10,
-                        }}
+                        style={Styles.iconeye}
                     >
                         <Icon name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="#888" />
                     </TouchableOpacity>
                 </View>
 
-                <Text style={{ alignSelf: "flex-start", fontSize: 15, marginBottom: 5, marginTop: 10 }}>Nhập lại mật khẩu</Text>
+                <Text style={Styles.textfield}>Nhập lại mật khẩu</Text>
                 <View style={{ width: "100%", position: "relative" }}>
                     <TextInput
-                        style={{
-                            width: "100%",
-                            borderColor: "#ddd",
-                            borderWidth: 1,
-                            borderRadius: 5,
-                            padding: 10,
-                            paddingRight: 40,
-                            marginBottom: 10,
-                        }}
+                        style={Styles.textinput}
                         placeholder="Nhập lại mật khẩu"
                         secureTextEntry={!isConfirmPasswordVisible}
                         value={confirmPassword}
@@ -111,28 +85,17 @@ const Register = () => {
                     />
                     <TouchableOpacity
                         onPress={toggleConfirmPasswordVisibility}
-                        style={{
-                            position: "absolute",
-                            right: 10,
-                            top: 10,
-                        }}
+                        style={Styles.iconeye}
                     >
                         <Icon name={isConfirmPasswordVisible ? "eye-off" : "eye"} size={20} color="#888" />
                     </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity
-                    style={{
-                        backgroundColor: "#4CAF50",
-                        padding: 10,
-                        borderRadius: 5,
-                        width: "100%",
-                        alignItems: "center",
-                        marginBottom: 10,
-                    }}
+                    style={Styles.btn}
                     onPress={handleSignUp}
                 >
-                    <Text style={{ color: "#fff", fontSize: 16 }}>Đăng ký</Text>
+                    <Text style={Styles.textbtn}>Đăng ký</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => navigation.navigate("Login")} style={{ marginTop: 20 }}>
