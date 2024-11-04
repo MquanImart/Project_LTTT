@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { View } from 'react-native';
-import Header from '@/src/shared/components/Header';
 import HeaderProfile from '../components/HeaderProfile';
 import UserDetail from '../components/UserDetail';
 import Styles from '../components/Styles';
 import ActionButtons from '../components/ActionButon';
+import Header from '@/src/shared/components/header/Header';
 
 const Profile = () => {
     const [firstName, setFirstName] = useState("Phan");

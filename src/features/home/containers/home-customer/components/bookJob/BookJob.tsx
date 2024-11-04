@@ -1,11 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import HeaderBookJob from './HeaderBookJob';
 import InputBookJob from './InputBookJob';
 import styles from './Styles';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import Header from '@/src/shared/components/Header';
+import Header from '@/src/shared/components/header/Header';
+
 
 type RootStackParamList = {
     BookJob: {
