@@ -24,7 +24,8 @@ const CardDayCalendar = ({time}: CardDayCalendarProps) => {
         <Text style={styles.time}>{time}:00</Text>
         <View style={styles.boxContent}>
           {data.map((cv)=> 
-          <TouchableOpacity style={styles.buttonJob}>
+          <TouchableOpacity style={styles.buttonJob}
+          onPress={()=> navigation.navigate("DetailService")}>
             <Text style={styles.days}
             numberOfLines={1} 
             ellipsizeMode="tail"

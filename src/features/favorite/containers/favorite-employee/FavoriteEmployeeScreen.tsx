@@ -4,7 +4,7 @@ import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import EmployeeCard from '@/src/features/favorite/components/EmployeeCard';
 import Colors from '@/src/styles/Color'; // Đảm bảo đường dẫn chính xác
-import Header from '@/src/shared/components/Header';
+import Header from '@/src/shared/components/header/Header';
 
 
 const FavoriteEmployeeScreen = () => {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Modal, Text, TextInput, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from '@/src/styles/Color';
-import Header from '@/src/shared/components/Header';
+import Header from '@/src/shared/components/header/Header';
 import ServiceList from '@/src/features/services/components/ServiceList';
 
 interface Service {
