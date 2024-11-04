@@ -4,6 +4,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { RootStackParamList } from "@/src/shared/routes/LoginNavigation";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
+import Styles from "./Styles";
+
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Verify'>;
 
 const Verify = () => {
@@ -38,25 +40,19 @@ const Verify = () => {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20, backgroundColor: "white" }}>
+            <View style={Styles.container}>
                 <Image
                     source={require("../../../../assets/images/resetpass.png")}
-                    style={{ width: 150, height: 150, marginBottom: 20 }}
+                    style={Styles.logo}
                 />
 
-                <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>Quên mật khẩu</Text>
+                <Text style={Styles.texttitle}>Quên mật khẩu</Text>
 
-                <Text style={{ alignSelf: "flex-start", fontSize: 15, marginBottom: 5 }}>Mật khẩu mới:</Text>
-                <View style={{ width: "100%", position: "relative", marginBottom: 10 }}>
+                <Text style={Styles.textfield}>Mật khẩu mới:</Text>
+
+                <View style={Styles.viewinput}>
                     <TextInput
-                        style={{
-                            width: "100%",
-                            borderColor: "#ddd",
-                            borderWidth: 1,
-                            borderRadius: 5,
-                            padding: 10,
-                            paddingRight: 40,
-                        }}
+                        style={Styles.textinput}
                         placeholder="Nhập mật khẩu mới"
                         secureTextEntry={!isPasswordVisible}
                         value={newPassword}
@@ -64,23 +60,17 @@ const Verify = () => {
                     />
                     <TouchableOpacity
                         onPress={togglePasswordVisibility}
-                        style={{ position: "absolute", right: 10, top: 10 }}
+                        style={Styles.btnicon}
                     >
                         <Icon name={isPasswordVisible ? "eye-off" : "eye"} size={20} color="#888" />
                     </TouchableOpacity>
                 </View>
 
-                <Text style={{ alignSelf: "flex-start", fontSize: 15, marginBottom: 5 }}>Nhập lại mật khẩu:</Text>
-                <View style={{ width: "100%", position: "relative", marginBottom: 20 }}>
+                <Text style={Styles.textfield}>Nhập lại mật khẩu:</Text>
+
+                <View style={Styles.viewinput}>
                     <TextInput
-                        style={{
-                            width: "100%",
-                            borderColor: "#ddd",
-                            borderWidth: 1,
-                            borderRadius: 5,
-                            padding: 10,
-                            paddingRight: 40,
-                        }}
+                        style={Styles.textinput}
                         placeholder="Nhập lại mật khẩu"
                         secureTextEntry={!isConfirmPasswordVisible}
                         value={confirmNewPassword}
@@ -88,23 +78,17 @@ const Verify = () => {
                     />
                     <TouchableOpacity
                         onPress={toggleConfirmPasswordVisibility}
-                        style={{ position: "absolute", right: 10, top: 10 }}
+                        style={Styles.btnicon}
                     >
                         <Icon name={isConfirmPasswordVisible ? "eye-off" : "eye"} size={20} color="#888" />
                     </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity
-                    style={{
-                        backgroundColor: "#4CAF50",
-                        padding: 10,
-                        borderRadius: 5,
-                        width: "100%",
-                        alignItems: "center",
-                    }}
+                    style={Styles.btn}
                     onPress={handlePasswordReset}
                 >
-                    <Text style={{ color: "#fff", fontSize: 16 }}>Xác nhận</Text>
+                    <Text style={Styles.textbtn}>Xác nhận</Text>
                 </TouchableOpacity>
             </View>
         </TouchableWithoutFeedback>

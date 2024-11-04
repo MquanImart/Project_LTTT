@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Image, Alert, Keyboard, Toucha
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/src/shared/routes/LoginNavigation";
+import Styles from "./Styles";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ResetPassword'>;
 
@@ -36,24 +37,17 @@ const ResetPassword = () => {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20, backgroundColor: "white" }}>
+            <View style={Styles.container}>
                 <Image
                     source={require("../../../../assets/images/resetpass.png")}
                     style={{ width: 150, height: 150, marginBottom: 20 }}
                 />
 
-                <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20 }}>Quên mật khẩu</Text>
+                <Text style={Styles.texttitle}>Quên mật khẩu</Text>
 
-                <Text style={{ alignSelf: "flex-start", fontSize: 15, marginBottom: 5 }}>Số điện thoại:</Text>
+                <Text style={Styles.textfield}>Số điện thoại:</Text>
                 <TextInput
-                    style={{
-                        width: "100%",
-                        borderColor: "#ddd",
-                        borderWidth: 1,
-                        borderRadius: 5,
-                        padding: 10,
-                        marginBottom: 10,
-                    }}
+                    style={Styles.textinput}
                     placeholder="Nhập số điện thoại"
                     keyboardType="phone-pad"
                     value={phoneNumber}
@@ -61,35 +55,21 @@ const ResetPassword = () => {
                 />
 
                 <TouchableOpacity
-                    style={{
-                        backgroundColor: "#ddd",
-                        padding: 10,
-                        borderRadius: 5,
-                        width: "100%",
-                        alignItems: "center",
-                        marginBottom: 10,
-                    }}
+                    style={Styles.btnotp}
                     onPress={handleSendOtp}
                 >
                     <Text style={{ color: "#888", fontSize: 16 }}>Gửi mã OTP</Text>
                 </TouchableOpacity>
 
                 <Text style={{ fontSize: 14, marginBottom: 10 }}>
-                    Một đoạn mã OTP đã được gửi tới sdt <Text style={{ color: "#4CAF50" }}>{phoneNumber}</Text>
+                    Một đoạn mã OTP đã được gửi tới <Text style={{ color: "#4CAF50" }}>{phoneNumber}</Text>
                 </Text>
 
                 <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 20 }}>
                     {otp.map((digit, index) => (
                         <TextInput
                             key={index}
-                            style={{
-                                borderColor: "#4CAF50",
-                                borderBottomWidth: 2,
-                                width: 40,
-                                textAlign: "center",
-                                fontSize: 18,
-                                marginHorizontal: 5,
-                            }}
+                            style={Styles.inputotp}
                             keyboardType="numeric"
                             maxLength={1}
                             value={digit}
@@ -99,13 +79,7 @@ const ResetPassword = () => {
                 </View>
 
                 <TouchableOpacity
-                    style={{
-                        backgroundColor: "#4CAF50",
-                        padding: 10,
-                        borderRadius: 5,
-                        width: "100%",
-                        alignItems: "center",
-                    }}
+                    style={Styles.btn}
                     onPress={handleVerifyOtp}
                 >
                     <Text style={{ color: "#fff", fontSize: 16 }}>Xác nhận</Text>

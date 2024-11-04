@@ -1,5 +1,3 @@
-// src/components/Header.tsx
-
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from '@/src/styles/Color'; // Đảm bảo đường dẫn chính xác
