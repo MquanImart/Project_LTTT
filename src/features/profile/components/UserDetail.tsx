@@ -81,6 +81,7 @@ const UserDetail = ({
                 onChangeText={setPhoneNumber}
                 editable={isEditable}
                 placeholder="Số điện thoại"
+                keyboardType="phone-pad"
             />
 
             <Text>Địa chỉ:</Text>
