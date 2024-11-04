@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, FlatList, Image, TouchableOpacity } 
 import Colors from '@/src/styles/Color';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RouteProp } from '@react-navigation/native';
-import Header from '@/src/shared/components/Header';
+import Header from '@/src/shared/components/header/Header';
 import { ChatStackParamList } from '@/src/shared/routes/ChatNavigation';
 
 type ChatDetailScreenProps = {

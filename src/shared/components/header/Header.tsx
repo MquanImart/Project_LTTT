@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Colors from '@/src/styles/Color';
+import Colors from '@/src/styles/Color'; // Đảm bảo đường dẫn chính xác
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const Header: React.FC<{ title: string; onBackPress: () => void }> = ({ title, onBackPress }) => {

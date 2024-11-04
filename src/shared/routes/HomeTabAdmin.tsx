@@ -8,6 +8,8 @@ import Colors from "@/src/styles/Color";
 import HomeCustomerNavigation from "./HomeCustomerNavigation";
 import ChatNavigation from "./ChatNavigation";
 import AppointmentNavigation from "./AppointmentNavigation";
+import HomeAdmin from "@/src/features/home/containers/home-admin/HomeAdmin";
+import ManageEmployee from "./ManageEmployeeNav";
 
 const Tab = createBottomTabNavigator();
 
@@ -28,6 +30,8 @@ function HomeTabAdminNavigation() {
             iconName = "shopping-cart";
           } else if (route.name === "Chat") {
             iconName = "chat";
+          } else if (route.name === "Employee") {
+            iconName = "person";
           } else if (route.name === "Service") {
             iconName = "build";
           }
@@ -43,6 +47,8 @@ function HomeTabAdminNavigation() {
             label = "Appointment";
           } else if (route.name === "Chat") {
             label = "Chat";
+          } else if (route.name === "Employee") {
+            label = "Employee";
           } else if (route.name === "Service") {
             label = "Service";
           }
@@ -64,9 +70,10 @@ function HomeTabAdminNavigation() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeCustomerNavigation} />
+      <Tab.Screen name="Home" component={HomeAdmin} />
       <Tab.Screen name="Appointment" component={AppointmentNavigation} />
       <Tab.Screen name="Chat" component={ChatNavigation} />
+      <Tab.Screen name="Employee" component={ManageEmployee} />
       <Tab.Screen name="Service" component={ServiceNavigation} />
     </Tab.Navigator>
   );

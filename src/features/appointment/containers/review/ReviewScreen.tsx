@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from '@/src/styles/Color';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '@/src/shared/routes/MainNavigator';
-import Header from '@/src/shared/components/Header';
+import Header from '@/src/shared/components/header/Header';
 
 type ReviewScreenRouteProp = RouteProp<RootStackParamList, 'Review'>;
 

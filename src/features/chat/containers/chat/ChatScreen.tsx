@@ -4,7 +4,7 @@ import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react
 import Colors from '@/src/styles/Color';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
-import Header from '@/src/shared/components/Header';
+import Header from '@/src/shared/components/header/Header';
 import { ChatStackParamList } from '@/src/shared/routes/ChatNavigation';
 
 type Message = {

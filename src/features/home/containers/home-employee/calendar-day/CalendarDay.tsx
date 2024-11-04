@@ -7,6 +7,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { HomeEmployeeStackParamList } from '@/src/shared/routes/HomeEmployeeNavigation';
 import { StackNavigationProp } from '@react-navigation/stack';
 import CardDayCalendar from './CardDayCalendar';
+import Header from '@/src/shared/components/header/Header';
 
 type HomeEmployeeNavigationProp = StackNavigationProp<HomeEmployeeStackParamList, 'CalendarMonth'>;
 
@@ -28,6 +29,7 @@ const CalendarDay = () => {
 
   return (
     <View style={styles.container}>
+      <Header title={'Lịch làm việc'} onBackPress={()=> {navigation.goBack()}}/>
         <TextInput
         placeholder="Search"
         left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="magnify" size={24} />} />}

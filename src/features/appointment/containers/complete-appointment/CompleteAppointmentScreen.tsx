@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import Header from '@/src/shared/components/Header';
+import Header from '@/src/shared/components/header/Header';
 import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
 import AppointmentCard from '@/src/features/appointment/components/AppointmentCompleteCard';
 import Colors from '@/src/styles/Color';

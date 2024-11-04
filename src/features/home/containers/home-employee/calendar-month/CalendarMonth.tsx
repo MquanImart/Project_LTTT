@@ -7,6 +7,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { HomeEmployeeStackParamList } from '@/src/shared/routes/HomeEmployeeNavigation';
 import { StackNavigationProp } from '@react-navigation/stack';
 import CardMonthCalendar from './CardMonthCalendar';
+import Header from '@/src/shared/components/header/Header';
 
 type HomeEmployeeNavigationProp = StackNavigationProp<HomeEmployeeStackParamList, 'CalendarMonth'>;
 
@@ -17,6 +18,7 @@ const CalendarMonth = () => {
     const [month, setMonth] = useState<number>(startMonth);
   return (
     <View style={styles.container}>
+      <Header title={'Lịch làm việc'} onBackPress={()=> {navigation.goBack()}}/>
         <TextInput
         placeholder="Search"
         left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="magnify" size={24} />} />}

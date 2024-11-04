@@ -23,7 +23,7 @@ function HomeTabEmployee() {
           // Xác định biểu tượng cho từng tab dựa trên tên route
           if (route.name === "Home") {
             iconName = "home";
-          } else if (route.name === "Order") {
+          } else if (route.name === "Appointment") {
             iconName = "shopping-cart";
           } else if (route.name === "Chat") {
             iconName = "chat";
@@ -38,8 +38,8 @@ function HomeTabEmployee() {
 
           if (route.name === "Home") {
             label = "Home";
-          } else if (route.name === "Order") {
-            label = "Order";
+          } else if (route.name === "Appointment") {
+            label = "Appointment";
           } else if (route.name === "Chat") {
             label = "Chat";
           } else if (route.name === "Profile") {
