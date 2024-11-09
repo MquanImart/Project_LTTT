@@ -36,6 +36,7 @@ export enum UserRole {
   export interface Service {
     id: string;
     name: string;
+    img: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date; // Optional field
@@ -108,9 +109,8 @@ export enum UserRole {
   export interface Bill {
     id: string;
     jobs: JobDetail[];
-    status: string;
+    status: string; // Da thanh toan , chua thanh toans
     createAt: Date;
     idCustomer: string;
     idEmployee: String;
-    payment: string;
   }
