@@ -5,11 +5,13 @@ import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import Styles from "./Styles";
+import restClient from "@/src/shared/services/RestClient";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
 
 const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState<string>("");
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -32,6 +34,8 @@ const Login = () => {
                     style={Styles.textinput}
                     placeholder="Nhập số điện thoại"
                     keyboardType="phone-pad"
+                    value={phoneNumber}
+                    onChange={() => {}}
                 />
 
                 <Text style={Styles.textfield}>Mật khẩu</Text>
@@ -56,8 +60,13 @@ const Login = () => {
 
                 <TouchableOpacity
                     style={Styles.btn}
-                    onPress={() => {
-                        // Handle sign in
+                    onPress={async () => {
+                        const result = await restClient.apiClient.authentication(phoneNumber, "password");
+                        if (result.success){
+                            //Chuyeenr trang
+                        } else {
+                            // In thong bao
+                        }
                     }}
                 >
                     <Text style={Styles.textLogin}>Đăng nhập</Text>
