@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Colors from '@/src/styles/Color';
-import { RootStackParamList } from '@/src/shared/routes/MainNavigator';
+import { RootStackParamList } from '@/src/shared/routes/AppointmentNavigation';
 
 interface AppointmentTabsProps {
   selectedTab: string;
