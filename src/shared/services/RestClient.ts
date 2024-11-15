@@ -28,6 +28,7 @@ class RestClient {
       });
       return {
         success: false,
+        data: null,
         messages: errorMessage,
       };
     } else {
@@ -39,6 +40,7 @@ class RestClient {
       });
       return {
         success: false,
+        data: null,
         messages: "Đã xảy ra lỗi không xác định",
       };
     }
@@ -47,11 +49,12 @@ class RestClient {
   public async authentication(phoneNumber: string, password: string) {
     try {
       const response = await axios.post(`${this.baseURL}/auths/login`, { phoneNumber, password });
+      console.log('rs', response.data)
       if (response.data.success) {
         // Lưu thông tin người dùng
         await AsyncStorage.setItem("token", response.data.token);
-        await AsyncStorage.setItem("userId", response.data.user._id);
-        await AsyncStorage.setItem("userName", response.data.user.userName);
+        await AsyncStorage.setItem("userId", response.data.resData.id);
+        await AsyncStorage.setItem("userRole", response.data.resData.role);
         this.token = response.data.token;
 
         Toast.show({
@@ -61,6 +64,7 @@ class RestClient {
 
         return {
           success: true,
+          data: response.data.resData,
           messages: response.data.messages,
         };
       } else {
@@ -71,6 +75,7 @@ class RestClient {
 
         return {
           success: false,
+          data: null,
           messages: "Tên đăng nhập hoặc mật khẩu không đúng",
         };
       }
@@ -181,14 +186,12 @@ class RestClient {
 
 const apiClient = new RestClient();
 
-const authsClient = apiClient.service("auths");
 const customerClient = apiClient.service("users/customer");
 const employeeClient = apiClient.service("users/employee");
 const usersClient = apiClient.service("users");
 
 const restClient = {
   apiClient,
-  authsClient,
   usersClient,
   customerClient,
   employeeClient,

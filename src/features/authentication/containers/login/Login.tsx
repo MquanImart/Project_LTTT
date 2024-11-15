@@ -5,13 +5,14 @@ import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import Styles from "./Styles";
-import restClient from "@/src/shared/services/RestClient";
+import { handleLogin } from "./handleLogin";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
 
 const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -20,7 +21,6 @@ const Login = () => {
     const navigation = useNavigation<LoginScreenNavigationProp>();
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={Styles.container}>
                 <Image
                     source={require("../../../../assets/images/login.png")}
@@ -35,16 +35,17 @@ const Login = () => {
                     placeholder="Nhập số điện thoại"
                     keyboardType="phone-pad"
                     value={phoneNumber}
-                    onChange={() => {}}
+                    onChangeText={setPhoneNumber}
                 />
 
                 <Text style={Styles.textfield}>Mật khẩu</Text>
-
                 <View style={{ width: "100%", position: "relative" }}>
                     <TextInput
                         style={Styles.textinput}
                         placeholder="Nhập mật khẩu"
                         secureTextEntry={!isPasswordVisible}
+                        value={password}
+                        onChangeText={setPassword}
                     />
                     <TouchableOpacity
                         onPress={togglePasswordVisibility}
@@ -60,14 +61,7 @@ const Login = () => {
 
                 <TouchableOpacity
                     style={Styles.btn}
-                    onPress={async () => {
-                        const result = await restClient.apiClient.authentication(phoneNumber, "password");
-                        if (result.success){
-                            //Chuyeenr trang
-                        } else {
-                            // In thong bao
-                        }
-                    }}
+                    onPress={() => handleLogin(phoneNumber, password, navigation)}
                 >
                     <Text style={Styles.textLogin}>Đăng nhập</Text>
                 </TouchableOpacity>
@@ -84,19 +78,7 @@ const Login = () => {
                         Bạn chưa có tài khoản? <Text style={{ color: "#4CAF50" }}>Đăng ký</Text>
                     </Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.navigate("HomeTabEmployee")} style={{ marginTop: 20 }}>
-                    <Text style={{ color: "#4CAF50" }}>Employee</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.navigate("HomeTabCustomer")} style={{ marginTop: 10 }}>
-                    <Text style={{ color: "#4CAF50" }}>Customer</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("HomeTabAdmin")} style={{ marginTop: 10 }}>
-                    <Text style={{ color: "#4CAF50" }}>ADmin</Text>
-                </TouchableOpacity>
             </View>
-        </TouchableWithoutFeedback>
     );
 };
 
