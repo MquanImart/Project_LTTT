@@ -1,18 +1,23 @@
-// src/features/chat/containers/ChatScreen.tsx
-import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import Colors from '@/src/styles/Color';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import Header from '@/src/shared/components/header/Header';
 import { ChatStackParamList } from '@/src/shared/routes/ChatNavigation';
+import restClient from '@/src/shared/services/RestClient';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-type Message = {
-  id: string;
-  name: string;
-  message: string;
-  time: string;
+type ChatItem = {
+  userId: string;
   avatar: string;
+  lastName: string;
+  firstName: string;
+  role: string;
+  lastMessage: {
+    type: 'Text' | 'Image' | 'Video';
+    content: string;
+  };
 };
 
 type ChatScreenProps = {
@@ -20,50 +25,71 @@ type ChatScreenProps = {
   route: RouteProp<ChatStackParamList, 'ChatScreen'>;
 };
 
-// Dữ liệu mẫu (Mock Data)
-const mockMessages: Message[] = [
-  {
-    id: '1',
-    name: 'Ronald Richards',
-    message: "So, what's your plan this weekend?",
-    time: '15:41',
-    avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg',
-  },
-  {
-    id: '2',
-    name: 'Jane Cooper',
-    message: 'I hope it goes well.',
-    time: '16:41',
-    avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg',
-  },
-];
-
 const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
-  // Sử dụng mock data cho danh sách tin nhắn
-  const [messages] = useState<Message[]>(mockMessages);
+  const [chats, setChats] = useState<ChatItem[]>([]);
 
-  const renderMessageItem = ({ item }: { item: Message }) => (
-    <TouchableOpacity
-      style={styles.messageContainer}
-      onPress={() => navigation.navigate('ChatDetailScreen', { contactId: item.id, contactName: item.name })}
-    >
-      <Image source={{ uri: item.avatar }} style={styles.avatar} />
-      <View style={styles.messageContent}>
-        <Text style={styles.messageName}>{item.name}</Text>
-        <Text style={styles.messageText}>{item.message}</Text>
-      </View>
-      <Text style={styles.messageTime}>{item.time}</Text>
-    </TouchableOpacity>
+  const fetchChats = async () => {
+    const result = await restClient.chatClient.find({});
+    if (result.success) {
+      setChats(result.resData); 
+    } else {
+      console.error(result.messages);
+    }
+  };
+
+  const deleteChat = async (userId: string) => {
+    try {
+        console.log('1')
+        const result = await restClient.chatClient.remove(userId);
+        if (result.success) {
+            // Gọi lại fetchChats để cập nhật danh sách chats từ server
+            await fetchChats();
+            console.log('xóa thành công')
+            console.log(chats)
+            Alert.alert("Success", "The chat has been deleted successfully.");
+        } else {
+            Alert.alert("Error", result.messages || "Failed to delete the chat.");
+        }
+    } catch (error) {
+        console.error("Delete chat error:", error);
+        Alert.alert("Error", "Failed to delete the chat.");
+    }
+};
+
+
+
+  useEffect(() => {
+    fetchChats();
+  }, []);
+
+  const renderChatItem = ({ item }: { item: ChatItem }) => (
+    <View style={styles.chatContainer}>
+      <TouchableOpacity
+        style={styles.chatDetails}
+        onPress={() =>
+          navigation.navigate('ChatDetailScreen', { contactId: item.userId, contactName: `${item.firstName} ${item.lastName}` })
+        }
+      >
+        <Image source={{ uri: item.avatar || 'https://i.imgur.com/Z4MDNDb.jpeg' }} style={styles.avatar} />
+        <View style={styles.chatContent}>
+          <Text style={styles.chatName}>{`${item.firstName} ${item.lastName}`}</Text>
+          <Text style={styles.chatText}>{item.lastMessage.content}</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => deleteChat(item.userId)} style={styles.deleteIcon}>
+        <Icon name="delete" size={24} color="red" />
+      </TouchableOpacity>
+    </View>
   );
 
   return (
     <View style={styles.container}>
       <Header title="Chat" onBackPress={() => navigation.goBack()} />
       <FlatList
-        data={messages}
-        renderItem={renderMessageItem}
-        keyExtractor={item => item.id}
-        contentContainerStyle={styles.messageList}
+        data={chats}
+        renderItem={renderChatItem}
+        keyExtractor={(item) => item.userId}
+        contentContainerStyle={styles.chatList}
       />
     </View>
   );
@@ -74,40 +100,45 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
-  messageList: {
+  chatList: {
     paddingHorizontal: 15,
     paddingTop: 10,
     paddingBottom: 70,
   },
-  messageContainer: {
+  chatContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: Colors.icon,
     alignSelf: 'stretch',
+  },
+  chatDetails: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   avatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
   },
-  messageContent: {
+  chatContent: {
     flex: 1,
     marginLeft: 10,
   },
-  messageName: {
+  chatName: {
     fontSize: 16,
     fontWeight: 'bold',
     color: Colors.text,
   },
-  messageText: {
+  chatText: {
     fontSize: 14,
     color: Colors.icon,
   },
-  messageTime: {
-    fontSize: 12,
-    color: Colors.icon,
+  deleteIcon: {
+    paddingHorizontal: 10,
   },
 });
 

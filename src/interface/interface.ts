@@ -91,9 +91,9 @@ export enum UserRole {
     deletedAt?: Date; // Optional field
   }
   export enum MessageType {
-    Text = "text",
-    Image = "img",
-    Video = "video"
+    Text = "Text",
+    Image = "Img",
+    Video = "Video"
   }
   
   export interface Chat {
