@@ -1,47 +1,65 @@
-import React from 'react';
-import { ScrollView, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, View, ActivityIndicator, Text } from 'react-native';
 import JobCard from './JobCard';
 import styles from './Styles';
-
-const jobs = [
-  {
-    id: 1,
-    name: 'Fixing a faucet',
-    image: 'https://anhvienpiano.com/wp-content/uploads/2019/05/chup-anh-thoi-trang-dep-my-man-duoi-anh-mat-troi-1.jpg',
-  },
-  {
-    id: 2,
-    name: 'Fixing a pipe',
-    image: 'https://anhvienpiano.com/wp-content/uploads/2019/05/chup-anh-thoi-trang-dep-my-man-duoi-anh-mat-troi-1.jpg',
-  },
-  {
-    id: 3,
-    name: 'Basic pipe installation',
-    image: 'https://anhvienpiano.com/wp-content/uploads/2019/05/chup-anh-thoi-trang-dep-my-man-duoi-anh-mat-troi-1.jpg',
-  },
-  {
-    id: 4,
-    name: 'Repairing sink',
-    image: 'https://anhvienpiano.com/wp-content/uploads/2019/05/chup-anh-thoi-trang-dep-my-man-duoi-anh-mat-troi-1.jpg',
-  },
-  {
-    id: 5,
-    name: 'Cleaning pipes',
-    image: 'https://anhvienpiano.com/wp-content/uploads/2019/05/chup-anh-thoi-trang-dep-my-man-duoi-anh-mat-troi-1.jpg',
-  },
-  {
-    id: 6,
-    name: 'Installing new pipes',
-    image: 'https://anhvienpiano.com/wp-content/uploads/2019/05/chup-anh-thoi-trang-dep-my-man-duoi-anh-mat-troi-1.jpg',
-  },
-];
+import restClient from "@/src/shared/services/RestClient";
+import { Service } from "@/src/interface/interface";
 
 const JobGrid: React.FC = () => {
+  const [jobs, setJobs] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const serviceClient = restClient.apiClient.service("services");
+        const response = await serviceClient.find({});
+        if (response.success) {
+          const transformedData = response.resData.map((item: any) => ({
+            id: item._id,
+            name: item.name,
+            img: item.img || "https://via.placeholder.com/150", // Hình mặc định nếu không có ảnh
+            createdAt: new Date(item.createdAt),
+            updatedAt: new Date(item.updatedAt),
+            deletedAt: item.deletedAt ? new Date(item.deletedAt) : undefined,
+          }));
+          setJobs(transformedData);
+        } else {
+          setError("Failed to fetch jobs.");
+        }
+      } catch (error) {
+        setError("An unexpected error occurred.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading jobs...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView>
       <View style={styles.grid}>
-        {jobs.map((job, index) => (
-          <JobCard key={`${job.id}-${index}`} name={job.name} image={job.image} />
+        {jobs.map((job) => (
+          <JobCard key={job.id} name={job.name} image={job.img} />
         ))}
       </View>
     </ScrollView>

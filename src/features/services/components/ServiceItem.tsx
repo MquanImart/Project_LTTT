@@ -1,28 +1,34 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Colors from '@/src/styles/Color';
-
-interface Service {
-  id: string;
-  name: string;
-}
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import Colors from "@/src/styles/Color";
+import { Service } from "@/src/interface/interface";
 
 interface ServiceItemProps {
   service: Service;
   expanded: boolean;
   onExpand: (id: string) => void;
   onEdit: () => void;
+  onDelete: () => void;
 }
 
-const ServiceItem: React.FC<ServiceItemProps> = ({ service, expanded, onExpand, onEdit }) => {
+const ServiceItem: React.FC<ServiceItemProps> = ({
+  service,
+  expanded,
+  onExpand,
+  onEdit,
+  onDelete,
+}) => {
+  const serviceName = service.name || "Unnamed Service"; // Đặt giá trị mặc định
+  const serviceId = service.id ? String(service.id) : "unknown"; // Chuyển id thành chuỗi
+
   return (
     <View>
       <View style={styles.serviceItem}>
+        <Image source={{ uri: service.img }} style={styles.serviceImage} />
         <View style={styles.serviceContent}>
-          <Icon name="favorite" size={24} color={Colors.white} style={styles.favoriteIcon} />
-          <Text style={styles.serviceText}>{service.name}</Text>
-          <TouchableOpacity onPress={() => onExpand(service.id)}>
+          <Text style={styles.serviceText}>{serviceName}</Text>
+          <TouchableOpacity onPress={() => onExpand(serviceId)}>
             <Icon name="keyboard-arrow-down" size={24} color={Colors.white} />
           </TouchableOpacity>
         </View>
@@ -30,11 +36,14 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ service, expanded, onExpand, 
       {expanded && (
         <View style={styles.expandedContentWrapper}>
           <View style={styles.expandedContent}>
-            <TouchableOpacity style={[styles.optionButton, styles.firstOption]} onPress={onEdit}>
+            <TouchableOpacity
+              style={[styles.optionButton, styles.firstOption]}
+              onPress={onEdit}
+            >
               <Text style={styles.optionText}>Edit</Text>
               <Icon name="edit" size={20} color={Colors.icon} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.optionButton}>
+            <TouchableOpacity style={styles.optionButton} onPress={onDelete}>
               <Text style={styles.optionText}>Delete</Text>
               <Icon name="delete" size={20} color={Colors.icon} />
             </TouchableOpacity>
@@ -52,14 +61,22 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     padding: 15,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  serviceImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25, // Hình tròn
+    marginRight: 10,
+    borderWidth: 2,
+    borderColor: Colors.white,
   },
   serviceContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  favoriteIcon: {
-    marginRight: 10,
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   serviceText: {
     flex: 1,
@@ -82,8 +99,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   optionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 15,
   },
