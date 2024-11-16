@@ -1,28 +1,42 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, Modal, Text, TextInput, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet, Modal, Text, TextInput, Button, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from '@/src/styles/Color';
 import Header from '@/src/shared/components/header/Header';
 import ServiceList from '@/src/features/services/components/ServiceList';
+import restClient from '@/src/shared/services/RestClient'; // Import API client
 
 interface Service {
   id: string;
   name: string;
+  img?: string; // Thêm thuộc tính ảnh nếu cần
 }
 
-const initialServices: Service[] = [
-  { id: '1', name: 'Clean House' },
-  { id: '2', name: 'Clean Up The Garden' },
-  { id: '3', name: 'Fix Light Bulbs' },
-  { id: '4', name: 'Flush The Toilet' },
-];
-
 const ServicesScreen = () => {
-  const [services, setServices] = useState<Service[]>(initialServices);
+  const [services, setServices] = useState<Service[]>([]);
   const [isAddModalVisible, setAddModalVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [newServiceName, setNewServiceName] = useState('');
   const [editingService, setEditingService] = useState<Service | null>(null);
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  // API lấy danh sách dịch vụ
+  const fetchServices = async () => {
+    try {
+      const response = await restClient.apiClient.service('services').find({});
+      if (response.success) {
+        setServices(response.resData || []);
+      } else {
+        Alert.alert('Error', response.messages || 'Failed to fetch services.');
+      }
+    } catch (error) {
+      console.error('Error fetching services:', error);
+      Alert.alert('Error', 'Unable to fetch services.');
+    }
+  };
 
   const toggleAddModal = () => {
     setAddModalVisible(!isAddModalVisible);
@@ -34,14 +48,14 @@ const ServicesScreen = () => {
     setEditModalVisible(!isEditModalVisible);
   };
 
-  const handleAddService = () => {
+  const handleAddService = async () => {
     const newService = { id: Date.now().toString(), name: newServiceName };
     setServices([...services, newService]);
     setNewServiceName('');
     toggleAddModal();
   };
 
-  const handleEditService = () => {
+  const handleEditService = async () => {
     if (editingService) {
       const updatedServices = services.map(service =>
         service.id === editingService.id ? { ...service, name: newServiceName } : service
@@ -55,7 +69,7 @@ const ServicesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header title="Services" onBackPress={() => console.log('Back Pressed')}/>
+      <Header title="Services" onBackPress={() => console.log('Back Pressed')} />
       <ServiceList services={services} onEdit={toggleEditModal} />
       <TouchableOpacity style={styles.addButton} onPress={toggleAddModal}>
         <Icon name="add" size={24} color={Colors.white} />
@@ -73,7 +87,7 @@ const ServicesScreen = () => {
             <Text style={styles.modalTitle}>NEW SERVICE</Text>
             <TextInput
               style={styles.input}
-              placeholder="Your Name"
+              placeholder="Service Name"
               value={newServiceName}
               onChangeText={setNewServiceName}
             />

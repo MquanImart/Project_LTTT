@@ -1,9 +1,8 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
-
 class RestClient {
-  baseURL: string = "http://localhost:8080"; // Điều chỉnh URL khi build app
+  baseURL: string = "http://192.168.1.22:8080"; // Điều chỉnh URL khi build app
   path: string = "";
   token: string = "";
 
@@ -190,6 +189,7 @@ const employeeClient = apiClient.service("users/employee");
 const usersClient = apiClient.service("users");
 const chatClient = apiClient.service("chats");
 const chatClients = apiClient.service("chats/messages");
+const chatClientss = apiClient.service("chats/available-contacts");
 
 const restClient = {
   apiClient,
@@ -197,7 +197,8 @@ const restClient = {
   customerClient,
   employeeClient,
   chatClient,
-  chatClients
+  chatClients,
+  chatClientss
 }
 
 export default restClient;
