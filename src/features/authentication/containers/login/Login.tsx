@@ -20,66 +20,71 @@ const Login = () => {
 
     const navigation = useNavigation<LoginScreenNavigationProp>();
 
+    const handlePhoneNumberChange = (text: string) => {
+        const filteredText = text.replace(/[^0-9]/g, "");
+        setPhoneNumber(filteredText);
+    };
+    
     return (
-            <View style={Styles.container}>
-                <Image
-                    source={require("../../../../assets/images/login.png")}
-                    style={{ width: 150, height: 150, marginBottom: 20, alignContent: "center" }}
-                />
-
-                <Text style={Styles.titletext}>Đăng nhập</Text>
-
-                <Text style={Styles.textfield}>Số điện thoại</Text>
+        <View style={Styles.container}>
+            <Image
+                source={require("../../../../assets/images/login.png")}
+                style={{ width: 150, height: 150, marginBottom: 20, alignContent: "center" }}
+            />
+    
+            <Text style={Styles.titletext}>Đăng nhập</Text>
+    
+            <Text style={Styles.textfield}>Số điện thoại</Text>
+            <TextInput
+                style={Styles.textinput}
+                placeholder="Nhập số điện thoại"
+                keyboardType="phone-pad"
+                value={phoneNumber}
+                onChangeText={handlePhoneNumberChange} // Use the new function here
+            />
+    
+            <Text style={Styles.textfield}>Mật khẩu</Text>
+            <View style={{ width: "100%", position: "relative" }}>
                 <TextInput
                     style={Styles.textinput}
-                    placeholder="Nhập số điện thoại"
-                    keyboardType="phone-pad"
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
+                    placeholder="Nhập mật khẩu"
+                    secureTextEntry={!isPasswordVisible}
+                    value={password}
+                    onChangeText={setPassword}
                 />
-
-                <Text style={Styles.textfield}>Mật khẩu</Text>
-                <View style={{ width: "100%", position: "relative" }}>
-                    <TextInput
-                        style={Styles.textinput}
-                        placeholder="Nhập mật khẩu"
-                        secureTextEntry={!isPasswordVisible}
-                        value={password}
-                        onChangeText={setPassword}
+                <TouchableOpacity
+                    onPress={togglePasswordVisibility}
+                    style={Styles.togglepass}
+                >
+                    <Icon
+                        name={isPasswordVisible ? "eye-off" : "eye"}
+                        size={20}
+                        color="#888"
                     />
-                    <TouchableOpacity
-                        onPress={togglePasswordVisibility}
-                        style={Styles.togglepass}
-                    >
-                        <Icon
-                            name={isPasswordVisible ? "eye-off" : "eye"}
-                            size={20}
-                            color="#888"
-                        />
-                    </TouchableOpacity>
-                </View>
-
-                <TouchableOpacity
-                    style={Styles.btn}
-                    onPress={() => handleLogin(phoneNumber, password, navigation)}
-                >
-                    <Text style={Styles.textLogin}>Đăng nhập</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    onPress={() => navigation.navigate("ResetPassword")}
-                    style={Styles.btnForgot}
-                >
-                    <Text style={Styles.textpass}>Quên mật khẩu?</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.navigate("Register")} style={{ marginTop: 20 }}>
-                    <Text>
-                        Bạn chưa có tài khoản? <Text style={{ color: "#4CAF50" }}>Đăng ký</Text>
-                    </Text>
                 </TouchableOpacity>
             </View>
-    );
+    
+            <TouchableOpacity
+                style={Styles.btn}
+                onPress={() => handleLogin(phoneNumber, password, navigation)}
+            >
+                <Text style={Styles.textLogin}>Đăng nhập</Text>
+            </TouchableOpacity>
+    
+            <TouchableOpacity
+                onPress={() => navigation.navigate("ResetPassword")}
+                style={Styles.btnForgot}
+            >
+                <Text style={Styles.textpass}>Quên mật khẩu?</Text>
+            </TouchableOpacity>
+    
+            <TouchableOpacity onPress={() => navigation.navigate("Register")} style={{ marginTop: 20 }}>
+                <Text>
+                    Bạn chưa có tài khoản? <Text style={{ color: "#4CAF50" }}>Đăng ký</Text>
+                </Text>
+            </TouchableOpacity>
+        </View>
+    );    
 };
 
 export default Login;

@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, Alert, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/src/shared/routes/LoginNavigation";
 import Styles from "./Styles";
+import { handleRegister } from "./handleRegister";
 
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, "Register">;
+type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, "Register">;
 
 const Register = () => {
-    const navigation = useNavigation<LoginScreenNavigationProp>();
+    const navigation = useNavigation<RegisterScreenNavigationProp>();
     const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,22 +25,7 @@ const Register = () => {
         setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
     };
 
-    const handleSignUp = () => {
-        if (!phoneNumber || !password || !confirmPassword) {
-            Alert.alert("Thông báo", "Vui lòng điền đầy đủ thông tin.");
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            Alert.alert("Thông báo", "Mật khẩu và xác nhận mật khẩu không khớp.");
-            return;
-        }
-
-        navigation.navigate("RegisterInfomation");
-    };
-
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={Styles.container}>
                 <Image
                     source={require("../../../../assets/images/login.png")}
@@ -93,18 +79,17 @@ const Register = () => {
 
                 <TouchableOpacity
                     style={Styles.btn}
-                    onPress={handleSignUp}
+                    onPress={()=> handleRegister(phoneNumber, password, navigation)}
                 >
                     <Text style={Styles.textbtn}>Đăng ký</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => navigation.navigate("Login")} style={{ marginTop: 20 }}>
                     <Text>
-                        Bạn đã có tài khoản? <Text style={{ color: "#4CAF50" }}>Login</Text>
+                        Bạn đã có tài khoản? <Text style={{ color: "#4CAF50" }}>Đăng nhập</Text>
                     </Text>
                 </TouchableOpacity>
             </View>
-        </TouchableWithoutFeedback>
     );
 };
 

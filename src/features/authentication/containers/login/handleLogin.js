@@ -31,3 +31,7 @@ export const handleLogin = async (phoneNumber, password, navigation) => {
         });
     }
 };
+
+export const validatePhoneNumer = async() => {
+    
+}
