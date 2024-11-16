@@ -7,6 +7,7 @@ import Header from '@/src/shared/components/header/Header';
 import { ChatStackParamList } from '@/src/shared/routes/ChatNavigation';
 import restClient from '@/src/shared/services/RestClient';
 import { Chat, MessageType } from '@/src/interface/interface';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type ChatDetailScreenProps = {
   navigation: any;
@@ -14,18 +15,20 @@ type ChatDetailScreenProps = {
 };
 
 const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }) => {
-  const { contactId, contactName } = route.params;
+  const { contactId, contactName, onNewMessage } = route.params;  // Lấy hàm onNewMessage từ params
   const [messages, setMessages] = useState<Chat[]>([]);
   const [inputText, setInputText] = useState('');
-  
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
   const fetchChatDetails = async () => {
+    if (!currentUserId) return;
     const params = new URLSearchParams();
-    params.append('participants', '6735f95f82e3726df63b7964');
+    params.append('participants', currentUserId);
     params.append('participants', contactId);
-  
+
     try {
       const result = await restClient.chatClients.find(params);
-  
+
       if (result.success) {
         setMessages(result.resData);
       } else {
@@ -35,46 +38,47 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
       console.error("Fetch error:", error);
     }
   };
-  
-  
-  
-  
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const userId = await AsyncStorage.getItem('userId');
+      setCurrentUserId(userId);
+    };
+    getUserId();
+    fetchChatDetails();
+  }, [currentUserId]);
 
   const sendMessage = async () => {
     if (!inputText.trim()) return;
     const chatRequest = {
-      participants: ['6735f95f82e3726df63b7964', contactId],
+      participants: [currentUserId, contactId],
       message: {
         type: MessageType.Text,
         content: inputText,
       },
-      senderId: '6735f95f82e3726df63b7964',
+      senderId: currentUserId,
     };
-  
+
     try {
       const result = await restClient.chatClient.create(chatRequest);
-  
+
       if (result.success) {
-        setMessages((prev) => [...prev, result.resData]); 
-        setInputText(''); 
+        setMessages((prev) => [...prev, result.resData]);
+        setInputText('');
+        onNewMessage();  // Gọi hàm onNewMessage để làm mới danh sách chat trong ChatScreen
       } else {
-        console.error(result.messages); 
+        console.error(result.messages);
       }
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
-  
-
-  useEffect(() => {
-    fetchChatDetails();
-  }, []);
 
   const renderMessageItem = ({ item }: { item: Chat }) => (
     <View
       style={[
         styles.messageContainer,
-        item.senderId === '6735f95f82e3726df63b7964' ? styles.userMessage : styles.contactMessage,
+        item.senderId === currentUserId ? styles.userMessage : styles.contactMessage,
       ]}
     >
       <Text style={styles.messageText}>{item.message.content}</Text>
@@ -88,7 +92,7 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
       <FlatList
         data={messages}
         renderItem={renderMessageItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => item.id || index.toString()}
         contentContainerStyle={styles.messageList}
       />
       <View style={styles.inputContainer}>
