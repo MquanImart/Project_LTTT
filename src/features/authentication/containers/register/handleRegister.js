@@ -3,7 +3,7 @@ import restClient from "@/src/shared/services/RestClient";
 
 export const handleRegister = async (phoneNumber, password, navigation) => {
     try {
-        const result = await restClient.customerClient.create(phoneNumber,password);
+        const result = await restClient.customerClient.create({phoneNumber,password});
 
         console.log("result:", result);
 
