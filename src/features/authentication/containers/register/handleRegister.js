@@ -4,9 +4,8 @@ import restClient from "@/src/shared/services/RestClient";
 export const handleRegister = async (phoneNumber, password, navigation) => {
     try {
         const result = await restClient.customerClient.create({phoneNumber,password});
-
         if (result.success) {
-            navigation.navigate("RegisterInfomation");
+          navigation.navigate("RegisterInfomation", { userId: result.resData._id });
         } else {
             Toast.show({
                 type: "error",
@@ -31,57 +30,62 @@ export const handleRegister = async (phoneNumber, password, navigation) => {
                 text2: "Vui lòng kiểm tra kết nối mạng và thử lại.",
             });
         }
-
         return { success: false, message: "Đã có lỗi xảy ra khi đăng ký" };
     }
 };
 
 export const handleUpdateUserInfo = async (userId, userInfo, navigation) => {
   try {
-    const { firstName, lastName, gender, birthDate, province, district, ward, street, avatar } = userInfo;
+      const { firstName, lastName, gender, birthDate, province, district, ward, street, avatar } = userInfo;
 
-    const dataUpdate = {
-      personalInfo: {
-        firstName,
-        lastName,
-        gender,
-        birthDate,
-      },
-      address: {
-        province,
-        district,
-        ward,
-        street,
-      },
-      avatar: avatar || "", 
-    };
+      // Chuyển birthDate sang định dạng yyyy-MM-dd
+      const formattedBirthDate = new Date(birthDate).toISOString().split("T")[0]; // Lấy ngày
 
-    const result = await restClient.usersClient.patch(userId, dataUpdate);
+      const dataUpdate = {
+          personalInfo: {
+              firstName,
+              lastName,
+              gender,
+              birthDate: formattedBirthDate, // Dạng yyyy-MM-dd
+          },
+          address: {
+              province,
+              district,
+              ward,
+              street,
+          },
+          avatar: avatar || "",
+      };
 
-    if (result.success) {
-      Toast.show({
-        type: "success",
-        text1: "Cập nhật thành công",
-        text2: "Thông tin cá nhân đã được cập nhật.",
-      });
+      console.log("Payload gửi lên server:", dataUpdate); // Debug để kiểm tra dữ liệu
 
-      navigation.goBack();
-    } else {
-      Toast.show({
-        type: "error",
-        text1: "Cập nhật thất bại",
-        text2: result.messages || "Vui lòng thử lại sau.",
-      });
-    }
+      const result = await restClient.usersClient.patch(userId, dataUpdate);
+
+      if (result.success) {
+          Toast.show({
+              type: "success",
+              text1: "Cập nhật thành công",
+              text2: "Thông tin cá nhân đã được cập nhật.",
+          });
+
+          navigation.goBack();
+      } else {
+          Toast.show({
+              type: "error",
+              text1: "Cập nhật thất bại",
+              text2: result.messages || "Vui lòng thử lại sau.",
+          });
+      }
   } catch (error) {
-    console.error("Error updating user:", error);
+      console.error("Error updating user:", error);
 
-    Toast.show({
-      type: "error",
-      text1: "Lỗi hệ thống",
-      text2: "Vui lòng kiểm tra lại kết nối mạng.",
-    });
+      Toast.show({
+          type: "error",
+          text1: "Lỗi hệ thống",
+          text2: "Vui lòng kiểm tra lại kết nối mạng.",
+      });
   }
 };
+
 
 

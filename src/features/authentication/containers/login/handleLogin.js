@@ -3,8 +3,10 @@ import { UserRole } from "@/src/interface/interface";
 import restClient from "@/src/shared/services/RestClient";
 
 export const handleLogin = async (phoneNumber, password, navigation) => {
+    console.log("phone", phoneNumber);
+    console.log("pass",password);
     const result = await restClient.apiClient.authentication(phoneNumber, password);
-    console.log('userRole', result);
+    console.log('user', result);
 
     if (result.success) {
         const userRole = result.data.role;
@@ -31,7 +33,3 @@ export const handleLogin = async (phoneNumber, password, navigation) => {
         });
     }
 };
-
-export const validatePhoneNumer = async() => {
-    
-}

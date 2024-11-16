@@ -3,20 +3,21 @@ import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
 import { handleUpdateUserInfo } from "./handleRegister";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import Styles from "./Styles";
 import { RootStackParamList } from "@/src/shared/routes/LoginNavigation";
 import { StackNavigationProp } from "@react-navigation/stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { RadioButton, Button } from "react-native-paper"; // Radio Button & Button
-import { DatePickerModal } from "react-native-paper-dates"; // Date Picker
+import { RadioButton, Button } from "react-native-paper";
+import { DatePickerModal } from "react-native-paper-dates";
 import { CalendarDate } from "react-native-paper-dates/lib/typescript/Date/Calendar";
+import { RouteProp } from "@react-navigation/native";
 
-type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, "Register">;
+type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
+type RegisterInformationRouteProp = RouteProp<{ RegisterInformation: { userId: string } }, "RegisterInformation">;
 
 const RegisterInformation = () => {
     const navigation = useNavigation<RegisterScreenNavigationProp>();
-    const [imageUri, setImageUri] = useState<string | null>(null); // Avatar
+    const [imageUri, setImageUri] = useState<string | null>(null);
     const [userInfo, setUserInfo] = useState({
         firstName: "",
         lastName: "",
@@ -26,11 +27,13 @@ const RegisterInformation = () => {
         district: "",
         ward: "",
         street: "",
-        avatar: null as string | null, // Avatar
+        avatar: null as string | null,
     });
 
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [date, setDate] = useState<CalendarDate>(undefined);
+    const route = useRoute<RegisterInformationRouteProp>();
+    const userId = route.params?.userId; // Lấy userId từ route.params
 
     const handleChooseImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -63,17 +66,14 @@ const RegisterInformation = () => {
         setUserInfo({ ...userInfo, [field]: value });
     };
 
-    const onConfirmDate = (params: CalendarDate) => {
-        setOpenDatePicker(false);
-        if (params) {
-            const formattedDate = new Date(params).toISOString().split("T")[0]; // Format YYYY-MM-DD
-            setDate(params);
-            handleInputChange("birthDate", formattedDate);
+    const onConfirmDate = (selectedDate: Date | null) => {
+        if (selectedDate) {
+            handleInputChange("birthDate", selectedDate.toISOString().split("T")[0]);
         }
-    };
+        setOpenDatePicker(false);
+    };     
 
     const handleSubmit = async () => {
-        const userId = await AsyncStorage.getItem("userId");
         handleUpdateUserInfo(userId, userInfo, navigation);
     };
 
@@ -123,9 +123,11 @@ const RegisterInformation = () => {
             </View>
 
             <Text style={Styles.textfield}>Ngày sinh:</Text>
-            <Button mode="contained" 
-                    onPress={() => setOpenDatePicker(true)}     
-                    contentStyle={{ backgroundColor: "#4CAF50" }}>
+            <Button
+                mode="contained"
+                onPress={() => setOpenDatePicker(true)}
+                contentStyle={{ backgroundColor: "#4CAF50" }}
+            >
                 Chọn Ngày: {date ? new Date(date).toLocaleDateString("vi-VN") : "Chưa chọn"}
             </Button>
             <DatePickerModal
@@ -134,10 +136,9 @@ const RegisterInformation = () => {
                 visible={openDatePicker}
                 onDismiss={() => setOpenDatePicker(false)}
                 date={date}
-                onConfirm={(params) => onConfirmDate(params.date)}
-                validRange={{ endDate: new Date() }} 
+                onConfirm={(params) => onConfirmDate(params.date ?? null)} // Chuyển undefined thành null
+                validRange={{ endDate: new Date() }}
             />
-
             <Text style={Styles.textfield}>Địa chỉ:</Text>
             <TextInput
                 style={Styles.textinput}
