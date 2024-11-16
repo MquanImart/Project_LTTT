@@ -5,8 +5,6 @@ export const handleRegister = async (phoneNumber, password, navigation) => {
     try {
         const result = await restClient.customerClient.create({phoneNumber,password});
 
-        console.log("result:", result);
-
         if (result.success) {
             navigation.navigate("RegisterInfomation");
         } else {
@@ -19,9 +17,7 @@ export const handleRegister = async (phoneNumber, password, navigation) => {
     } catch (error) {
         console.error("Register error:", error);
 
-        // Kiểm tra lỗi chi tiết
         if (error.response) {
-            // Lỗi từ server
             console.error("Error response:", error.response.data);
             Toast.show({
                 type: "error",
@@ -29,7 +25,6 @@ export const handleRegister = async (phoneNumber, password, navigation) => {
                 text2: error.response.data.message || "Vui lòng thử lại sau.",
             });
         } else {
-            // Lỗi không phải từ server
             Toast.show({
                 type: "error",
                 text1: "Lỗi kết nối với server",
@@ -40,3 +35,53 @@ export const handleRegister = async (phoneNumber, password, navigation) => {
         return { success: false, message: "Đã có lỗi xảy ra khi đăng ký" };
     }
 };
+
+export const handleUpdateUserInfo = async (userId, userInfo, navigation) => {
+  try {
+    const { firstName, lastName, gender, birthDate, province, district, ward, street, avatar } = userInfo;
+
+    const dataUpdate = {
+      personalInfo: {
+        firstName,
+        lastName,
+        gender,
+        birthDate,
+      },
+      address: {
+        province,
+        district,
+        ward,
+        street,
+      },
+      avatar: avatar || "", 
+    };
+
+    const result = await restClient.usersClient.patch(userId, dataUpdate);
+
+    if (result.success) {
+      Toast.show({
+        type: "success",
+        text1: "Cập nhật thành công",
+        text2: "Thông tin cá nhân đã được cập nhật.",
+      });
+
+      navigation.goBack();
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Cập nhật thất bại",
+        text2: result.messages || "Vui lòng thử lại sau.",
+      });
+    }
+  } catch (error) {
+    console.error("Error updating user:", error);
+
+    Toast.show({
+      type: "error",
+      text1: "Lỗi hệ thống",
+      text2: "Vui lòng kiểm tra lại kết nối mạng.",
+    });
+  }
+};
+
+
