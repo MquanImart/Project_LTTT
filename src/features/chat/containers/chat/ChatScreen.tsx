@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, Modal, Alert } from 'react-native';
 import Colors from '@/src/styles/Color';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
@@ -20,6 +20,14 @@ type ChatItem = {
   };
 };
 
+type UserItem = {
+  userId: string;
+  avatar: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+};
+
 type ChatScreenProps = {
   navigation: NativeStackNavigationProp<ChatStackParamList, 'ChatScreen'>;
   route: RouteProp<ChatStackParamList, 'ChatScreen'>;
@@ -27,36 +35,58 @@ type ChatScreenProps = {
 
 const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
   const [chats, setChats] = useState<ChatItem[]>([]);
+  const [users, setUsers] = useState<UserItem[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const fetchChats = async () => {
-    const result = await restClient.chatClient.find({});
-    if (result.success) {
-      setChats(result.resData); 
-    } else {
-      console.error(result.messages);
+    try {
+      const result = await restClient.chatClient.find({});
+      if (result.success) {
+        setChats(result.resData);
+      } else {
+        Alert.alert('Error', result.messages || 'Failed to load chats.');
+      }
+    } catch (error) {
+      console.error('Error fetching chats:', error);
     }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const result = await restClient.chatClientss.find({});
+      if (result.success) {
+        setUsers(result.resData);
+      } else {
+        Alert.alert('Error', result.messages || 'Failed to load users.');
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  const startChat = async (userId: string) => {
+    navigation.navigate('ChatDetailScreen', {
+      contactId: userId,
+      contactName: users.find((user) => user.userId === userId)?.firstName || '',
+      onNewMessage: fetchChats,
+    });
+    setModalVisible(false);
   };
 
   const deleteChat = async (userId: string) => {
     try {
-        console.log('1')
-        const result = await restClient.chatClient.remove(userId);
-        if (result.success) {
-            // Gọi lại fetchChats để cập nhật danh sách chats từ server
-            await fetchChats();
-            console.log('xóa thành công')
-            console.log(chats)
-            Alert.alert("Success", "The chat has been deleted successfully.");
-        } else {
-            Alert.alert("Error", result.messages || "Failed to delete the chat.");
-        }
+      const result = await restClient.chatClient.remove(userId);
+      if (result.success) {
+        Alert.alert('Success', 'Chat deleted successfully.');
+        fetchChats();
+      } else {
+        Alert.alert('Error', result.messages || 'Failed to delete chat.');
+      }
     } catch (error) {
-        console.error("Delete chat error:", error);
-        Alert.alert("Error", "Failed to delete the chat.");
+      console.error('Error deleting chat:', error);
+      Alert.alert('Error', 'An error occurred while deleting the chat.');
     }
-};
-
-
+  };
 
   useEffect(() => {
     fetchChats();
@@ -67,7 +97,11 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
       <TouchableOpacity
         style={styles.chatDetails}
         onPress={() =>
-          navigation.navigate('ChatDetailScreen', { contactId: item.userId, contactName: `${item.firstName} ${item.lastName}` })
+          navigation.navigate('ChatDetailScreen', {
+            contactId: item.userId,
+            contactName: `${item.firstName} ${item.lastName}`,
+            onNewMessage: fetchChats,
+          })
         }
       >
         <Image source={{ uri: item.avatar || 'https://i.imgur.com/Z4MDNDb.jpeg' }} style={styles.avatar} />
@@ -76,21 +110,54 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
           <Text style={styles.chatText}>{item.lastMessage.content}</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => deleteChat(item.userId)} style={styles.deleteIcon}>
-        <Icon name="delete" size={24} color="red" />
+      <TouchableOpacity onPress={() => deleteChat(item.userId)}>
+        <Icon name="delete" size={24} color={Colors.grey} />
       </TouchableOpacity>
     </View>
+  );
+
+  const renderUserItem = ({ item }: { item: UserItem }) => (
+    <TouchableOpacity style={styles.userItem} onPress={() => startChat(item.userId)}>
+      <Image source={{ uri: item.avatar || 'https://i.imgur.com/Z4MDNDb.jpeg' }} style={styles.avatar} />
+      <Text style={styles.userName}>{`${item.firstName} ${item.lastName}`}</Text>
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
       <Header title="Chat" onBackPress={() => navigation.goBack()} />
+      <TouchableOpacity
+        style={styles.newChatButton}
+        onPress={() => {
+          setModalVisible(true);
+          fetchUsers();
+        }}
+      >
+        <Text style={styles.newChatButtonText}>+ New Chat</Text>
+      </TouchableOpacity>
       <FlatList
         data={chats}
         renderItem={renderChatItem}
-        keyExtractor={(item) => item.userId}
+        keyExtractor={(item, index) => item.userId || index.toString()}
         contentContainerStyle={styles.chatList}
       />
+      {/* Modal hiển thị danh sách người dùng */}
+      <Modal visible={modalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Select a user to chat</Text>
+          </View>
+          <FlatList
+            data={users}
+            renderItem={renderUserItem}
+            keyExtractor={(item, index) => item.userId || index.toString()}
+            contentContainerStyle={styles.userList}
+          />
+          <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -112,7 +179,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: Colors.icon,
-    alignSelf: 'stretch',
   },
   chatDetails: {
     flexDirection: 'row',
@@ -137,8 +203,61 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.icon,
   },
-  deleteIcon: {
-    paddingHorizontal: 10,
+  newChatButton: {
+    backgroundColor: Colors.mainColor1,
+    padding: 10,
+    margin: 15,
+    borderRadius: 10,
+  },
+  newChatButtonText: {
+    color: Colors.white,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: Colors.background,
+    padding: 20,
+    paddingTop: 40,
+  },
+  modalHeader: {
+    backgroundColor: Colors.mainColor1,
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.white,
+  },
+  userList: {
+    paddingBottom: 20,
+  },
+  userItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.icon,
+  },
+  userName: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: Colors.text,
+  },
+  closeButton: {
+    backgroundColor: Colors.grey,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  closeButtonText: {
+    color: Colors.white,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 
