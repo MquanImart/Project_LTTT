@@ -27,10 +27,10 @@ const JobCard: React.FC<JobCardProps> = ({ name, image }) => {
 
   return (
     <TouchableOpacity onPress={handlePress} style={styles.card}>
-        <Image source={{ uri: image }} style={styles.image} />
-        <View style={styles.overlay}>
-          <Text style={styles.title}>{name}</Text>
-        </View>
+      <Image source={{ uri: image }} style={styles.image} />
+      <View style={styles.overlay}>
+        <Text style={styles.title}>{name}</Text>
+      </View>
     </TouchableOpacity>
   );
 };

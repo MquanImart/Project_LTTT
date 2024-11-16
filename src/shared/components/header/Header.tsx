@@ -1,23 +1,27 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Colors from '@/src/styles/Color'; // Đảm bảo đường dẫn chính xác
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Colors from '@/src/styles/Color'; // Đảm bảo Colors được định nghĩa đúng
 
-const Header: React.FC<{ title: string; onBackPress: () => void }> = ({ title, onBackPress }) => {
+const Header: React.FC<{ 
+  title: string; 
+  onBackPress?: () => void; 
+  showBackButton?: boolean; 
+}> = ({ title, onBackPress, showBackButton = true }) => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity onPress={onBackPress}>
-        <Icon name="arrow-back" size={24} color="#fff" />
-      </TouchableOpacity>
+      {showBackButton ? (
+        <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
+          <Icon name="arrow-back" size={24} color="#fff" />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.backButtonPlaceholder} /> 
+      )}
+
+      {/* Tiêu đề */}
       <Text style={styles.title}>{title}</Text>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity>
-          <Icon name="search" size={24} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Icon name="filter-list" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
+
+      <View style={styles.rightPlaceholder} />
     </View>
   );
 };
@@ -26,20 +30,29 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: Colors.mainColor1, // Màu nền header
+    justifyContent: 'space-between', 
+    backgroundColor: Colors.mainColor1,
     paddingVertical: 10,
     paddingHorizontal: 15,
     height: 100,
   },
-  title: {
-    fontSize: 24, // Tăng kích thước chữ để nổi bật hơn
-    fontWeight: 'bold',
-    color: '#fff', // Màu chữ trắng
-  },
-  iconContainer: {
-    flexDirection: 'row',
+  backButton: {
+    width: 40, 
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backButtonPlaceholder: {
+    width: 40, 
+  },
+  rightPlaceholder: {
+    width: 40, 
+  },
+  title: {
+    flex: 1,
+    textAlign: 'center', 
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff', 
   },
 });
 
