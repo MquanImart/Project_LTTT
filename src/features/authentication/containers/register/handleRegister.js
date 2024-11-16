@@ -38,15 +38,12 @@ export const handleUpdateUserInfo = async (userId, userInfo, navigation) => {
   try {
       const { firstName, lastName, gender, birthDate, province, district, ward, street, avatar } = userInfo;
 
-      // Chuyển birthDate sang định dạng yyyy-MM-dd
-      const formattedBirthDate = new Date(birthDate).toISOString().split("T")[0]; // Lấy ngày
-
       const dataUpdate = {
           personalInfo: {
               firstName,
               lastName,
               gender,
-              birthDate: formattedBirthDate, // Dạng yyyy-MM-dd
+              birthDate, // Giữ nguyên giá trị chuỗi
           },
           address: {
               province,
@@ -86,6 +83,3 @@ export const handleUpdateUserInfo = async (userId, userInfo, navigation) => {
       });
   }
 };
-
-
-

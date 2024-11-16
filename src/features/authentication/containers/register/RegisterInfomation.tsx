@@ -71,7 +71,7 @@ const RegisterInformation = () => {
             handleInputChange("birthDate", selectedDate.toISOString().split("T")[0]);
         }
         setOpenDatePicker(false);
-    };     
+    };
 
     const handleSubmit = async () => {
         handleUpdateUserInfo(userId, userInfo, navigation);
@@ -128,7 +128,7 @@ const RegisterInformation = () => {
                 onPress={() => setOpenDatePicker(true)}
                 contentStyle={{ backgroundColor: "#4CAF50" }}
             >
-                Chọn Ngày: {date ? new Date(date).toLocaleDateString("vi-VN") : "Chưa chọn"}
+                Chọn Ngày: {userInfo.birthDate ? userInfo.birthDate : "Chưa chọn"}
             </Button>
             <DatePickerModal
                 locale="vi"
