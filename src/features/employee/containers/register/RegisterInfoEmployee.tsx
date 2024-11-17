@@ -8,14 +8,12 @@ import Styles from "../board/Styles";
 import { RadioButton, Button } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
 import { CalendarDate } from "react-native-paper-dates/lib/typescript/Date/Calendar";
-import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
 
 type DetailEmployeeNavigationProp = NativeStackNavigationProp<ManageEmployeeStackParamList, 'Employee'>;
-type RegisterInformationRouteProp = RouteProp<{ RegisterInformation: { userId: string } }, "RegisterInformation">;
 
-const RegisterInformation = () => {
+const RegisterInformationEmployee = () => {
     const navigation = useNavigation<DetailEmployeeNavigationProp>();
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [userInfo, setUserInfo] = useState({
@@ -32,8 +30,8 @@ const RegisterInformation = () => {
 
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [date, setDate] = useState<CalendarDate>(undefined);
-    const route = useRoute<RegisterInformationRouteProp>();
-    const userId = route.params?.userId; // Lấy userId từ route.params
+    const route = useRoute();
+    const { userId } = route.params as { userId: string};
 
     const handleChooseImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -73,9 +71,12 @@ const RegisterInformation = () => {
         setOpenDatePicker(false);
     };
 
-    const handleSubmit =  () => {
+    const handleSubmit =  async () => {
         try {
-            handleUpdateUserInfo(userId, userInfo);
+            const result = await handleUpdateUserInfo(userId, userInfo);
+            if (result.success){
+                navigation.navigate("ChooseJob");
+            }
             console.log("Điều hướng đến ChooseJob");
         } catch (error) {
             console.error("Có lỗi xảy ra khi cập nhật thông tin người dùng:", error);
@@ -170,11 +171,11 @@ const RegisterInformation = () => {
                 onChangeText={(value) => handleInputChange("street", value)}
             />
 
-            <TouchableOpacity style={Styles.btn}>
+            <TouchableOpacity style={Styles.btn} onPress={handleSubmit}>
                 <Text style={{ color: "#fff", fontSize: 16 }}>Cập nhật thông tin cá nhân</Text>
             </TouchableOpacity>
         </View>
     );
 };
 
-export default RegisterInformation;
+export default RegisterInformationEmployee;

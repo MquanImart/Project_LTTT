@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
 
 type DetailEmployeeNavigationProp = NativeStackNavigationProp<ManageEmployeeStackParamList, 'Employee'>;
-const Register = () => {
+const RegisterEmployee = () => {
     const navigation = useNavigation<DetailEmployeeNavigationProp>();
     const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
@@ -53,7 +53,10 @@ const Register = () => {
             return;
         }
 
-        await handleRegister(phoneNumber, password, navigation);
+        const result = await handleRegister(phoneNumber, password);
+        if (result.success){
+            navigation.navigate("RegisterInfoEmployee", {userId: result.userId});
+        }
     };
 
     return (
@@ -127,4 +130,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default RegisterEmployee;

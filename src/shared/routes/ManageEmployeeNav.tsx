@@ -1,7 +1,7 @@
 import BoardEmployee from "@/src/features/employee/containers/board/BoardEmployee";
 import DetailEmployee from "@/src/features/employee/containers/details/DetailEmployee";
-import Register from "@/src/features/employee/containers/register/register";
-import RegisterInformation from "@/src/features/employee/containers/register/RegisterInfo";
+import RegisterEmployee from "@/src/features/employee/containers/register/RegisterEmployee";
+import RegisterInformationEmployee from "@/src/features/employee/containers/register/RegisterInfoEmployee";
 import ChooseJob from "@/src/features/employee/containers/register/ChooseJob";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
@@ -11,8 +11,8 @@ const Stack = createStackNavigator();
 export type ManageEmployeeStackParamList = {
   Employee: undefined;
   Details: undefined;
-  Register: undefined;
-  RegisterInfo: {userId: string};
+  RegisterEmployee: undefined;
+  RegisterInfoEmployee: {userId: string};
   ChooseJob: undefined;
 };
 
@@ -23,8 +23,8 @@ function ManageEmployee() {
         }}>
           <Stack.Screen name="Employee" component={BoardEmployee} />
           <Stack.Screen name="Details" component={DetailEmployee} />
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="RegisterInfo" component={RegisterInformation} />
+          <Stack.Screen name="RegisterEmployee" component={RegisterEmployee} />
+          <Stack.Screen name="RegisterInfoEmployee" component={RegisterInformationEmployee} />
           <Stack.Screen name="ChooseJob" component={ChooseJob} />
     </Stack.Navigator>
   );

@@ -5,7 +5,7 @@ import { Button, List, Provider, Searchbar } from "react-native-paper";
 import styles, { pickerSelectStyles } from "./stylesBoard";
 import RNPickerSelect from 'react-native-picker-select';
 import useBoard, { EmployeeDisplay } from "./useBoard";
-import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
 
@@ -37,7 +37,7 @@ const BoardEmployee = () => {
       };
 
     const handleRegister = () => {
-      navigation.navigate("Register");
+      navigation.navigate("RegisterEmployee");
     }
 
     if (currentEmployees.length <= 0) {return <></>}
