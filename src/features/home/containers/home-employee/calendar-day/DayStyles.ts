@@ -60,19 +60,20 @@ const styles = StyleSheet.create({
     buttonJob: {
       minHeight: 50,
     },
-    cellDays: {
+    cellDay: {
       width: '14.2857%',
       borderWidth: 0.5,
       borderColor: Colors.white,
-      backgroundColor: Colors.lightGrey,
       justifyContent: 'center', alignItems: 'center'
     },
+    cellDays: {
+      backgroundColor: Colors.lightGrey,
+    },
     currDays: {
-      width: '14.2857%',
-      borderWidth: 0.5,
-      borderColor: Colors.white,
       backgroundColor: Colors.mainColor2,
-      justifyContent: 'center', alignItems: 'center'
+    },
+    chooseDay: {
+      backgroundColor: Colors.yellow,
     },
   });
 

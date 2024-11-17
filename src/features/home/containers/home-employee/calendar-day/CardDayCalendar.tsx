@@ -6,31 +6,29 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HomeEmployeeStackParamList } from "@/src/shared/routes/HomeEmployeeNavigation";
 import { useNavigation } from "@react-navigation/native";
+import { JobDay } from "./useCalendarDay";
 
 interface CardDayCalendarProps{
   time: number;
+  listJob: JobDay[];
 }
 
 type HomeEmployeeNavigationProp = StackNavigationProp<HomeEmployeeStackParamList, 'HomeEmplyee'>;
 
-const CardDayCalendar = ({time}: CardDayCalendarProps) => {
+const CardDayCalendar = ({time, listJob}: CardDayCalendarProps) => {
   const navigation = useNavigation<HomeEmployeeNavigationProp>();
-  const data = [
-    {time: '2:30', cv: 'Sửa điện', dc: '122/23A/2 Trường Thọ, Thủ Đức'},
-  ]
-
     return (
     <View style={styles.monthCard}>
         <Text style={styles.time}>{time}:00</Text>
         <View style={styles.boxContent}>
-          {data.map((cv)=> 
-          <TouchableOpacity style={styles.buttonJob}
+          {listJob.map((it)=> 
+          <TouchableOpacity key={it.day} style={styles.buttonJob}
           onPress={()=> navigation.navigate("DetailService")}>
             <Text style={styles.days}
             numberOfLines={1} 
             ellipsizeMode="tail"
             >
-              Thời gian: {cv.time} Công việc: {cv.cv} Địa chỉ: {cv.dc}
+              Thời gian: {it.hour}:{String(it.minute).padStart(2, '0')} Công việc: {it.service.name} Địa chỉ: {it.address}
             </Text>
           </TouchableOpacity>
           )}
