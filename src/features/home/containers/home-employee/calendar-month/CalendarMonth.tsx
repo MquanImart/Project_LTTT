@@ -18,19 +18,19 @@ const CalendarMonth = () => {
     const [month, setMonth] = useState<number>(startMonth);
   return (
     <View style={styles.container}>
-      <Header title={'Lịch làm việc'} onBackPress={()=> {navigation.goBack()}}/>
+      <Header title={'Lịch làm việc'} onBackPress={()=> {navigation.navigate("CalendarYear", {startMonth: startMonth})}}/>
         <TextInput
         placeholder="Search"
         left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="magnify" size={24} />} />}
         style={styles.searchBar}
       />
       <View style={styles.yearContainer}>
-        <IconButton icon="chevron-left" size={24} onPress={() => {navigation.goBack()}} />
+        <IconButton icon="chevron-left" size={24} onPress={()=> {navigation.navigate("CalendarYear", {startMonth: startMonth})}} />
         <Text style={styles.yearText}>{currYear}</Text>
       </View>
       <View style={styles.monthContainer}>
         <IconButton icon="chevron-left" size={24} onPress={() => {setMonth(month - 1)}} />
-        <Text style={styles.yearText}>Tháng {month + 1}</Text>
+        <Text style={styles.yearText}>Tháng {month}</Text>
         <IconButton icon="chevron-right" size={24} onPress={() => {setMonth(month + 1)}} />
       </View>
       <CardMonthCalendar month={month} year={currYear}/>

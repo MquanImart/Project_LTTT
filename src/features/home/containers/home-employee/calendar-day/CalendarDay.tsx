@@ -23,11 +23,12 @@ const CalendarDay = () => {
   const { currDay, currMonth, currYear } = route.params as { currDay: number, currMonth: number, currYear: number};
   const [dayOfWeek, setDayOfWeek] = useState<DayOfWeekProps[]>([]);
   const currDate = new Date();
-  const {} = useCalendarDay();
+  const {filterAllJob} = useCalendarDay({year: currYear, month: currMonth, day: currDay});
 
   useEffect(() => {
     createDayofWeek();
-  }, []);
+  }, [currDay, currMonth, currYear]);
+
   const createDayofWeek = () => {
     const currentDate = new Date(currYear, currMonth - 1, currDay);
     const startOfWeek = new Date(currentDate);
@@ -52,12 +53,13 @@ const CalendarDay = () => {
     <View style={styles.container}>
       <Header title={'Lịch làm việc'} onBackPress={()=> {navigation.goBack()}}/>
       <View style={styles.yearContainer}>
-        <IconButton icon="chevron-left" size={24} onPress={() => {navigation.goBack()}} />
+        <IconButton icon="chevron-left" size={24} onPress={() => {navigation.navigate("CalendarMonth", {startMonth: currMonth, currYear: currYear})}} />
         <Text style={styles.yearText}>Tháng {currMonth}</Text>
       </View>
       <View style={styles.monthContainer}>
         {dayOfWeek.map((day)=> 
-          <TouchableOpacity style={currDate.getDate() === day.day? styles.currDays: styles.cellDays}
+          <TouchableOpacity key={`dow${day.day}`} style={[styles.cellDay, 
+            currDate.getDate() === day.day? styles.currDays: (currDay === day.day?styles.chooseDay:styles.cellDays)]}
           onPress={() => handleChangeDay(day.day)}>
             <Text >{day.dayOfWeek}</Text>
             <Text >{day.day}</Text>
@@ -65,9 +67,12 @@ const CalendarDay = () => {
         )}
       </View>
       <ScrollView contentContainerStyle={styles.calendarContainer}>
-        {Array.from({ length: 24 }, (_, time) => (
-            <CardDayCalendar key={time} time={time}/>
-          ))}
+        {Array.from({ length: 24 }, (_, time) => {
+          const jobInHours = filterAllJob?.filter((it) => it.hour === time);
+          return (
+            <CardDayCalendar key={time} time={time} listJob={jobInHours?jobInHours:[]}/>
+          )
+        })}
       </ScrollView>
     </View>
   );

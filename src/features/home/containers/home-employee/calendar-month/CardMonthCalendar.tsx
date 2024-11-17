@@ -6,58 +6,25 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HomeEmployeeStackParamList } from "@/src/shared/routes/HomeEmployeeNavigation";
 import { useNavigation } from "@react-navigation/native";
+import useCalendarMonth from "./useCalendarMonth";
 
 interface CardMonthCalendarProps{
   month: number; 
   year: number;
 }
 
-interface DayData {
-  day: number;
-  month: number;
-}
+const dayOfWeek = ['Su', 'Mo', 'Tu',  'We',  'Th',  'Fr',  'Sa'];
+const months = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
 
 type HomeEmployeeNavigationProp = StackNavigationProp<HomeEmployeeStackParamList, 'HomeEmplyee'>;
 
 const CardMonthCalendar = ({month, year}: CardMonthCalendarProps) => {
   const navigation = useNavigation<HomeEmployeeNavigationProp>();
-  const dayOfWeek = ['Su', 'Mo', 'Tu',  'We',  'Th',  'Fr',  'Sa'];
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
-  const [dataMonth, setDataMonth] = useState<DayData[]>([]);
 
-  useEffect(()=> {
-    const newData = createMonthData(month, year);
-    
-    setDataMonth(newData);
-  },[month]);
-
-  const createMonthData = (month: number, year: number) => {
-    const data: DayData[] = [];
-
-    const firstDay = new Date(year, month, 1);
-    const firstDayOfMonth = firstDay.getDay();
-    const startDate = new Date(firstDay);
-    startDate.setDate(startDate.getDate() - firstDayOfMonth);
-
-    const lastDayOfMonth = new Date(year, month + 1, 0);
-    const lastDayOfWeek = lastDayOfMonth.getDay();
-    const endDate = new Date(lastDayOfMonth);
-    endDate.setDate(endDate.getDate() + (6 - lastDayOfWeek));
-
-    const currentDate = new Date(startDate);
-    while (currentDate <= endDate) {
-      data.push({
-        day: currentDate.getDate(),
-        month: currentDate.getMonth() + 1, // Chuyển tháng về từ 1 - 12
-      });
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    return data;
-  };
+  const {dataMonth} = useCalendarMonth({month: month, year: year});
 
     return (
     <Card style={styles.monthCard} key={month}>
@@ -78,7 +45,7 @@ const CardMonthCalendar = ({month, year}: CardMonthCalendarProps) => {
               >
                 <Text style={_month.month === month + 1? styles.daysInMonth: styles.days}>{_month.day}</Text>
                 <Text style={[_month.month === month + 1? styles.daysInMonth: styles.days, styles.boxContent]}>
-                  3 công việc
+                  {_month.numJob > 0? `${_month.numJob} công việc`: ""} 
                 </Text>
               </TouchableOpacity>
             </View>

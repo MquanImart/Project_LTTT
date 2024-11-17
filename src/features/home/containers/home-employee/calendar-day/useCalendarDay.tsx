@@ -4,7 +4,7 @@ import restClient from "@/src/shared/services/RestClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-type JobDay = {
+export type JobDay = {
     year: number;
     month: number;
     day: number;
@@ -15,11 +15,15 @@ type JobDay = {
     address: string;
 }
 
-const useCalendarDay = async () => {
+interface useCalendarDayProps{
+    year: number;
+    month: number;
+    day: number;
+}
+const useCalendarDay = ({year, month, day} : useCalendarDayProps) => {
     const [allOrder, setAllOrder] = useState<OrderWithService[]>([]);
-    const userId = await AsyncStorage.getItem("userId");
-    const [allJob, setAllJob] = useState<JobDay[]>();
-
+    const [allJob, setAllJob] = useState<JobDay[]>([]);
+    const [filterAllJob, setFillterAllJob] = useState<JobDay[]>([]);
     useEffect(()=> {    
         getAllOrderById();
     } ,[]);
@@ -28,13 +32,14 @@ const useCalendarDay = async () => {
         if (allOrder.length > 0){
             getDataAllJob();
         }
-    }, [allOrder]);
+    }, [allOrder, day]);
     
     const getAllOrderById = async () => {
+        const userId = await AsyncStorage.getItem("userId");
         const orderClient = restClient.apiClient.service("orders");
         const result = await orderClient.find({employeeId: userId})
         if (result.success){
-            setAllOrder(result.data);
+            setAllOrder(result.resData);
         } else {
             console.log(result.message);
         }
@@ -50,7 +55,6 @@ const useCalendarDay = async () => {
             const hour = date.getHours(); // Giờ (0-23)
             const minute = date.getMinutes(); // Phút (0-59)
             const second = date.getSeconds(); // Giây (0-59)
-
             return {
                 year,
                 month,
@@ -63,9 +67,10 @@ const useCalendarDay = async () => {
             }   
         })
         setAllJob(newAllJob);
+        setFillterAllJob(newAllJob.filter((it)=> it.day === day));
     }
     return {
-        allOrder, allJob
+        allOrder, allJob, filterAllJob
     }
 }
 
