@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
         fontWeight: '400'
     },
     buttonTitle: {
-        backgroundColor: Colors.mainColor2
+        backgroundColor: Colors.mainColor1
     },
     boxSearch: {
         backgroundColor: '#fff'
