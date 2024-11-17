@@ -14,11 +14,10 @@ interface Appointment {
 interface AppointmentCardProps {
   appointment: Appointment;
   onChatPress: () => void;
-  onRebookPress: () => void;
   onReviewPress: () => void;
 }
 
-const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onChatPress, onRebookPress, onReviewPress }) => {
+const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onChatPress, onReviewPress }) => {
   return (
     <View style={styles.card}>
       <Image source={{ uri: appointment.avatar }} style={styles.avatar} />
@@ -36,9 +35,6 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onChatPr
           ))}
         </View>
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.rebookButton} onPress={onRebookPress}>
-            <Text style={styles.buttonText}>Re-Book</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.reviewButton} onPress={onReviewPress}>
             <Text style={styles.buttonText}>Add Review</Text>
           </TouchableOpacity>

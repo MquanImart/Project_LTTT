@@ -10,10 +10,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RadioButton, Button } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
 import { CalendarDate } from "react-native-paper-dates/lib/typescript/Date/Calendar";
-import { RouteProp } from "@react-navigation/native";
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
-type RegisterInformationRouteProp = RouteProp<{ RegisterInformation: { userId: string } }, "RegisterInformation">;
 
 const RegisterInformation = () => {
     const navigation = useNavigation<RegisterScreenNavigationProp>();
@@ -32,8 +30,8 @@ const RegisterInformation = () => {
 
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [date, setDate] = useState<CalendarDate>(undefined);
-    const route = useRoute<RegisterInformationRouteProp>();
-    const userId = route.params?.userId; // Lấy userId từ route.params
+    const route = useRoute();
+    const { userId } = route.params as { userId: string};
 
     const handleChooseImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();

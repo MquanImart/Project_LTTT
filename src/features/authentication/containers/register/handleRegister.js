@@ -65,7 +65,7 @@ export const handleUpdateUserInfo = async (userId, userInfo, navigation) => {
               text2: "Thông tin cá nhân đã được cập nhật.",
           });
 
-          navigation.goBack();
+          navigation.navigate("Login");
       } else {
           Toast.show({
               type: "error",

@@ -6,7 +6,7 @@ import ProgressAppointmentScreen from '@/src/features/appointment/containers/pro
 import CancelAppointmentScreen from '@/src/features/appointment/containers/cancel-appointment/AppointmentCancelCard';
 import ReviewScreen from '@/src/features/appointment/containers/review/ReviewScreen';
 
-export type RootStackParamList = {
+export type AppointmentStackParamList = {
   Complete: undefined;
   Upcoming: undefined;
   Progress: undefined;
@@ -14,7 +14,7 @@ export type RootStackParamList = {
   Review: { appointment: { id: string; name: string; service: string; rating: number; avatar: string } };
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator<AppointmentStackParamList>();
 
 const AppointmentNavigation = () => {
   return (
