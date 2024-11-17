@@ -15,6 +15,7 @@ const JobGrid: React.FC = () => {
       try {
         const serviceClient = restClient.apiClient.service("services");
         const response = await serviceClient.find({});
+        console.log("API Response:", response); // Kiểm tra phản hồi API
         if (response.success) {
           const transformedData = response.resData.map((item: any) => ({
             id: item._id,
@@ -23,6 +24,7 @@ const JobGrid: React.FC = () => {
             createdAt: new Date(item.createdAt),
             updatedAt: new Date(item.updatedAt),
             deletedAt: item.deletedAt ? new Date(item.deletedAt) : undefined,
+
           }));
           setJobs(transformedData);
         } else {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity, Modal, Alert } from 'react-native';
 import Colors from '@/src/styles/Color';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import Header from '@/src/shared/components/header/Header';
 import { ChatStackParamList } from '@/src/shared/routes/ChatNavigation';
 import restClient from '@/src/shared/services/RestClient';
@@ -68,7 +68,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
     navigation.navigate('ChatDetailScreen', {
       contactId: userId,
       contactName: users.find((user) => user.userId === userId)?.firstName || '',
-      onNewMessage: fetchChats,
+      onNewMessage: fetchChats, // Callback to refresh chats
     });
     setModalVisible(false);
   };
@@ -88,9 +88,12 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    fetchChats();
-  }, []);
+  // Use `useFocusEffect` to refresh chats when returning to ChatScreen
+  useFocusEffect(
+    useCallback(() => {
+      fetchChats();
+    }, [])
+  );
 
   const renderChatItem = ({ item }: { item: ChatItem }) => (
     <View style={styles.chatContainer}>
@@ -100,7 +103,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
           navigation.navigate('ChatDetailScreen', {
             contactId: item.userId,
             contactName: `${item.firstName} ${item.lastName}`,
-            onNewMessage: fetchChats,
+            onNewMessage: fetchChats, // Pass fetchChats to refresh data after message send
           })
         }
       >

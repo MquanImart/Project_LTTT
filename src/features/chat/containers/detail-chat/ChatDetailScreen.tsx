@@ -15,41 +15,43 @@ type ChatDetailScreenProps = {
 };
 
 const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }) => {
-  const { contactId, contactName, onNewMessage } = route.params;  // Lấy hàm onNewMessage từ params
+  const { contactId, contactName, onNewMessage } = route.params; // Receive the callback `onNewMessage`
   const [messages, setMessages] = useState<Chat[]>([]);
   const [inputText, setInputText] = useState('');
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  const fetchChatDetails = async () => {
-    if (!currentUserId) return;
-    const params = new URLSearchParams();
-    params.append('participants', currentUserId);
-    params.append('participants', contactId);
-
-    try {
-      const result = await restClient.chatClients.find(params);
-
-      if (result.success) {
-        setMessages(result.resData);
-      } else {
-        console.error(result.messages);
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
-    }
-  };
-
+  // Fetch the current user's ID and chat details
   useEffect(() => {
     const getUserId = async () => {
       const userId = await AsyncStorage.getItem('userId');
       setCurrentUserId(userId);
+      if (userId) {
+        fetchChatDetails(userId);
+      }
     };
     getUserId();
-    fetchChatDetails();
-  }, [currentUserId]);
+  }, []);
+
+  const fetchChatDetails = async (userId: string) => {
+    const params = new URLSearchParams();
+    params.append('participants', userId);
+    params.append('participants', contactId);
+
+    try {
+      const result = await restClient.chatClients.find(params);
+      if (result.success) {
+        setMessages(result.resData);
+      } else {
+        console.error('Error fetching chat details:', result.message);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
 
   const sendMessage = async () => {
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || !currentUserId) return;
+
     const chatRequest = {
       participants: [currentUserId, contactId],
       message: {
@@ -61,16 +63,15 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
 
     try {
       const result = await restClient.chatClient.create(chatRequest);
-
       if (result.success) {
-        setMessages((prev) => [...prev, result.resData]);
+        setMessages((prev) => [...prev, result.resData]); // Update local messages
         setInputText('');
-        onNewMessage();  // Gọi hàm onNewMessage để làm mới danh sách chat trong ChatScreen
+        onNewMessage && onNewMessage(); // Trigger callback to update the previous screen
       } else {
-        console.error(result.messages);
+        console.error('Error sending message:', result.message);
       }
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error('Error sending message:', error);
     }
   };
 
@@ -82,7 +83,7 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
       ]}
     >
       <Text style={styles.messageText}>{item.message.content}</Text>
-      <Text style={styles.messageTime}>{new Date(item.createdAt).toLocaleTimeString()}</Text>
+      <Text style={styles.messageTime}>{new Date(Number(item.createdAt)).toLocaleTimeString()}</Text>
     </View>
   );
 

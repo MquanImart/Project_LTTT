@@ -7,6 +7,7 @@ import restClient from "@/src/shared/services/RestClient";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useFocusEffect } from "@react-navigation/native"; 
 import { RootStackParamList } from "@/src/shared/routes/FavouriteNavigation";
 
 type FavoriteEmployeeScreenProps = {
@@ -18,7 +19,7 @@ const FavoriteEmployeeScreen: React.FC<FavoriteEmployeeScreenProps> = ({ navigat
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  // Lấy userId từ AsyncStorage
+  // Get userId from AsyncStorage
   useEffect(() => {
     const getUserId = async () => {
       const userId = await AsyncStorage.getItem("userId");
@@ -62,11 +63,14 @@ const FavoriteEmployeeScreen: React.FC<FavoriteEmployeeScreenProps> = ({ navigat
     }
   };
 
-  useEffect(() => {
-    if (currentUserId) fetchFavoriteEmployees();
-  }, [currentUserId]);
+  // Refresh favorite employees when screen gains focus
+  useFocusEffect(
+    React.useCallback(() => {
+      if (currentUserId) fetchFavoriteEmployees();
+    }, [currentUserId])
+  );
 
-  const handleChat = (employeeId: string, contactName: string) => {
+  const handleChat = (userId: string, contactName: string) => {
     if (!currentUserId) {
       Toast.show({
         type: "error",
@@ -77,9 +81,9 @@ const FavoriteEmployeeScreen: React.FC<FavoriteEmployeeScreenProps> = ({ navigat
     }
 
     navigation.navigate("ChatDetailScreen", {
-      contactId: employeeId,
+      contactId: userId, // Pass the correct userId
       contactName,
-      onNewMessage: fetchFavoriteEmployees,
+      onNewMessage: fetchFavoriteEmployees, // Pass the fetch function as callback
     });
   };
 
@@ -118,9 +122,7 @@ const FavoriteEmployeeScreen: React.FC<FavoriteEmployeeScreenProps> = ({ navigat
               key={employee.employeeId}
               name={`${employee.firstName} ${employee.lastName}`}
               rating={employee.rating || 0}
-              onChat={() =>
-                handleChat(employee.employeeId, `${employee.firstName} ${employee.lastName}`)
-              }
+              onChat={() => handleChat(employee.userId, `${employee.firstName} ${employee.lastName}`)}
               avatar={employee.avatar}
               onFavorite={() => handleFavorite(employee.employeeId)}
             />
