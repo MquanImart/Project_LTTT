@@ -5,7 +5,7 @@ import AppointmentTabs from '@/src/features/appointment/components/AppointmentTa
 import AppointmentCard from '@/src/features/appointment/components/AppointmentCompleteCard';
 import Colors from '@/src/styles/Color';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '@/src/shared/routes/MainNavigator';
+import { AppointmentStackParamList } from '@/src/shared/routes/AppointmentNavigation';
 
 const appointments = [
   { id: '1', name: 'Olivia Turner, M.D.', service: 'Clean House', rating: 3, avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg' },
@@ -14,7 +14,7 @@ const appointments = [
 
 const CompleteAppointmentScreen = () => {
   const [selectedTab, setSelectedTab] = useState<string>('Complete');
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<AppointmentStackParamList>>();
 
   const handleTabPress = (tab: string) => {
     setSelectedTab(tab);
@@ -30,7 +30,6 @@ const CompleteAppointmentScreen = () => {
           <AppointmentCard
             appointment={item}
             onChatPress={() => console.log('Chat pressed')}
-            onRebookPress={() => console.log('Re-Book pressed')}
             onReviewPress={() => navigation.navigate('Review', { appointment: item })}
           />
         )}

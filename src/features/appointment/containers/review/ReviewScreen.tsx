@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from '@/src/styles/Color';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '@/src/shared/routes/MainNavigator';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import Header from '@/src/shared/components/header/Header';
+import { AppointmentStackParamList } from '@/src/shared/routes/AppointmentNavigation';
 
-type ReviewScreenRouteProp = RouteProp<RootStackParamList, 'Review'>;
+type ReviewScreenRouteProp = RouteProp<AppointmentStackParamList, 'Review'>;
 
 const ReviewScreen: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<AppointmentStackParamList>>();
   const route = useRoute<ReviewScreenRouteProp>();
   const { appointment } = route.params;
   const [rating, setRating] = useState(appointment.rating || 0);
@@ -20,7 +21,7 @@ const ReviewScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Header title="Review" onBackPress={() => console.log('Back Pressed')} />
+      <Header title="Review" onBackPress={() => navigation.goBack()} />
 
       <View style={styles.content}>
         <Image source={{ uri: appointment.avatar }} style={styles.avatar} />

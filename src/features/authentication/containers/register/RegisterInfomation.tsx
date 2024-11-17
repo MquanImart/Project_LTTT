@@ -10,7 +10,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RadioButton, Button } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
 import { CalendarDate } from "react-native-paper-dates/lib/typescript/Date/Calendar";
-import { RouteProp } from "@react-navigation/native";
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
 

@@ -62,6 +62,7 @@ class RestClient {
         // Lưu thông tin người dùng
         await AsyncStorage.setItem("token", response.data.token);
         await AsyncStorage.setItem("userId", response.data.resData._id);
+        await AsyncStorage.setItem("role", response.data.resData.role);
         this.token = response.data.token;
 
         Toast.show({
