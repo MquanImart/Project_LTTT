@@ -36,6 +36,10 @@ const BoardEmployee = () => {
         navigation.navigate("Details");
       };
 
+    const handleRegister = () => {
+      navigation.navigate("Register");
+    }
+
     if (currentEmployees.length <= 0) {return <></>}
     return (
         <Provider>
@@ -44,7 +48,7 @@ const BoardEmployee = () => {
                 <Text style={styles.textTitle}>Nhân viên</Text>
                 <Button 
                 style={styles.buttonTitle}
-                icon="account-plus" mode="contained" onPress={() => console.log('Pressed')}>
+                icon="account-plus" mode="contained" onPress={() =>handleRegister()}>
                   Tạo tài khoản
                 </Button>
             </View>
