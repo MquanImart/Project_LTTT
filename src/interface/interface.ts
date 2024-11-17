@@ -42,7 +42,7 @@ export enum UserRole {
     }; // Optional field
   }
   export interface Service {
-    id: string;
+    _id: string;
     name: string;
     img: string;
     createdAt: {
