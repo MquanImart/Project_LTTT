@@ -2,15 +2,15 @@ import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "@/src/shared/routes/LoginNavigation";
-import Styles from "./Styles";
+import Styles from "../board/Styles";
 import { handleRegister } from "./handleRegister";
 import Toast from "react-native-toast-message";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
 
-type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, "Register">;
+type DetailEmployeeNavigationProp = NativeStackNavigationProp<ManageEmployeeStackParamList, 'Employee'>;
 const Register = () => {
-    const navigation = useNavigation<RegisterScreenNavigationProp>();
+    const navigation = useNavigation<DetailEmployeeNavigationProp>();
     const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");

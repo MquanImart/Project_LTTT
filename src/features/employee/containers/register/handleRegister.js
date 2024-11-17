@@ -34,7 +34,7 @@ export const handleRegister = async (phoneNumber, password, navigation) => {
     }
 };
 
-export const handleUpdateUserInfo = async (userId, userInfo, navigation) => {
+export const handleUpdateUserInfo = async (userId, userInfo) => {
   try {
       const { firstName, lastName, gender, birthDate, province, district, ward, street, avatar } = userInfo;
 
@@ -54,8 +54,6 @@ export const handleUpdateUserInfo = async (userId, userInfo, navigation) => {
           avatar: avatar || "",
       };
 
-      console.log("Payload gửi lên server:", dataUpdate); // Debug để kiểm tra dữ liệu
-
       const result = await restClient.usersClient.patch(userId, dataUpdate);
 
       if (result.success) {
@@ -64,8 +62,6 @@ export const handleUpdateUserInfo = async (userId, userInfo, navigation) => {
               text1: "Cập nhật thành công",
               text2: "Thông tin cá nhân đã được cập nhật.",
           });
-
-          navigation.goBack();
       } else {
           Toast.show({
               type: "error",

@@ -4,19 +4,19 @@ import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
 import { handleUpdateUserInfo } from "./handleRegister";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import Styles from "./Styles";
-import { RootStackParamList } from "@/src/shared/routes/LoginNavigation";
-import { StackNavigationProp } from "@react-navigation/stack";
+import Styles from "../board/Styles";
 import { RadioButton, Button } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
 import { CalendarDate } from "react-native-paper-dates/lib/typescript/Date/Calendar";
 import { RouteProp } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
 
-type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
+type DetailEmployeeNavigationProp = NativeStackNavigationProp<ManageEmployeeStackParamList, 'Employee'>;
 type RegisterInformationRouteProp = RouteProp<{ RegisterInformation: { userId: string } }, "RegisterInformation">;
 
 const RegisterInformation = () => {
-    const navigation = useNavigation<RegisterScreenNavigationProp>();
+    const navigation = useNavigation<DetailEmployeeNavigationProp>();
     const [imageUri, setImageUri] = useState<string | null>(null);
     const [userInfo, setUserInfo] = useState({
         firstName: "",
@@ -73,9 +73,14 @@ const RegisterInformation = () => {
         setOpenDatePicker(false);
     };
 
-    const handleSubmit = async () => {
-        handleUpdateUserInfo(userId, userInfo, navigation);
-    };
+    const handleSubmit =  () => {
+        try {
+            handleUpdateUserInfo(userId, userInfo);
+            console.log("Điều hướng đến ChooseJob");
+        } catch (error) {
+            console.error("Có lỗi xảy ra khi cập nhật thông tin người dùng:", error);
+        }
+    };          
 
     return (
         <View style={Styles.container}>
@@ -165,7 +170,7 @@ const RegisterInformation = () => {
                 onChangeText={(value) => handleInputChange("street", value)}
             />
 
-            <TouchableOpacity style={Styles.btn} onPress={handleSubmit}>
+            <TouchableOpacity style={Styles.btn}>
                 <Text style={{ color: "#fff", fontSize: 16 }}>Cập nhật thông tin cá nhân</Text>
             </TouchableOpacity>
         </View>
