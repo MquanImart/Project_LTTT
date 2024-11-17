@@ -9,6 +9,7 @@
       contactName: string,
       onNewMessage: () => void; // Thêm onNewMessage callback
      };
+  
   };
 
   const Stack = createStackNavigator<ChatStackParamList>();
