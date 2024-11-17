@@ -76,6 +76,7 @@ export enum UserRole {
     userId: string;
     jobIds: string[]; // Array of job IDs
     status: EmployeeStatus;
+    rating?: Number,
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date; // Optional field

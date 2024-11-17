@@ -1,159 +1,216 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { Button } from 'react-native-paper';
-import { DatePickerModal, TimePickerModal } from 'react-native-paper-dates';
-import { CalendarDate } from 'react-native-paper-dates/lib/typescript/Date/Calendar';
-import styles from './Styles';
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { Button } from "react-native-paper";
+import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
+import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import styles from "./Styles";
+import restClient from "@/src/shared/services/RestClient";
 
 interface InputBookJobProps {
-    jobName: string;
-    onSubmit: () => void;
+  jobName: string;
+  jobId: string;
+  onSubmit: () => void;
+  goBack: () => void; // Hàm chuyển về trang trước
 }
 
-const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, onSubmit }) => {
-    const [date, setDate] = useState<CalendarDate>(undefined);
-    const [openDatePicker, setOpenDatePicker] = useState(false);
-    const [time, setTime] = useState<{ hours: number; minutes: number } | undefined>(undefined);
-    const [openTimePicker, setOpenTimePicker] = useState(false);
-    const [address, setAddress] = useState({
-        city: '',
-        district: '',
-        ward: '',
-        street: '',
-    });
-    const [phone, setPhone] = useState('');
+const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, goBack }) => {
+  const [date, setDate] = useState<Date | undefined>();
+  const [time, setTime] = useState<{ hours: number; minutes: number } | undefined>();
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [openTimePicker, setOpenTimePicker] = useState(false);
+  const [address, setAddress] = useState({
+    city: "",
+    district: "",
+    ward: "",
+    street: "",
+  });
+  const [phone, setPhone] = useState("");
 
-    const today = new Date();
+  const today = new Date();
 
-    // Hàm xử lý xác nhận ngày
-    const onConfirmDate = (params: CalendarDate) => {
-        setOpenDatePicker(false);
-        setDate(params);
-    };
+  const validateFields = () => {
+    if (!address.city || !address.district || !address.ward || !address.street) {
+      Toast.show({
+        type: "error",
+        text1: "Thông báo",
+        text2: "Vui lòng điền đầy đủ địa chỉ.",
+        position: "top",
+      });
+      return false;
+    }
+    if (!phone || !/^[0-9]{10,11}$/.test(phone)) {
+      Toast.show({
+        type: "error",
+        text1: "Thông báo",
+        text2: "Số điện thoại phải có từ 10 đến 11 số.",
+        position: "top",
+      });
+      return false;
+    }
+    if (!date) {
+      Toast.show({
+        type: "error",
+        text1: "Thông báo",
+        text2: "Vui lòng chọn ngày.",
+        position: "top",
+      });
+      return false;
+    }
+    if (!time) {
+      Toast.show({
+        type: "error",
+        text1: "Thông báo",
+        text2: "Vui lòng chọn giờ.",
+        position: "top",
+      });
+      return false;
+    }
+    return true;
+  };
 
-    // Hàm xử lý xác nhận giờ
-    const onConfirmTime = (selectedTime: { hours: number; minutes: number }) => {
-        setOpenTimePicker(false);
-        setTime(selectedTime);
-    };
-
-    const validateFields = () => {
-        if (!address.city || !address.district || !address.ward || !address.street) {
-            Alert.alert('Thông báo', 'Vui lòng điền đầy đủ địa chỉ.');
-            return false;
+  const handleBooking = async () => {
+    if (validateFields()) {
+      try {
+        const customerId = await AsyncStorage.getItem("userId");
+        if (!customerId) {
+          Toast.show({
+            type: "error",
+            text1: "Lỗi",
+            text2: "Không tìm thấy thông tin người dùng. Vui lòng đăng nhập lại.",
+            position: "top",
+          });
+          return;
         }
-        if (!phone) {
-            Alert.alert('Thông báo', 'Vui lòng nhập số điện thoại.');
-            return false;
+
+        const startDate = new Date(date!);
+        startDate.setHours(time!.hours, time!.minutes);
+
+        const payload = {
+          jobId,
+          customerId,
+          address: `${address.street}, ${address.ward}, ${address.district}, ${address.city}`,
+          phoneNumber: phone,
+          startDate,
+        };
+
+        const result = await restClient.apiClient.service("orders").create(payload);
+
+        if (result.success) {
+          Toast.show({
+            type: "success",
+            text1: "Thành công",
+            text2: "Đặt dịch vụ thành công!",
+            position: "top",
+          });
+          onSubmit(); // Gọi hàm callback khi đặt lịch thành công
+          resetFields(); // Reset dữ liệu các ô nhập
+          goBack(); // Quay lại trang trước
+        } else {
+          Toast.show({
+            type: "error",
+            text1: "Thất bại",
+            text2: result.messages || "Không thể đặt dịch vụ.",
+            position: "top",
+          });
         }
-        if (!date) {
-            Alert.alert('Thông báo', 'Vui lòng chọn ngày.');
-            return false;
-        }
-        if (!time) {
-            Alert.alert('Thông báo', 'Vui lòng chọn giờ.');
-            return false;
-        }
-        return true;
-    };
+      } catch (error) {
+        Toast.show({
+          type: "error",
+          text1: "Lỗi",
+          text2: "Đã xảy ra lỗi khi đặt dịch vụ.",
+          position: "top",
+        });
+      }
+    }
+  };
 
-    const handleBooking = () => {
-        if (validateFields()) {
-            Alert.alert(
-                'Xác nhận',
-                'Bạn có chắc chắn muốn đặt dịch vụ?',
-                [
-                    { text: 'Hủy', style: 'cancel' },
-                    { text: 'Xác nhận', onPress: onSubmit },
-                ]
-            );
-        }
-    };
+  const resetFields = () => {
+    setDate(undefined);
+    setTime(undefined);
+    setAddress({ city: "", district: "", ward: "", street: "" });
+    setPhone("");
+  };
 
-    return (
-        <View style={styles.body}>
-            <Text style={styles.jobTitle}>Dịch vụ: {jobName}</Text>
+  return (
+    <View style={styles.body}>
+      <Text style={styles.jobTitle}>Dịch vụ: {jobName}</Text>
 
-            <Text style={styles.label}>Địa chỉ:</Text>
-            <View style={styles.addressContainer}>
-                <TextInput
-                    placeholder="Tỉnh/TP"
-                    style={styles.addressInput}
-                    value={address.city}
-                    onChangeText={(text) => setAddress({ ...address, city: text })}
-                />
-                <TextInput
-                    placeholder="Quận/Huyện"
-                    style={styles.addressInput}
-                    value={address.district}
-                    onChangeText={(text) => setAddress({ ...address, district: text })}
-                />
-                <TextInput
-                    placeholder="Phường/Xã"
-                    style={styles.addressInput}
-                    value={address.ward}
-                    onChangeText={(text) => setAddress({ ...address, ward: text })}
-                />
-                <TextInput
-                    placeholder="Số nhà"
-                    style={styles.addressInput}
-                    value={address.street}
-                    onChangeText={(text) => setAddress({ ...address, street: text })}
-                />
-            </View>
+      <Text style={styles.label}>Địa chỉ:</Text>
+      <View style={styles.addressContainer}>
+        <TextInput
+          placeholder="Tỉnh/TP"
+          style={styles.addressInput}
+          value={address.city}
+          onChangeText={(text) => setAddress({ ...address, city: text })}
+        />
+        <TextInput
+          placeholder="Quận/Huyện"
+          style={styles.addressInput}
+          value={address.district}
+          onChangeText={(text) => setAddress({ ...address, district: text })}
+        />
+        <TextInput
+          placeholder="Phường/Xã"
+          style={styles.addressInput}
+          value={address.ward}
+          onChangeText={(text) => setAddress({ ...address, ward: text })}
+        />
+        <TextInput
+          placeholder="Số nhà"
+          style={styles.addressInput}
+          value={address.street}
+          onChangeText={(text) => setAddress({ ...address, street: text })}
+        />
+      </View>
 
-            <Text style={styles.label}>Số điện thoại:</Text>
-            <TextInput
-                placeholder="Số điện thoại"
-                keyboardType="phone-pad"
-                style={styles.input}
-                value={phone}
-                onChangeText={setPhone}
-            />
+      <Text style={styles.label}>Số điện thoại:</Text>
+      <TextInput
+        placeholder="Số điện thoại"
+        keyboardType="phone-pad"
+        style={styles.input}
+        value={phone}
+        onChangeText={setPhone}
+      />
 
-            <Text style={styles.label}>Thời gian:</Text>
-            <View style={styles.timeContainer}>
-                <Button mode="contained" onPress={() => setOpenDatePicker(true)}>
-                    Chọn Ngày: {date ? new Date(date).toLocaleDateString('vi-VN') : 'Chưa chọn'}
-                </Button>
-                <DatePickerModal
-                    locale="vi"
-                    mode="single"
-                    visible={openDatePicker}
-                    onDismiss={() => setOpenDatePicker(false)}
-                    date={date}
-                    onConfirm={(params) => onConfirmDate(params.date)}
-                    validRange={{ startDate: today }}
-                />
+      <Text style={styles.label}>Thời gian:</Text>
+      <View style={styles.timeContainer}>
+        <Button mode="contained" onPress={() => setOpenDatePicker(true)}>
+          Chọn Ngày: {date ? date.toLocaleDateString("vi-VN") : "Chưa chọn"}
+        </Button>
+        <DatePickerModal
+          locale="vi"
+          mode="single"
+          visible={openDatePicker}
+          onDismiss={() => setOpenDatePicker(false)}
+          date={date}
+          onConfirm={(params) => {
+            setDate(params.date);
+            setOpenDatePicker(false);
+          }}
+          validRange={{ startDate: today }}
+        />
 
-                <Button mode="contained" onPress={() => setOpenTimePicker(true)}>
-                    Chọn Giờ: {time ? `${time.hours}:${time.minutes}` : 'Chưa chọn'}
-                </Button>
-                <TimePickerModal
-                    visible={openTimePicker}
-                    onDismiss={() => setOpenTimePicker(false)}
-                    onConfirm={onConfirmTime}
-                    hours={time ? time.hours : 0}
-                    minutes={time ? time.minutes : 0}
-                />
-            </View>
+        <Button mode="contained" onPress={() => setOpenTimePicker(true)}>
+          Chọn Giờ: {time ? `${time.hours}:${time.minutes}` : "Chưa chọn"}
+        </Button>
+        <TimePickerModal
+          visible={openTimePicker}
+          onDismiss={() => setOpenTimePicker(false)}
+          onConfirm={(params) => {
+            setTime({ hours: params.hours, minutes: params.minutes });
+            setOpenTimePicker(false);
+          }}
+          hours={time ? time.hours : today.getHours()}
+          minutes={time ? time.minutes : today.getMinutes()}
+        />
+      </View>
 
-            <Text style={styles.label}>Ghi chú:</Text>
-            <TextInput
-                placeholder="Ghi chú"
-                multiline
-                style={styles.noteInput}
-            />
-            <View style={styles.conteainerpass}>
-                <TouchableOpacity
-                    style={styles.btn}
-                    onPress={handleBooking}
-                >
-                    <Text style={styles.testpass}>Đặt dịch vụ</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
+      <TouchableOpacity style={styles.btn} onPress={handleBooking}>
+        <Text style={styles.testpass}>Đặt dịch vụ</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 export default InputBookJob;
