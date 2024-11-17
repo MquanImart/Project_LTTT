@@ -58,7 +58,7 @@ const ServicesScreen = () => {
         const response = await serviceClient.find({});
         if (response.success) {
           const transformedData = response.resData.map((item: any) => ({
-            id: item._id,
+            _id: item._id,
             name: item.name,
             img: item.img || "",
             createdAt: new Date(item.createdAt),
@@ -159,11 +159,11 @@ const ServicesScreen = () => {
     try {
       const updatedData = { name: newServiceName, img: selectedImage };
       const serviceClient = restClient.apiClient.service("services");
-      const response = await serviceClient.patch(editingService.id, updatedData);
+      const response = await serviceClient.patch(editingService._id, updatedData);
 
       if (response.success) {
         setServices((prev) =>
-          prev.map((item) => (item.id === editingService.id ? { ...item, ...updatedData } : item))
+          prev.map((item) => (item._id === editingService._id ? { ...item, ...updatedData } : item))
         );
         toggleEditModal(null);
         Toast.show({
@@ -193,10 +193,10 @@ const ServicesScreen = () => {
 
     try {
       const serviceClient = restClient.apiClient.service("services");
-      const response = await serviceClient.remove(serviceToDelete.id);
+      const response = await serviceClient.remove(serviceToDelete._id);
 
       if (response.success) {
-        setServices((prev) => prev.filter((item) => item.id !== serviceToDelete.id));
+        setServices((prev) => prev.filter((item) => item._id !== serviceToDelete._id));
         Toast.show({
           type: "success",
           text1: "Thành công",

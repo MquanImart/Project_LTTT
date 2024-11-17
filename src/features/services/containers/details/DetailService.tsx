@@ -84,7 +84,6 @@ const DetailService = () => {
             <View style={styles.mainContainer}>
                 <View style={styles.cardLabel}>
                     <Icon name="access-time" size={24} color="#000" style={{marginHorizontal: 5}}/>
-                    <Text>{order.startDate.toDateString()}</Text>
                 </View>
                 <View style={styles.cardLabel}>
                     <Icon name="place" size={24} color="#000" style={{marginHorizontal: 5}}/>

@@ -46,7 +46,9 @@ const useCalendarDay = ({year, month, day} : useCalendarDayProps) => {
     }
 
     const getDataAllJob = () => {
+        console.log('all order', allOrder)
         const newAllJob : JobDay[] = allOrder.map((item)=> {
+            console.log('date', item.order.startDate.$date)
             const timestamp = item.order.startDate.$date;
             const date = new Date(timestamp);
             const day = date.getDate(); // Ngày (1-31)

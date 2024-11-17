@@ -26,7 +26,7 @@ const JobCard: React.FC<JobCardProps> = ({ service }) => {
     navigation.navigate("BookJob", {
       jobName: service.name,
       jobImage: service.img,
-      jobId: service.id, // Truyền jobId
+      jobId: service._id, // Truyền jobId
     });
   };
 
