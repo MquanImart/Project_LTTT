@@ -10,22 +10,38 @@ const Stack = createStackNavigator();
 
 export type HomeEmployeeStackParamList = {
   HomeEmplyee: undefined;
-  CalendarYear: {startMonth: number};
-  CalendarMonth: {startMonth: number, currYear: number};
-  CalendarDay: {currDay: number, currMonth: number, currYear: number};
+  CalendarYear: { startMonth: number };
+  CalendarMonth: { startMonth: number, currYear: number };
+  CalendarDay: { currDay: number, currMonth: number, currYear: number };
   DetailService: undefined;
 };
 
 function HomeEmployeeNavigation() {
+  const currentDate = new Date();
+  const currDay = currentDate.getDate();
+  const currMonth = currentDate.getMonth() + 1; // Month is zero-indexed, so add 1
+  const currYear = currentDate.getFullYear();
+
   return (
-    <Stack.Navigator initialRouteName="HomeCustomer" screenOptions={{
-           headerShown: false,
-        }}>
-          <Stack.Screen name="HomeCustomer" component={HomeEmplyee} />
-          <Stack.Screen name="CalendarYear" component={CalendarYear} />
-          <Stack.Screen name="CalendarMonth" component={CalendarMonth} />
-          <Stack.Screen name="CalendarDay" component={CalendarDay} />
-          <Stack.Screen name="DetailService" component={DetailService} />
+    <Stack.Navigator
+      initialRouteName="CalendarDay"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="HomeCustomer" component={HomeEmplyee} />
+      <Stack.Screen name="CalendarYear" component={CalendarYear} />
+      <Stack.Screen name="CalendarMonth" component={CalendarMonth} />
+      <Stack.Screen
+        name="CalendarDay"
+        initialParams={{
+          currDay,
+          currMonth,
+          currYear,
+        }}
+        component={CalendarDay}
+      />
+      <Stack.Screen name="DetailService" component={DetailService} />
     </Stack.Navigator>
   );
 }

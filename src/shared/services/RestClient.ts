@@ -2,8 +2,8 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 class RestClient {
-  // baseURL: string = "http://192.168.1.22:8080"; // Điều chỉnh URL khi build app
-  baseURL: string = "http://localhost:8080"; // Điều chỉnh URL khi build app
+  baseURL: string = "http://192.168.1.60:8080"; // Điều chỉnh URL khi build app
+  //baseURL: string = "http://localhost:8080"; // Điều chỉnh URL khi build app
   path: string = "";
   token: string = "";
 
@@ -11,9 +11,15 @@ class RestClient {
     const client = new RestClient();
     client.path = path;
     client.token = this.token;
+    if (this.token === ""){
+      this.setNewToken();
+    }
     return client;
   }
 
+  private async setNewToken() {
+    this.token = await AsyncStorage.getItem("token") as string;
+  }
   private async loadToken() {
     this.token = (await AsyncStorage.getItem("token")) || "";
   }
