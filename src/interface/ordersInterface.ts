@@ -1,4 +1,4 @@
-import { Order, Service, User } from "./interface";
+import { Employee, Order, Service, User } from "./interface";
 
 export interface ScheduleOrder{ 
     day: string;
@@ -17,4 +17,5 @@ export interface OrderWithService {
   service: Service;
   employee: User;
   customer: User;
+  employeeM: Employee;
 }

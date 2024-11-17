@@ -12,7 +12,7 @@ const ReviewScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<AppointmentStackParamList>>();
   const route = useRoute<ReviewScreenRouteProp>();
   const { appointment } = route.params;
-  const [rating, setRating] = useState(appointment.rating || 0);
+  const [rating, setRating] = useState(appointment.employeeM.rating || 0);
   const [comment, setComment] = useState('');
 
   const handleStarPress = (value: number) => {
@@ -21,12 +21,12 @@ const ReviewScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Header title="Review" onBackPress={() => navigation.goBack()} />
+      <Header title="Đánh giá" onBackPress={() => navigation.goBack()} />
 
       <View style={styles.content}>
-        <Image source={{ uri: appointment.avatar }} style={styles.avatar} />
-        <Text style={styles.name}>{appointment.name}</Text>
-        <Text style={styles.service}>{appointment.service}</Text>
+        <Image source={{ uri: appointment.employee.avatar }} style={styles.avatar} />
+        <Text style={styles.name}>{`${appointment.employee.personalInfo.firstName} ${appointment.employee.personalInfo.lastName}`}</Text>
+        <Text style={styles.service}>{appointment.service.name}</Text>
         <View style={styles.ratingContainer}>
           {[1, 2, 3, 4, 5].map((value) => (
             <TouchableOpacity key={value} onPress={() => handleStarPress(value)}>
@@ -40,14 +40,14 @@ const ReviewScreen: React.FC = () => {
         </View>
         <TextInput
           style={styles.commentInput}
-          placeholder="Enter Your Comment Here..."
+          placeholder="Nhập đánh giá của bạn..."
           placeholderTextColor={Colors.mainColor1}
           value={comment}
           onChangeText={setComment}
           multiline
         />
         <TouchableOpacity style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Add Review</Text>
+          <Text style={styles.submitButtonText}>Đánh giá</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  
 });
 
 export default ReviewScreen;

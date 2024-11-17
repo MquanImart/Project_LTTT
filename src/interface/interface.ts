@@ -21,7 +21,7 @@ export enum UserRole {
   }
   
   export interface User {
-    id: string;
+    _id: string;
     account: {
       phoneNumber: string;
       password: string;
@@ -68,7 +68,7 @@ export enum UserRole {
   }
   
   export interface Order {
-    id: string;
+    _id: string;
     state: OrderState;
     jobId: string;
     customerId: string;
@@ -93,10 +93,11 @@ export enum UserRole {
   }
   
   export interface Employee {
+    _id: string;
     userId: string;
     jobIds: string[]; // Array of job IDs
     status: EmployeeStatus;
-    rating?: Number,
+    rating?: number,
     createdAt: {
       $date: number;
     };
@@ -130,7 +131,7 @@ export enum UserRole {
   }
   
   export interface Chat {
-    id: string;
+    _id: string;
     participants: [string, string]; // Array containing two user IDs
     message: {
       type: MessageType;
@@ -142,7 +143,7 @@ export enum UserRole {
     senderId: string;
   }
   export interface Bill {
-    id: string;
+    _id: string;
     jobs: JobDetail[];
     status: string; // Da thanh toan , chua thanh toans
     createAt: {

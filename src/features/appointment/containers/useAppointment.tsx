@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const enum StateOrder {
-    Pending,       // 0
-    InProgress,    // 1
-    Completed,     // 2
-    Canceled       // 3
+    Pending = "Pending", 
+    InProgress = "InProgress",   
+    Completed = "Completed",     
+    Canceled = "Canceled"   
 }
 
 const useAppointment = () => {
+    const [role, setRole] = useState<string | null>(null);
     const [allOrder, setAllOrder] = useState<OrderWithService[]>([]);
     const [completeAppoint, setComplelteAppoint] = useState<OrderWithService[]>([]);
     const [upcomingAppoint, setUpcomingAppoint] = useState<OrderWithService[]>([]);
@@ -23,13 +24,17 @@ const useAppointment = () => {
     
     useEffect(()=> {
         if (allOrder.length > 0){
-            setComplelteAppoint(allOrder.filter((it)=> it.order.state === "Completed"))
+            setComplelteAppoint(allOrder.filter((it)=> it.order.state === "Completed"));
+            setUpcomingAppoint(allOrder.filter((it)=> it.order.state === "Pending"))
+            setProgressAppoint(allOrder.filter((it)=> it.order.state === "InProgress"))
+            setCancelAppoint(allOrder.filter((it)=> it.order.state === "Canceled"))
         }
     }, [allOrder]);
 
     const getAllOrderById = async () => {
         const userId = await AsyncStorage.getItem("userId");
         const role = await AsyncStorage.getItem("role");
+        setRole(role);
         const orderClient = restClient.apiClient.service("orders");
         let result;
         if (role === "Admin"){
@@ -46,7 +51,8 @@ const useAppointment = () => {
         }
     }
     return {
-        
+        completeAppoint, upcomingAppoint, progressAppoint, cancelAppoint,
+        role
     }
 }
 

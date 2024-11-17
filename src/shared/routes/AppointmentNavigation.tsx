@@ -3,15 +3,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 import CompleteAppointmentScreen from '@/src/features/appointment/containers/complete-appointment/CompleteAppointmentScreen';
 import UpcomingAppointmentScreen from '@/src/features/appointment/containers/upcoming-appointment/UpcomingAppointmentScreen';
 import ProgressAppointmentScreen from '@/src/features/appointment/containers/progress-appointment/ProgressAppointmentScreen';
-import CancelAppointmentScreen from '@/src/features/appointment/containers/cancel-appointment/AppointmentCancelCard';
+import CancelAppointmentScreen from '@/src/features/appointment/containers/cancel-appointment/CancelAppointmentScreen';
 import ReviewScreen from '@/src/features/appointment/containers/review/ReviewScreen';
+import { OrderWithService } from '@/src/interface/ordersInterface';
 
 export type AppointmentStackParamList = {
   Complete: undefined;
   Upcoming: undefined;
   Progress: undefined;
   Cancel: undefined;
-  Review: { appointment: { id: string; name: string; service: string; rating: number; avatar: string } };
+  Review: { appointment: OrderWithService };
 };
 
 const Stack = createStackNavigator<AppointmentStackParamList>();
