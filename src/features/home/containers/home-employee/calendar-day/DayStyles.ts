@@ -1,3 +1,4 @@
+import Colors from '@/src/styles/Color';
 import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     container: {
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
       marginVertical: 10,
     },
     monthContainer: {
-      width: '90%',
+      width: '100%',
       alignSelf: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -59,8 +60,19 @@ const styles = StyleSheet.create({
     buttonJob: {
       minHeight: 50,
     },
+    cellDays: {
+      width: '14.2857%',
+      borderWidth: 0.5,
+      borderColor: Colors.white,
+      backgroundColor: Colors.lightGrey,
+      justifyContent: 'center', alignItems: 'center'
+    },
     currDays: {
-      color: 'green'
+      width: '14.2857%',
+      borderWidth: 0.5,
+      borderColor: Colors.white,
+      backgroundColor: Colors.mainColor2,
+      justifyContent: 'center', alignItems: 'center'
     },
   });
 

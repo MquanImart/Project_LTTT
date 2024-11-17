@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { IconButton, TextInput } from 'react-native-paper';
 import styles from './DayStyles';
 import MaterialCommunityIcons from '@expo/vector-icons/build/MaterialCommunityIcons';
@@ -8,43 +8,60 @@ import { HomeEmployeeStackParamList } from '@/src/shared/routes/HomeEmployeeNavi
 import { StackNavigationProp } from '@react-navigation/stack';
 import CardDayCalendar from './CardDayCalendar';
 import Header from '@/src/shared/components/header/Header';
+import useCalendarDay from './useCalendarDay';
 
 type HomeEmployeeNavigationProp = StackNavigationProp<HomeEmployeeStackParamList, 'CalendarMonth'>;
 
-const dayOfWeek = [
-  { dayOfWeek: 'Su', day: 27 },
-  { dayOfWeek: 'Mo', day: 28 },
-  { dayOfWeek: 'Tu', day: 29 },
-  { dayOfWeek: 'We', day: 30 },
-  { dayOfWeek: 'Th', day: 31 },
-  { dayOfWeek: 'Fr', day: 1 },
-  { dayOfWeek: 'Sa', day: 2 }
-];
+type DayOfWeekProps = {
+  dayOfWeek: string;
+  day: number;
+}
 
 const CalendarDay = () => {
   const navigation = useNavigation<HomeEmployeeNavigationProp>();
   const route = useRoute();
   const { currDay, currMonth, currYear } = route.params as { currDay: number, currMonth: number, currYear: number};
+  const [dayOfWeek, setDayOfWeek] = useState<DayOfWeekProps[]>([]);
   const currDate = new Date();
+  const {} = useCalendarDay();
 
+  useEffect(() => {
+    createDayofWeek();
+  }, []);
+  const createDayofWeek = () => {
+    const currentDate = new Date(currYear, currMonth - 1, currDay);
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+  
+    const newDayOfWeek = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(startOfWeek);
+      date.setDate(startOfWeek.getDate() + i);
+      return {
+        dayOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][i],
+        day: date.getDate(),
+      };
+    });
+    setDayOfWeek(newDayOfWeek)
+  }
+
+  const handleChangeDay = (day: number) => {
+    navigation.navigate("CalendarDay", { currDay: day, currMonth: currMonth, currYear: currYear })
+  }
+  if (dayOfWeek.length <= 0) return <ActivityIndicator size="large" color="#0000ff" />
   return (
     <View style={styles.container}>
       <Header title={'Lịch làm việc'} onBackPress={()=> {navigation.goBack()}}/>
-        <TextInput
-        placeholder="Search"
-        left={<TextInput.Icon icon={() => <MaterialCommunityIcons name="magnify" size={24} />} />}
-        style={styles.searchBar}
-      />
       <View style={styles.yearContainer}>
         <IconButton icon="chevron-left" size={24} onPress={() => {navigation.goBack()}} />
-        <Text style={styles.yearText}>Tháng {currMonth + 1}</Text>
+        <Text style={styles.yearText}>Tháng {currMonth}</Text>
       </View>
       <View style={styles.monthContainer}>
         {dayOfWeek.map((day)=> 
-          <View>
-            <Text style={currDate.getDate() === day.day? styles.currDays: {}}>{day.dayOfWeek}</Text>
-            <Text style={currDate.getDate() === day.day? styles.currDays: {}}>{day.day}</Text>
-          </View>
+          <TouchableOpacity style={currDate.getDate() === day.day? styles.currDays: styles.cellDays}
+          onPress={() => handleChangeDay(day.day)}>
+            <Text >{day.dayOfWeek}</Text>
+            <Text >{day.day}</Text>
+          </TouchableOpacity>
         )}
       </View>
       <ScrollView contentContainerStyle={styles.calendarContainer}>

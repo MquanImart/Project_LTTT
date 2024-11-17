@@ -15,7 +15,9 @@ export enum UserRole {
     firstName: string;
     lastName: string;
     gender: boolean;
-    birthDate: Date;
+    birthDate: {
+      $date: number;
+    };
   }
   
   export interface User {
@@ -29,17 +31,29 @@ export enum UserRole {
     avatar: string;
     role: UserRole;
     favoriteEmployees: string[]; // Array of employee IDs the user likes
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date; // Optional field
+    createdAt: {
+      $date: number;
+    };
+    updatedAt: {
+      $date: number;
+    };
+    deletedAt?: {
+      $date: number;
+    }; // Optional field
   }
   export interface Service {
     id: string;
     name: string;
     img: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date; // Optional field
+    createdAt: {
+      $date: number;
+    };
+    updatedAt: {
+      $date: number;
+    };
+    deletedAt?: {
+      $date: number;
+    }; // Optional field
   }
   export enum OrderState {
     Pending = "Pending",
@@ -60,9 +74,15 @@ export enum UserRole {
     customerId: string;
     employeeId: string;
     cancelReason?: string; // Optional field
-    startDate: Date;
-    updateDate?: Date; // Optional field
-    finishDate?: Date; // Optional field
+    startDate: {
+      $date: number;
+    };
+    updateDate?: {
+      $date: number;
+    }; // Optional field
+    finishDate?: {
+      $date: number;
+    }; // Optional field
     address: string;
     phoneNumber: string;
     jobDetail: JobDetail;
@@ -77,9 +97,15 @@ export enum UserRole {
     jobIds: string[]; // Array of job IDs
     status: EmployeeStatus;
     rating?: Number,
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date; // Optional field
+    createdAt: {
+      $date: number;
+    };
+    updatedAt: {
+      $date: number;
+    };
+    deletedAt?: {
+      $date: number;
+    }; // Optional field
   }
   export interface Review {
     reviewId: string;
@@ -87,9 +113,15 @@ export enum UserRole {
     customerId: string;
     content: string;
     rating: number;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date; // Optional field
+    createdAt: {
+      $date: number;
+    };
+    updatedAt: {
+      $date: number;
+    };
+    deletedAt?: {
+      $date: number;
+    }; // Optional field
   }
   export enum MessageType {
     Text = "Text",
@@ -104,14 +136,18 @@ export enum UserRole {
       type: MessageType;
       content: string;
     };
-    createdAt: Date;
+    createdAt: {
+      $date: number;
+    };
     senderId: string;
   }
   export interface Bill {
     id: string;
     jobs: JobDetail[];
     status: string; // Da thanh toan , chua thanh toans
-    createAt: Date;
+    createAt: {
+      $date: number;
+    };
     idCustomer: string;
     idEmployee: String;
   }
