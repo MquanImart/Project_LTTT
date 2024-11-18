@@ -16,7 +16,7 @@ const ChooseJob = () => {
     const [services, setServices] = useState<Service[]>([]);
     const [choose, setChoose] = useState<Service[]>([]);
     const route = useRoute();
-    const { userId } = route.params as { userId: string};
+    const { userId } = route.params as { userId: string };
 
     useEffect(() => {
         getServices();
@@ -48,7 +48,7 @@ const ChooseJob = () => {
 
     const handleSubmit = async () => {
         const jobIds = choose.map((item) => item._id);
-    
+
         if (jobIds.length === 0) {
             Toast.show({
                 type: "info",
@@ -57,7 +57,7 @@ const ChooseJob = () => {
             });
             return;
         }
-    
+
         try {
             const employeeClient = restClient.apiClient.service("/employees");
             const result = await employeeClient.create({
@@ -65,14 +65,17 @@ const ChooseJob = () => {
                 jobIds,
                 status: EmployeeStatus.Active,
             });
-    
+
             if (result.success) {
                 Toast.show({
                     type: "success",
                     text1: "Thành công",
                     text2: "Nhân viên được tạo thành công.",
                 });
-                navigation.navigate("Employee");
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Employee' }],
+                });
             } else {
                 Toast.show({
                     type: "error",
@@ -87,7 +90,7 @@ const ChooseJob = () => {
                 text2: "Không thể tạo nhân viên. Vui lòng thử lại sau.",
             });
         }
-    };    
+    };
 
     return (
         <View style={Styles.container}>

@@ -7,15 +7,8 @@ import useBoard, { EmployeeDisplay } from "./useBoard";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
-import Dropdown from "@/src/shared/components/dropdown/Dropdown";
 
 type DetailEmployeeNavigationProp = NativeStackNavigationProp<ManageEmployeeStackParamList, 'Details'>;
-
-const filterOptions = [
-  { label: 'A->Z', value: '1' },
-  { label: 'Z->A', value: '2' },
-  { label: 'Ngày tạo', value: '3' },
-];
 
 const BoardEmployee = () => {
   const navigation = useNavigation<DetailEmployeeNavigationProp>();
@@ -27,7 +20,7 @@ const BoardEmployee = () => {
 
   useEffect(() => {
     fetchEmployees({ page: currentPage, searchQuery, filterType });
-  }, [currentPage, filterType]);
+  }, [currentPage, filterType, navigation]);
 
   const handleNextPage = () => {
     if (currentPage + 1 < totalPages) {

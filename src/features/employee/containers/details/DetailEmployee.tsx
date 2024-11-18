@@ -32,6 +32,32 @@ const DetailEmployee = () => {
     navigation.goBack();
   };
 
+  const deleteEmployee = async (employeeId: string) => {
+    try {
+      const employeeService = restClient.apiClient.service("/employees");
+      const updateResult = await employeeService.patch(employeeId, { status: "OnLeave" });
+  
+      if (updateResult.success) {
+        const userService = restClient.apiClient.service("/users");
+        const deleteResult = await userService.patch(employeeId, { deletedAt: new Date().toISOString() });
+  
+        if (deleteResult.success) {
+          navigation.reset({
+            index: 0, 
+            routes: [{ name: 'Employee' }],
+          });
+          
+        } else {
+          console.error("Xóa người dùng thất bại:", deleteResult.message);
+        }
+      } else {
+        console.error("Cập nhật trạng thái nhân viên thất bại:", updateResult.message);
+      }
+    } catch (error) {
+      console.error("Lỗi khi sa thải nhân viên:", error);
+    }
+  };  
+
   const fetchServices = async (jobIds: string[]) => {
     try {
       if (!jobIds || jobIds.length === 0) {
@@ -211,7 +237,7 @@ const DetailEmployee = () => {
             style={{ backgroundColor: "#ff5c5c", alignSelf: "center" }}
             labelStyle={{ color: "#fff" }}
             mode="contained"
-            onPress={() => console.log("Sa thải")}
+            onPress={() => deleteEmployee(employeeId)}
           >
             Sa thải
           </Button>
