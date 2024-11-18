@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import Colors from '@/src/styles/Color';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { RouteProp } from '@react-navigation/native';
@@ -19,6 +19,9 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
   const [messages, setMessages] = useState<Chat[]>([]);
   const [inputText, setInputText] = useState('');
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  // Create a ref for the FlatList
+  const flatListRef = useRef<FlatList>(null);
 
   // Fetch the current user's ID and chat details
   useEffect(() => {
@@ -67,6 +70,8 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
         setMessages((prev) => [...prev, result.resData]); // Update local messages
         setInputText('');
         onNewMessage && onNewMessage(); // Trigger callback to update the previous screen
+        // Scroll to the bottom after sending a message
+        flatListRef.current?.scrollToEnd({ animated: true });
       } else {
         console.error('Error sending message:', result.message);
       }
@@ -88,13 +93,23 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
   );
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <Header title={contactName} onBackPress={() => navigation.goBack()} />
       <FlatList
+        ref={flatListRef}
         data={messages}
         renderItem={renderMessageItem}
         keyExtractor={(item, index) => item._id || index.toString()}
         contentContainerStyle={styles.messageList}
+        onContentSizeChange={() => {
+          // Scroll to the bottom when new messages are added
+          setTimeout(() => {
+            flatListRef.current?.scrollToEnd({ animated: true });
+          }, 100);
+        }}
       />
       <View style={styles.inputContainer}>
         <TextInput
@@ -103,12 +118,13 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
           placeholderTextColor={Colors.icon}
           value={inputText}
           onChangeText={setInputText}
+          onSubmitEditing={sendMessage} // Allows sending message when 'Enter' is pressed
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Icon name="send" size={24} color={Colors.white} />
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
