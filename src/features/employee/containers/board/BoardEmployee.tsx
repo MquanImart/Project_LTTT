@@ -3,11 +3,11 @@ import { useState } from "react";
 import { View, Text, FlatList } from "react-native";
 import { Button, List, Provider, Searchbar } from "react-native-paper";
 import styles, { pickerSelectStyles } from "./stylesBoard";
-import RNPickerSelect from 'react-native-picker-select';
 import useBoard, { EmployeeDisplay } from "./useBoard";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
+import Dropdown from "@/src/shared/components/dropdown/Dropdown";
 
 type DetailEmployeeNavigationProp = NativeStackNavigationProp<ManageEmployeeStackParamList, 'Employee'>;
 
@@ -60,12 +60,7 @@ const BoardEmployee = () => {
                   style={{ backgroundColor: 'white', minWidth: '60%' }}
                   inputStyle={{ color: 'black' }}
                 />
-                <RNPickerSelect
-                  onValueChange={(value) => setFilterType(value)}
-                  items={filterOptions}
-                  value={filterType}
-                  style={pickerSelectStyles}
-                />
+                <Dropdown data={filterOptions} setValue={setFilterType}/>
             </View>
             <View style={{ minHeight: 300, width: '100%', padding: 10 }}>
             <FlatList

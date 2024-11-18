@@ -17,7 +17,7 @@ const AppointmentCancelCard: React.FC<AppointmentCancelCardProps> = ({
   onFavoritePress,
   onDetailsPress
 }) => {
-  const date = new Date(appointment.order.startDate.$date);
+  const date = new Date(appointment.order.startDate);
   return (
     <View style={styles.card}>
       <Image source={role==="Customer"? { uri: appointment.employee.avatar }:{ uri: appointment.customer.avatar }} style={styles.avatar} />

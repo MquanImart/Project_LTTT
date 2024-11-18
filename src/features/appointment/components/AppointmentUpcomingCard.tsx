@@ -21,7 +21,7 @@ const AppointmentUpcomingCard: React.FC<AppointmentUpcomingCardProps> = ({
   onRejectPress,
   onFavoritePress,
 }) => {
-  const date = new Date(appointment.order.startDate.$date);
+  const date = new Date(appointment.order.startDate);
 
   return (
     <View style={styles.card}>

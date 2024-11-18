@@ -1,36 +1,30 @@
 import React, { useState } from 'react';
 import Header from '@/src/shared/components/header/Header';
-import { Provider } from 'react-native-paper';
+import { ActivityIndicator, MD2Colors, Provider } from 'react-native-paper';
 import { View, Text, StyleSheet } from 'react-native';
 import useHomeAdmin from './useHomeAdmin';
 import styles from './stylesAdmin';
-import RNPickerSelect from 'react-native-picker-select';
 import { ScrollView } from 'react-native-gesture-handler';
 import { BarChart, PieChart } from 'react-native-gifted-charts';
+import Dropdown from '@/src/shared/components/dropdown/Dropdown';
 
 const HomeAdmin = () => {
   const {setSortByMonth, setSortByYear,
-    setSortByMonthSer, setSortByYearSer,
+    setSortByMonthSer, setSortByYearSer, allSchedule,
     optionMonth, optionYear, dataOrder, dataService} = useHomeAdmin();
+  
+  if (allSchedule === null || dataOrder === null || dataService === null) 
+    return <ActivityIndicator animating={true} color={MD2Colors.red800} />
+    
   return (
     <Provider>
       <Header title={'Thống kê'} onBackPress={()=> {}}/>
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true}>
         <View style={styles.boxChart}>
           <Text style={styles.textTitle}>Số đơn hàng</Text>
           <View style={styles.boxTitle}>
-            <RNPickerSelect
-              onValueChange={(value) => setSortByMonth(value)}
-              items={optionMonth}
-              style={pickerSelectStyles}
-              placeholder={{ label: 'Chọn tháng', value: null }}
-            />
-            <RNPickerSelect
-              onValueChange={(value) => setSortByYear(value)}
-              items={optionYear}
-              style={pickerSelectStyles}
-              placeholder={{ label: 'Chọn năm', value: null }}
-            />
+            <Dropdown data={optionMonth} setValue={setSortByMonth}/>
+            <Dropdown data={optionYear} setValue={setSortByYear}/>
           </View>
           <BarChart
             data={dataOrder}
@@ -52,18 +46,8 @@ const HomeAdmin = () => {
         <View style={styles.boxChart}>
           <Text style={styles.textTitle}>Thống kê dịch vụ</Text>
           <View style={styles.boxTitle}>
-            <RNPickerSelect
-              onValueChange={(value) => setSortByMonthSer(value)}
-              items={optionMonth}
-              style={pickerSelectStyles}
-              placeholder={{ label: 'Chọn tháng', value: null }}
-            />
-            <RNPickerSelect
-              onValueChange={(value) => setSortByYearSer(value)}
-              items={optionYear}
-              style={pickerSelectStyles}
-              placeholder={{ label: 'Chọn năm', value: null }}
-            />
+          <Dropdown data={optionMonth} setValue={setSortByMonthSer}/>
+          <Dropdown data={optionYear} setValue={setSortByYearSer}/>
           </View>
           <View style={styles.boxPie}>
             <PieChart
