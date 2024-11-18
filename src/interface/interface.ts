@@ -83,6 +83,7 @@ export enum UserRole {
     deletedAt?: number; // Optional field
   }
   export interface Review {
+    reviewId: Key | null | undefined;
     _id: string;
     employeeId: string;
     customerId: string;
