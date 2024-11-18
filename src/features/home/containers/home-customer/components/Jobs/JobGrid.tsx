@@ -15,10 +15,9 @@ const JobGrid: React.FC = () => {
       try {
         const serviceClient = restClient.apiClient.service("services");
         const response = await serviceClient.find({});
-        console.log("API Response:", response); // Kiểm tra phản hồi API
         if (response.success) {
           const transformedData = response.resData.map((item: any) => ({
-            id: item._id,
+            _id: item._id,
             name: item.name,
             img: item.img || "https://via.placeholder.com/150", // Hình mặc định nếu không có ảnh
             createdAt: new Date(item.createdAt),
@@ -61,7 +60,7 @@ const JobGrid: React.FC = () => {
     <ScrollView>
       <View style={styles.grid}>
         {jobs.map((job) => (
-        <JobCard key={job._id} service={job} />
+        <JobCard key={job._id }  service={job} />
         ))}
       </View>
     </ScrollView>
