@@ -30,9 +30,9 @@ const ProgressAppointmentScreen = () => {
   const handleSubmitDialog = async () => {
     const orderClient = restClient.apiClient.service("orders");
     if (selectedOrder){
-      const result = await orderClient.patch(selectedOrder._id.$oid, {state: "Canceled", cancelReason: cancel})
+      const result = await orderClient.patch(selectedOrder._id, {state: "Canceled", cancelReason: cancel})
       if (result.success){
-        setProgressAppoint(progressAppoint.filter((item) => item.order._id.$oid !== selectedOrder._id.$oid))
+        setProgressAppoint(progressAppoint.filter((item) => item.order._id !== selectedOrder._id))
       } else {
         Toast.show({
           type: "error",
@@ -71,7 +71,7 @@ const ProgressAppointmentScreen = () => {
             onDetailsPress={handleDetails}
           />
         )}
-        keyExtractor={(item) => item.order._id.$oid}
+        keyExtractor={(item) => item.order._id}
         contentContainerStyle={styles.listContainer}
       />
       <Portal>

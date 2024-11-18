@@ -21,9 +21,7 @@ export enum UserRole {
   }
   
   export interface User {
-    _id: {
-      $oid: string;
-    };
+    _id: string;
     account: {
       phoneNumber: string;
       password: string;
@@ -44,9 +42,7 @@ export enum UserRole {
     }; // Optional field
   }
   export interface Service {
-    _id: {
-      $oid: string;
-    };
+    _id: string;
     name: string;
     img: string;
     createdAt: {
@@ -72,9 +68,7 @@ export enum UserRole {
   }
   
   export interface Order {
-    _id: {
-      $oid: string;
-    };
+    _id: string;
     state: OrderState;
     jobId: string;
     customerId: string;
@@ -99,9 +93,7 @@ export enum UserRole {
   }
   
   export interface Employee {
-    _id: {
-      $oid: string;
-    };
+    _id: string;
     userId: string;
     jobIds: string[]; // Array of job IDs
     status: EmployeeStatus;
@@ -117,9 +109,7 @@ export enum UserRole {
     }; // Optional field
   }
   export interface Review {
-    reviewId: {
-      $oid: string;
-    };
+    _id: string;
     employeeId: string;
     customerId: string;
     content: string;

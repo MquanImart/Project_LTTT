@@ -24,8 +24,8 @@ const ReviewScreen: React.FC = () => {
   const handleSubmit = async () => {
     const reviewClient = restClient.apiClient.service("reviews");
     const result = await reviewClient.create({
-      customerId: appointment.customer._id.$oid, 
-      employeeId: appointment.employee._id.$oid,
+      customerId: appointment.customer._id, 
+      employeeId: appointment.employee._id,
       content: comment,
       rating: rating
     })

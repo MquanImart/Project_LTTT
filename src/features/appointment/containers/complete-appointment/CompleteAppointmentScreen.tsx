@@ -34,7 +34,7 @@ const CompleteAppointmentScreen = () => {
             onDetailsPress={handleDetails}
           />
         )}
-        keyExtractor={(item) => item.order._id.$oid}
+        keyExtractor={(item) => item.order._id}
       />
     </View>
   );
