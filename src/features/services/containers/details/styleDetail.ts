@@ -25,8 +25,9 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
     },
     textTitle: {
-        fontSize: 25,
-        fontWeight: '500'
+        fontSize: 30,
+        color: Colors.mainColor1,
+        fontWeight: '700'
     },
     mainContainer: {
         paddingHorizontal: 10,

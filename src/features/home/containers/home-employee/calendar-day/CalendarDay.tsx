@@ -51,7 +51,7 @@ const CalendarDay = () => {
   if (dayOfWeek.length <= 0) return <ActivityIndicator size="large" color="#0000ff" />
   return (
     <View style={styles.container}>
-      <Header title={'Lịch làm việc'} onBackPress={()=> {navigation.goBack()}}/>
+      <Header title={'Lịch làm việc'} showBackButton={false} />
       <View style={styles.yearContainer}>
         <IconButton icon="chevron-left" size={24} onPress={() => {navigation.navigate("CalendarMonth", {startMonth: currMonth, currYear: currYear})}} />
         <Text style={styles.yearText}>Tháng {currMonth}</Text>

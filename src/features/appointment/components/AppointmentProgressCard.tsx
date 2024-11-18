@@ -9,7 +9,6 @@ interface AppointmentProgressCardProps {
   appointment: OrderWithService;
   onCancelPress: () => void;
   onDetailsPress: () => void;
-  onFavoritePress: () => void;
 }
 
 const AppointmentProgressCard: React.FC<AppointmentProgressCardProps> = ({
@@ -17,7 +16,6 @@ const AppointmentProgressCard: React.FC<AppointmentProgressCardProps> = ({
   appointment,
   onCancelPress,
   onDetailsPress,
-  onFavoritePress,
 }) => {
   const date = new Date(appointment.order.startDate);
   return (
@@ -80,9 +78,6 @@ const AppointmentProgressCard: React.FC<AppointmentProgressCardProps> = ({
           </View>
         </View>
       </View>
-      <TouchableOpacity style={styles.favoriteButton} onPress={onFavoritePress}>
-        <Icon name="favorite-border" size={24} color={Colors.red} />
-      </TouchableOpacity>
     </View>
   );
 };

@@ -41,15 +41,15 @@ function HomeTabCustomerNavigation() {
           let label = ""; // Giá trị mặc định
 
           if (route.name === "Home") {
-            label = "Home";
+            label = "Trang chủ";
           } else if (route.name === "Favorite") {
-            label = "Favorite";
+            label = "Yêu thích";
           } else if (route.name === "Appointment") {
-            label = "Appointment";
+            label = "Đơn hàng";
           } else if (route.name === "Chat") {
-            label = "Chat";
+            label = "Nhắn tin";
           } else if (route.name === "Profile") {
-            label = "person";
+            label = "Cá nhân";
           }
 
           return (
