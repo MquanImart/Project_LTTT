@@ -48,7 +48,7 @@ const useCalendarDay = ({year, month, day} : useCalendarDayProps) => {
 
     const getDataAllJob = () => {
         const newAllJob : JobDay[] = allOrder.map((item)=> {
-            const timestamp = item.order.startDate.$date;
+            const timestamp = item.order.startDate;
             const date = new Date(timestamp);
             const day = date.getDate(); // Ngày (1-31)
             const month = date.getMonth() + 1; // Tháng (0-11, cần +1 để thành 1-12)

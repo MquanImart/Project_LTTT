@@ -215,7 +215,7 @@ const DetailService = () => {
               </View>
               <View style={styles.cardLabel}>
                 <Icon name="access-time" size={24} color="#000" style={{ marginHorizontal: 5 }} />
-                <Text>Thời gian: {new Date(order.startDate.$date).toLocaleString()}</Text>
+                <Text>Thời gian: {new Date(order.startDate).toLocaleString()}</Text>
               </View>
             </View>
 
