@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Header from '@/src/shared/components/header/Header';
 import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
@@ -11,14 +11,20 @@ import { AppointmentStackParamList } from '@/src/shared/routes/AppointmentNaviga
 
 const CancelAppointmentScreen = () => {
   const navigation = useNavigation<NavigationProp<AppointmentStackParamList>>();
-  const {cancelAppoint, role} = useAppointment();
-  const handleDetails = () => {
-    //navigation.navigate("Details");
-  }
-  if (role === null) return  <ActivityIndicator animating={true} color={MD2Colors.red800} />
+  const { cancelAppoint, role } = useAppointment();
+
+  const handleDetails = (appointment: any) => {
+    navigation.navigate('DetailService', {
+      service: appointment.service, // Truyền dữ liệu dịch vụ
+      order: appointment.order,     // Truyền dữ liệu đơn hàng
+    });
+  };
+
+  if (role === null) return <ActivityIndicator animating={true} color={MD2Colors.red800} />;
+
   return (
     <View style={styles.container}>
-      <Header title="Đơn hàng" onBackPress={() => console.log('Back Pressed')} />
+      <Header title="Đơn hàng" showBackButton={false}/>
       <AppointmentTabs selectedTab={'Đã hủy'} />
       <FlatList
         data={cancelAppoint}
@@ -26,8 +32,7 @@ const CancelAppointmentScreen = () => {
           <AppointmentCancelCard
             role={role}
             appointment={item}
-            onFavoritePress={() => console.log('Favorite pressed')} 
-            onDetailsPress={handleDetails}          
+            onDetailsPress={() => handleDetails(item)} // Gọi hàm điều hướng
           />
         )}
         keyExtractor={(item) => item.order._id}

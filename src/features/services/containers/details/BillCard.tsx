@@ -1,8 +1,7 @@
 import Colors from "@/src/styles/Color";
-import { View, StyleSheet, Text } from "react-native";
-import { TextInput, IconButton } from "react-native-paper";
+import { View, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
-import { JobDetail, UserRole } from "@/src/interface/interface"; // Import UserRole
+import { JobDetail, UserRole } from "@/src/interface/interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface BillCardProps {
@@ -67,27 +66,21 @@ const BillCard = ({ jobs, setJobs, updateJob, disableDelete = false }: BillCardP
           <Text style={styles.textJob}>{job.jobName}</Text>
           <TextInput
             value={job.price.toString()}
-            editable={userRole === UserRole.Admin || userRole === UserRole.Employee} // Chỉ cho phép chỉnh sửa nếu là Admin/Customer
+            editable={userRole === UserRole.Admin || userRole === UserRole.Employee}
             onChangeText={(text) => handlePriceChange(text, index)}
-            style={[styles.inputPrice, { color: "#000" }]} // Đảm bảo màu chữ rõ ràng
-            mode="outlined"
+            style={styles.inputPrice}
             keyboardType="numeric"
-            theme={{
-              colors: {
-                background: "#fff", // Màu nền trắng
-                text: "#000",       // Màu chữ đen
-                placeholder: "#aaa" // Placeholder màu xám
-              },
-            }}
+            placeholder="Nhập giá"
           />
           <Text style={styles.textCurrency}>đ</Text>
           {!disableDelete &&
-            (userRole === UserRole.Admin || userRole === UserRole.Employee) && ( // Nút xóa chỉ hiển thị với Admin và Customer
-              <IconButton
-                icon="delete"
+            (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
+              <TouchableOpacity
                 onPress={() => handleDeleteJob(index)}
                 style={styles.deleteButton}
-              />
+              >
+                <Text style={styles.deleteButtonText}>Xóa</Text>
+              </TouchableOpacity>
             )}
           {errors[index] && <Text style={styles.errorText}>{errors[index]}</Text>}
         </View>
@@ -100,44 +93,63 @@ const styles = StyleSheet.create({
   card: {
     width: "100%",
     padding: 10,
+    backgroundColor: "#f7f7f7",
+    borderRadius: 10,
   },
   boxJob: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: Colors.mainColor2,
+    backgroundColor: "#fff",
     padding: 15,
     marginBottom: 10,
-    borderRadius: 5,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   textJob: {
     flex: 1,
     fontSize: 16,
-    color: "#000",
+    fontWeight: "500",
+    color: "#333",
   },
   inputPrice: {
-    width: 150,
+    width: 100,
+    height: 40,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
+    borderColor: "#ddd",
+    borderRadius: 8,
     textAlign: "center",
     fontSize: 16,
-    color: "#000",
-    backgroundColor: "#fff",
+    color: "#333",
+    backgroundColor: "#f9f9f9",
   },
   textCurrency: {
     fontSize: 16,
-    color: "#000",
-    marginLeft: 5,
+    color: "#333",
+    marginLeft: 8,
+    fontWeight: "500",
   },
   deleteButton: {
     marginLeft: 10,
     backgroundColor: Colors.mainColor1,
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  deleteButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 14,
   },
   errorText: {
     color: "red",
     fontSize: 12,
     marginTop: 5,
+    textAlign: "center",
   },
 });
 

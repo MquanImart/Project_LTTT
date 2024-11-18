@@ -1,8 +1,7 @@
 import Colors from "@/src/styles/Color";
-import { View, StyleSheet, Text } from "react-native";
-import { TextInput, Button, IconButton } from "react-native-paper";
+import { View, StyleSheet, TextInput, Text, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
-import { JobDetail, UserRole } from "@/src/interface/interface"; // Import UserRole
+import { JobDetail, UserRole } from "@/src/interface/interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface DetailCardProps {
@@ -11,7 +10,7 @@ interface DetailCardProps {
   updateJob: (index: number, updatedField: Partial<JobDetail>) => Promise<void>;
   addJob: (newJob: JobDetail) => Promise<void>;
   deleteJob: (index: number) => Promise<void>;
-  orderId: string; // ID của đơn hàng
+  orderId: string;
 }
 
 const DetailCard = ({
@@ -68,45 +67,36 @@ const DetailCard = ({
       console.error("Bạn không có quyền xóa công việc.");
       return;
     }
-  
+
     const updatedJobs = jobs.filter((_, i) => i !== index);
     setJobs(updatedJobs);
-  
+
     try {
       if (!orderId) {
         console.error("Invalid order ID:", orderId);
         return;
       }
-  
-      await deleteJob(index); // Không cần kiểm tra giá trị trả về
+
+      await deleteJob(index);
       console.log("Job deleted successfully");
     } catch (error) {
       console.error("Error deleting job:", error);
     }
   };
-  
 
   return (
     <View style={styles.card}>
-      {/* Chỉ hiển thị ô thêm công việc nếu user là Admin hoặc Customer */}
       {(userRole === UserRole.Admin || userRole === UserRole.Employee) && (
         <View style={styles.inputContainer}>
           <TextInput
-            label="Tên công việc"
+            placeholder="Tên công việc"
             value={newJobName}
             onChangeText={setNewJobName}
             style={styles.input}
-            mode="outlined"
-            theme={{ colors: { background: "#fff", text: "#000" } }}
           />
-          <Button
-            mode="contained"
-            onPress={handleAddJob}
-            style={styles.addButton}
-            labelStyle={styles.addButtonText}
-          >
-            Thêm
-          </Button>
+          <TouchableOpacity style={styles.addButton} onPress={handleAddJob}>
+            <Text style={styles.addButtonText}>Thêm</Text>
+          </TouchableOpacity>
         </View>
       )}
       {jobs.map((job, index) => (
@@ -115,19 +105,12 @@ const DetailCard = ({
             value={job.jobName}
             onChangeText={(text) => handleUpdateJob(index, { jobName: text })}
             style={styles.inputJobName}
-            mode="outlined"
-            theme={{ colors: { background: "#fff", text: "#000" } }}
-            editable={userRole === UserRole.Admin || userRole === UserRole.Employee
-            } // Chỉ cho phép chỉnh sửa nếu có quyền
+            editable={userRole === UserRole.Admin || userRole === UserRole.Employee}
           />
-          {/* Nút xóa chỉ hiển thị với Admin và Customer */}
           {(userRole === UserRole.Admin || userRole === UserRole.Employee) && (
-            <IconButton
-              icon="delete"
-              onPress={() => handleDeleteJob(index)}
-              style={styles.deleteButton}
-              iconColor="#fff"
-            />
+            <TouchableOpacity onPress={() => handleDeleteJob(index)} style={styles.deleteButton}>
+              <Text style={{ color: "#fff", fontWeight: "bold" }}>Xóa</Text>
+            </TouchableOpacity>
           )}
         </View>
       ))}
@@ -141,17 +124,53 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     marginRight: 10,
-    borderRadius: 5,
-    backgroundColor: "#fff",
+    borderRadius: 10,
+    backgroundColor: "#f9f9f9",
     fontSize: 16,
-    color: "#000",
+    color: "#333",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  inputJobName: {
+    flex: 1,
+    marginRight: 10,
+    borderRadius: 10,
+    backgroundColor: "#f9f9f9",
+    fontSize: 16,
+    color: "#333",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 1,
   },
   addButton: {
     backgroundColor: Colors.mainColor1,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 2,
   },
   addButtonText: {
     color: Colors.white,
     fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 16,
   },
   jobRow: {
     flexDirection: "row",
@@ -161,15 +180,18 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
   },
-  inputJobName: {
-    flex: 1,
-    marginRight: 10,
-    borderRadius: 5,
-    backgroundColor: "#fff",
-    fontSize: 16,
-    color: "#000",
+  deleteButton: {
+    backgroundColor: Colors.mainColor1,
+    padding: 10,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 2,
   },
-  deleteButton: { backgroundColor: Colors.mainColor1 },
 });
 
 export default DetailCard;

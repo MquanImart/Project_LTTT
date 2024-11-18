@@ -10,9 +10,10 @@ interface AppointmentCardProps {
   onChatPress: () => void;
   onDetailsPress: () => void;
   onReviewPress: () => void;
+  onFavouritePress: () => void;
 }
 
-const AppointmentCard: React.FC<AppointmentCardProps> = ({ role, appointment, onChatPress, onDetailsPress, onReviewPress }) => {
+const AppointmentCard: React.FC<AppointmentCardProps> = ({ role, appointment, onChatPress, onDetailsPress, onReviewPress, onFavouritePress }) => {
   return (
     <View style={styles.card}>
       <Image source={ role==="Customer"? { uri: appointment.employee.avatar }:{ uri: appointment.customer.avatar }} style={styles.avatar} />
@@ -22,7 +23,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ role, appointment, on
           :`${appointment.customer.personalInfo.firstName} ${appointment.customer.personalInfo.lastName}`}
         </Text>
         <Text style={styles.service}>{appointment.service.name}</Text>
-        <View style={styles.ratingContainer}>
+        { role === "Customer" && <View style={styles.ratingContainer}>
           {[...Array(5)].map((_, i) => (
             <Icon
               key={i}
@@ -32,6 +33,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ role, appointment, on
             />
           ))}
         </View>
+          }
          
         <View style={styles.buttonRow}>
           {role === "Customer" &&
@@ -44,9 +46,10 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ role, appointment, on
           </View>
         </View>
       <View style={styles.actionColumn}>
-        <TouchableOpacity style={styles.favoriteButton}>
+        {role === "Customer"  && <TouchableOpacity style={styles.favoriteButton} onPress={onFavouritePress}>
           <Icon name="favorite-border" size={24} color={Colors.red} />
         </TouchableOpacity>
+        }
         {role !== "Admin" && 
         <TouchableOpacity style={styles.chatButton} onPress={onChatPress}>
         <Text style={styles.buttonText}>Nhắn tin</Text>

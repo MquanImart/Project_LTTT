@@ -128,7 +128,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header title="Chat" onBackPress={() => navigation.goBack()} />
+      <Header title="Chat" showBackButton={false} />
       <TouchableOpacity
         style={styles.newChatButton}
         onPress={() => {

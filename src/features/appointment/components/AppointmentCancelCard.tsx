@@ -7,14 +7,12 @@ import { OrderWithService } from '@/src/interface/ordersInterface';
 interface AppointmentCancelCardProps {
   role: string;
   appointment: OrderWithService;
-  onFavoritePress: () => void;
   onDetailsPress: () => void;
 }
 
 const AppointmentCancelCard: React.FC<AppointmentCancelCardProps> = ({
   role,
   appointment,
-  onFavoritePress,
   onDetailsPress
 }) => {
   const date = new Date(appointment.order.startDate);
@@ -55,9 +53,6 @@ const AppointmentCancelCard: React.FC<AppointmentCancelCardProps> = ({
           <Text style={styles.reasonText}>{appointment.order.cancelReason}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.favoriteButton} onPress={onFavoritePress}>
-        <Icon name="favorite-border" size={24} color={Colors.red} />
-      </TouchableOpacity>
     </View>
   );
 };

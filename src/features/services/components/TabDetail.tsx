@@ -1,6 +1,6 @@
+import React from "react";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Colors from "@/src/styles/Color";
-import { View, StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
 
 interface TabDetailProp {
   tab: number;
@@ -8,25 +8,20 @@ interface TabDetailProp {
 }
 
 const TabDetail = ({ tab, setTab }: TabDetailProp) => {
-console.log("Current tab:", tab); // Kiểm tra giá trị tab
   return (
     <View style={styles.container}>
-      <Button
-        mode="contained"
+      <TouchableOpacity
         onPress={() => setTab(0)}
-        labelStyle={tab === 0 ? styles.textWhite : styles.textBlack}
-        style={[styles.boxbutton, tab === 0 && styles.buttonChoose]} // Áp dụng style khi được chọn
+        style={[styles.boxButton, tab === 0 && styles.buttonChoose]} // Áp dụng style khi được chọn
       >
-        Chi tiết công việc
-      </Button>
-      <Button
-        mode="contained"
+        <Text style={tab === 0 ? styles.textWhite : styles.textBlack}>Chi tiết công việc</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
         onPress={() => setTab(1)}
-        labelStyle={tab === 1 ? styles.textWhite : styles.textBlack}
-        style={[styles.boxbutton, tab === 1 && styles.buttonChoose]} // Áp dụng style khi được chọn
+        style={[styles.boxButton, tab === 1 && styles.buttonChoose]} // Áp dụng style khi được chọn
       >
-        Hóa đơn
-      </Button>
+        <Text style={tab === 1 ? styles.textWhite : styles.textBlack}>Hóa đơn</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -40,11 +35,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginTop: 10,
   },
-  boxbutton: {
-    width: "50%",
+  boxButton: {
+    flex: 1,
     height: "100%",
     backgroundColor: "#fff", // Nền trắng mặc định
-    borderRadius: 0,
+    justifyContent: "center",
+    alignItems: "center",
     borderBottomColor: Colors.mainColor1,
     borderBottomWidth: 2,
     borderStyle: "solid",
@@ -54,9 +50,13 @@ const styles = StyleSheet.create({
   },
   textWhite: {
     color: "#fff", // Chữ trắng
+    fontWeight: "bold",
+    fontSize: 16,
   },
   textBlack: {
     color: "#000", // Chữ đen
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
 
