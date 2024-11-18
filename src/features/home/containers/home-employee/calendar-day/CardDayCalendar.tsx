@@ -22,13 +22,20 @@ const CardDayCalendar = ({time, listJob}: CardDayCalendarProps) => {
         <Text style={styles.time}>{time}:00</Text>
         <View style={styles.boxContent}>
           {listJob.map((it)=> 
-          <TouchableOpacity key={it.day} style={styles.buttonJob}
-          onPress={()=> navigation.navigate("DetailService")}>
-            <Text style={styles.days}
-            numberOfLines={1} 
-            ellipsizeMode="tail"
-            >
-              Thời gian: {it.hour}:{String(it.minute).padStart(2, '0')} Công việc: {it.service.name} Địa chỉ: {it.address}
+          <TouchableOpacity
+            key={it.service.name} // Dùng tên dịch vụ làm key
+            style={styles.buttonJob}
+            onPress={() =>
+              navigation.navigate("DetailService", {
+                service: it.service, // Truyền đối tượng dịch vụ
+                order: it.order,     // Truyền đối tượng đơn hàng
+              })
+            }
+          >
+            <Text style={styles.days} numberOfLines={1} ellipsizeMode="tail">
+              Thời gian: {it.hour}:{String(it.minute).padStart(2, "0")} 
+              Công việc: {it.service.name} 
+              Địa chỉ: {it.address}
             </Text>
           </TouchableOpacity>
           )}

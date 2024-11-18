@@ -93,7 +93,7 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
       <FlatList
         data={messages}
         renderItem={renderMessageItem}
-        keyExtractor={(item, index) => item.id || index.toString()}
+        keyExtractor={(item, index) => item._id || index.toString()}
         contentContainerStyle={styles.messageList}
       />
       <View style={styles.inputContainer}>

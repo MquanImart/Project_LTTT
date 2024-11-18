@@ -3,11 +3,12 @@ import BookJob from '@/src/features/home/containers/home-customer/components/boo
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 
-type RootStackParamList = {
+export type RootStackParamList = {
   HomeCustomer: undefined;
   BookJob: {
     jobName: string;
     jobImage: string;
+    jobId: string;
   };
 };
 

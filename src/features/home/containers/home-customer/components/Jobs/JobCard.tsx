@@ -4,14 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import styles from "./Styles";
 import { Service } from "@/src/interface/interface"; // Import interface Service
-
-type RootStackParamList = {
-  BookJob: {
-    jobName: string;
-    jobImage: string;
-    jobId: string;
-  };
-};
+import { RootStackParamList } from "@/src/shared/routes/HomeCustomerNavigation";
 
 type NavigationProp = StackNavigationProp<RootStackParamList, "BookJob">;
 
