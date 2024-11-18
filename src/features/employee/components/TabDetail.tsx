@@ -1,50 +1,68 @@
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Colors from "@/src/styles/Color";
-import { View, Text, StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
 
-interface TabDetailProp{
-    tab: number;
-    setTab: (value: number) => void;
+interface TabDetailProp {
+  tab: number;
+  setTab: (value: number) => void;
 }
-const TabDetail = ({tab, setTab}: TabDetailProp) => {
 
-    return (
-        <View style={styles.container}>
-            <Button mode="contained" onPress={() => setTab(0)}
-            labelStyle={tab !== 0? { color: 'black' }: {}}
-            style={[styles.boxbutton, tab === 0? styles.buttonChoose: {}]}>
-              Dịch vụ
-            </Button>
-            <Button mode="contained" onPress={() => setTab(1)}
-            labelStyle={tab === 0? { color: 'black' }: {}}
-            style={[styles.boxbutton, tab === 1? styles.buttonChoose: {}]}>
-              Đánh giá
-            </Button>
-        </View>
-    )
-}
+const TabDetail = ({ tab, setTab }: TabDetailProp) => {
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => setTab(0)}
+        style={[styles.tabButton, tab === 0 ? styles.buttonActive : styles.buttonInactive]}
+      >
+        <Text style={[styles.tabText, tab === 0 ? styles.textActive : styles.textInactive]}>
+          Dịch vụ
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => setTab(1)}
+        style={[styles.tabButton, tab === 1 ? styles.buttonActive : styles.buttonInactive]}
+      >
+        <Text style={[styles.tabText, tab === 1 ? styles.textActive : styles.textInactive]}>
+          Đánh giá
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        height: 50,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        marginTop: 10,
-    },
-    boxbutton: {
-        width: '50%',
-        height: '100%',
-        backgroundColor: '#fff',
-        borderRadius: 0,
-        borderBottomColor: Colors.mainColor1,
-        borderBottomWidth: 2,
-        borderStyle: 'solid',
-    },
-    buttonChoose: {
-        backgroundColor: Colors.mainColor1,
-    },
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    height: 50,
+    marginTop: 10,
+    backgroundColor: Colors.white,
+  },
+  tabButton: {
+    flex: 1, // Đảm bảo nút chiếm đều không gian trong vùng chứa
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%", // Đảm bảo chiều cao nút đầy đủ
+  },
+  buttonActive: {
+    backgroundColor: Colors.mainColor1,
+  },
+  buttonInactive: {
+    backgroundColor: Colors.white,
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.mainColor1, // Thêm viền dưới cho tab không được chọn
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  textActive: {
+    color: Colors.white,
+  },
+  textInactive: {
+    color: Colors.mainColor1,
+  },
 });
 
 export default TabDetail;

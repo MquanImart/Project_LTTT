@@ -68,6 +68,7 @@ const BoardEmployee = () => {
           style={styles.buttonTitle}
           icon="account-plus"
           mode="contained"
+          labelStyle={{ color: "#fff" }}
           onPress={handleRegister}
         >
           Tạo tài khoản

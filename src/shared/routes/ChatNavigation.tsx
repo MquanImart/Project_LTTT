@@ -5,7 +5,8 @@
 
   export type ChatStackParamList = {
     ChatScreen: undefined;
-    ChatDetailScreen: { contactId: string; 
+    ChatDetailScreen: { 
+      contactId: string; 
       contactName: string,
       onNewMessage: () => void; // Thêm onNewMessage callback
      };

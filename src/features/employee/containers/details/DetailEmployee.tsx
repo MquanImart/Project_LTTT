@@ -22,6 +22,7 @@ type DetailEmployeeNavigationProp = CompositeNavigationProp<
 const DetailEmployee = () => {
   const [tab, setTab] = useState<number>(0);
   const [employeeDetail, setEmployeeDetail] = useState<any>(null);
+
   const [loading, setLoading] = useState<boolean>(true);
   const [rating, setRating] = useState<number>(0);
   const navigation = useNavigation<DetailEmployeeNavigationProp>();
@@ -164,6 +165,18 @@ const DetailEmployee = () => {
       .join(", ") || "Không có địa chỉ";
   };
 
+  const handleChat = () => {
+    const refresh = () => {
+      console.log("Refreshing appointments...");
+    };
+    console.log('employeeDetail', employeeDetail)
+      navigation.navigate('ChatDetailScreen', {
+        contactId: employeeDetail.userId, 
+        contactName: employeeDetail.personalInfo.firstName + " " + employeeDetail.personalInfo.lastName,
+        onNewMessage: () => refresh()
+      });
+  };
+
   useEffect(() => {
     console.log("Employee ID:", employeeId);
     fetchEmployeeDetail();
@@ -214,10 +227,11 @@ const DetailEmployee = () => {
                 </View>
                 <Button
                   mode="contained"
-                  onPress={() => console.log("Chat pressed")}
-                  style={{ backgroundColor: Colors.mainColor1 }}
+                  onPress={handleChat}
+                  style={{ backgroundColor: Colors.mainColor1}}
+                  labelStyle={{ color: "#fff" }}
                 >
-                  Chat
+                  Nhắn tin
                 </Button>
               </View>
             </View>

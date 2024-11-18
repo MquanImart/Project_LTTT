@@ -3,10 +3,12 @@ import DetailEmployee from "@/src/features/employee/containers/details/DetailEmp
 import RegisterEmployee from "@/src/features/employee/containers/register/RegisterEmployee";
 import RegisterInformationEmployee from "@/src/features/employee/containers/register/RegisterInfoEmployee";
 import ChooseJob from "@/src/features/employee/containers/register/ChooseJob";
+import ChatDetailScreen from '@/src/features/chat/containers/detail-chat/ChatDetailScreen';
 import { createStackNavigator } from "@react-navigation/stack";
+
 import React from "react";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<ManageEmployeeStackParamList>();
 
 export type ManageEmployeeStackParamList = {
   Employee: undefined;
@@ -14,6 +16,12 @@ export type ManageEmployeeStackParamList = {
   RegisterEmployee: undefined;
   RegisterInfoEmployee: {userId: string};
   ChooseJob: {userId: string};
+  ChatDetailScreen: { 
+    contactId: string; 
+    contactName: string;
+    onNewMessage: () => void;
+  };
+   
 };
 
 function ManageEmployee() {
@@ -26,6 +34,7 @@ function ManageEmployee() {
           <Stack.Screen name="RegisterEmployee" component={RegisterEmployee} />
           <Stack.Screen name="RegisterInfoEmployee" component={RegisterInformationEmployee} />
           <Stack.Screen name="ChooseJob" component={ChooseJob} />
+          <Stack.Screen name="ChatDetailScreen" component={ChatDetailScreen} />
     </Stack.Navigator>
   );
 }
