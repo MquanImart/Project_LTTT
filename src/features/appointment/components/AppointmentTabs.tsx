@@ -1,34 +1,31 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Colors from '@/src/styles/Color';
-import { RootStackParamList } from '@/src/shared/routes/AppointmentNavigation';
+import { AppointmentStackParamList } from '@/src/shared/routes/AppointmentNavigation';
 
 interface AppointmentTabsProps {
   selectedTab: string;
-  onTabPress: (tab: string) => void;
 }
 
-const tabs = ['Complete', 'Upcoming', 'Progress', 'Cancel'];
+const tabs = ['Hoàn thành', 'Chờ duyệt', 'Đang thực hiện', 'Đã hủy'];
 
-const AppointmentTabs: React.FC<AppointmentTabsProps> = ({ selectedTab, onTabPress }) => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+const AppointmentTabs: React.FC<AppointmentTabsProps> = ({ selectedTab }) => {
+  const navigation = useNavigation<NavigationProp<AppointmentStackParamList>>();
 
   const handleTabPress = (tab: string) => {
-    onTabPress(tab);
-
     // Điều hướng theo từng tab
     switch (tab) {
-      case 'Complete':
+      case 'Hoàn thành':
         navigation.navigate('Complete');
         break;
-      case 'Upcoming':
+      case 'Chờ duyệt':
         navigation.navigate('Upcoming');
         break;
-      case 'Progress':
+      case 'Đang thực hiện':
         navigation.navigate('Progress');
         break;
-      case 'Cancel':
+      case 'Đã hủy':
         navigation.navigate('Cancel');
         break;
     }
@@ -36,6 +33,11 @@ const AppointmentTabs: React.FC<AppointmentTabsProps> = ({ selectedTab, onTabPre
 
   return (
     <View style={styles.tabsContainer}>
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false} 
+        contentContainerStyle={styles.tabsContainer}
+      >
       {tabs.map((tab) => (
         <TouchableOpacity
           key={tab}
@@ -45,6 +47,7 @@ const AppointmentTabs: React.FC<AppointmentTabsProps> = ({ selectedTab, onTabPre
           <Text style={selectedTab === tab ? styles.activeTabText : styles.tabText}>{tab}</Text>
         </TouchableOpacity>
       ))}
+      </ScrollView>
     </View>
   );
 };
@@ -60,13 +63,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 20,
-    backgroundColor: Colors.tabIconDefault,
+    backgroundColor: Colors.mainColor2,
   },
   activeTab: {
     backgroundColor: Colors.mainColor1,
   },
   tabText: {
-    color: Colors.mainColor1,
+    color: Colors.mainColor3,
   },
   activeTabText: {
     color: Colors.white,

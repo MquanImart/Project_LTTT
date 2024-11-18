@@ -2,55 +2,55 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from '@/src/styles/Color';
-
-interface Appointment {
-  id: string;
-  name: string;
-  service: string;
-  rating: number;
-  avatar: string;
-}
+import { OrderWithService } from '@/src/interface/ordersInterface';
 
 interface AppointmentCardProps {
-  appointment: Appointment;
+  role: string;
+  appointment: OrderWithService;
   onChatPress: () => void;
-  onRebookPress: () => void;
+  onDetailsPress: () => void;
   onReviewPress: () => void;
 }
 
-const AppointmentCard: React.FC<AppointmentCardProps> = ({ appointment, onChatPress, onRebookPress, onReviewPress }) => {
+const AppointmentCard: React.FC<AppointmentCardProps> = ({ role, appointment, onChatPress, onDetailsPress, onReviewPress }) => {
   return (
     <View style={styles.card}>
-      <Image source={{ uri: appointment.avatar }} style={styles.avatar} />
+      <Image source={ role==="Customer"? { uri: appointment.employee.avatar }:{ uri: appointment.customer.avatar }} style={styles.avatar} />
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>{appointment.name}</Text>
-        <Text style={styles.service}>{appointment.service}</Text>
+        <Text style={styles.name}>
+          {role==="Customer"?`${appointment.employee.personalInfo.firstName} ${appointment.employee.personalInfo.lastName}`
+          :`${appointment.customer.personalInfo.firstName} ${appointment.customer.personalInfo.lastName}`}
+        </Text>
+        <Text style={styles.service}>{appointment.service.name}</Text>
         <View style={styles.ratingContainer}>
           {[...Array(5)].map((_, i) => (
             <Icon
               key={i}
               name="star"
               size={18}
-              color={i < appointment.rating ? '#FFD700' : '#C0C0C0'}
+              color={i < (appointment.employeeM.rating?appointment.employeeM.rating:0) ? '#FFD700' : '#C0C0C0'}
             />
           ))}
         </View>
+         
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.rebookButton} onPress={onRebookPress}>
-            <Text style={styles.buttonText}>Re-Book</Text>
-          </TouchableOpacity>
+          {role === "Customer" &&
           <TouchableOpacity style={styles.reviewButton} onPress={onReviewPress}>
-            <Text style={styles.buttonText}>Add Review</Text>
+            <Text style={styles.buttonText}>Đánh giá</Text>
+          </TouchableOpacity>}
+          <TouchableOpacity style={styles.reviewButton} onPress={onDetailsPress}>
+            <Text style={styles.buttonText}>Chi tiết</Text>
           </TouchableOpacity>
+          </View>
         </View>
-      </View>
       <View style={styles.actionColumn}>
         <TouchableOpacity style={styles.favoriteButton}>
           <Icon name="favorite-border" size={24} color={Colors.red} />
         </TouchableOpacity>
+        {role !== "Admin" && 
         <TouchableOpacity style={styles.chatButton} onPress={onChatPress}>
-          <Text style={styles.buttonText}>Chat</Text>
-        </TouchableOpacity>
+        <Text style={styles.buttonText}>Nhắn tin</Text>
+      </TouchableOpacity>}
       </View>
     </View>
   );
@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.mainColor1,
     borderRadius: 5,
     padding: 10,
-    flex: 1,
+    margin: 10,
+    flex: 1
   },
   actionColumn: {
     position: 'absolute',
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 12,
     textAlign: 'center',
+    marginBottom: 2
   },
 });
 

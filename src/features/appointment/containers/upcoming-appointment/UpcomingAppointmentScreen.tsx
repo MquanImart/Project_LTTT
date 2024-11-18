@@ -4,52 +4,33 @@ import Header from '@/src/shared/components/header/Header';
 import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
 import AppointmentUpcomingCard from '@/src/features/appointment/components/AppointmentUpcomingCard';
 import Colors from '@/src/styles/Color'; // Đảm bảo đường dẫn chính xác
-
-const appointments = [
-  {
-    id: '1',
-    name: 'Dr. Olivia Turner, M.D.',
-    service: 'Clean House',
-    rating: 4,
-    avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg',
-    date: 'Sunday, 12 June',
-    time: '9:30 AM - 10:00 AM',
-  },
-  {
-    id: '2',
-    name: 'Dr. Olivia Turner, M.D.',
-    service: 'Clean House',
-    rating: 4,
-    avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg',
-    date: 'Sunday, 12 June',
-    time: '9:30 AM - 10:00 AM',
-  },
-  // Thêm các cuộc hẹn khác nếu cần
-];
+import useAppointment from '../useAppointment';
+import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
 const UpcomingAppointmentScreen = () => {
-  const [selectedTab, setSelectedTab] = useState<string>('Upcoming');
+  const {upcomingAppoint, role} = useAppointment();
 
-  const handleTabPress = (tab: string) => {
-    setSelectedTab(tab);
-  };
-
+  const handleDetails = () => {
+    //navigation.navigate("Details");
+  }
+  if (role === null) return  <ActivityIndicator animating={true} color={MD2Colors.red800} />
   return (
     <View style={styles.container}>
-      <Header title="All appointment" onBackPress={() => console.log('Back Pressed')} />
-      <AppointmentTabs selectedTab={selectedTab} onTabPress={handleTabPress} />
+      <Header title="Đơn hàng" onBackPress={() => console.log('Back Pressed')} />
+      <AppointmentTabs selectedTab={'Chờ duyệt'}/>
       <FlatList
-        data={appointments}
+        data={upcomingAppoint}
         renderItem={({ item }) => (
           <AppointmentUpcomingCard
+            role={role}
             appointment={item}
-            onDetailsPress={() => console.log('Details pressed')}
             onAcceptPress={() => console.log('Accept pressed')}
             onRejectPress={() => console.log('Reject pressed')}
             onFavoritePress={() => console.log('Favorite pressed')}
+            onDetailsPress={handleDetails}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.order._id.$oid}
         contentContainerStyle={styles.listContainer}
       />
     </View>

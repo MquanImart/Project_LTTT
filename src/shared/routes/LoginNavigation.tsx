@@ -14,7 +14,7 @@ const Stack = createStackNavigator();
 
 export type RootStackParamList = {
     Login: undefined;
-    RegisterInfomation: { userId: string };
+    RegisterInfomation: {userId: string};
     Register: undefined;
     Verify: undefined;
     ResetPassword: undefined;

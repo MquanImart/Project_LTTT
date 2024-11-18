@@ -4,54 +4,98 @@ import Header from '@/src/shared/components/header/Header';
 import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
 import AppointmentProgressCard from '@/src/features/appointment/components/AppointmentProgressCard';
 import Colors from '@/src/styles/Color';
-
-const appointments = [
-  {
-    id: '1',
-    name: 'Dr. Olivia Turner, M.D.',
-    service: 'Clean House',
-    rating: 4,
-    avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg',
-    date: 'Sunday, 12 June',
-    time: '9:30 AM - 10:00 AM',
-  },
-  {
-    id: '2',
-    name: 'Dr. Olivia Turner, M.D.',
-    service: 'Clean House',
-    rating: 4,
-    avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg',
-    date: 'Sunday, 12 June',
-    time: '9:30 AM - 10:00 AM',
-  },
-  // Thêm các cuộc hẹn khác nếu cần
-];
+import useAppointment from '../useAppointment';
+import { ActivityIndicator, Button, Dialog, MD2Colors, Portal, Provider, TextInput } from 'react-native-paper';
+import restClient from '@/src/shared/services/RestClient';
+import { Order } from '@/src/interface/interface';
+import Toast from 'react-native-toast-message';
 
 const ProgressAppointmentScreen = () => {
-  const [selectedTab, setSelectedTab] = useState<string>('Progress');
+  const {progressAppoint, role, setProgressAppoint} = useAppointment();
+  const [visible, setVisible] = useState(false);
+  const [cancel, setCancel] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  const handleTabPress = (tab: string) => {
-    setSelectedTab(tab);
-    // Điều hướng đến màn hình tương ứng nếu cần
-  };
+  const handleOpenDialog = (selected: Order) => {
+    setVisible(true);
+    setSelectedOrder(selected);
+  }
+
+  const handleHieDialog = () => {
+    setVisible(false);
+    setCancel('');
+    setSelectedOrder(null);
+  }
+
+  const handleSubmitDialog = async () => {
+    const orderClient = restClient.apiClient.service("orders");
+    if (selectedOrder){
+      const result = await orderClient.patch(selectedOrder._id.$oid, {state: "Canceled", cancelReason: cancel})
+      if (result.success){
+        setProgressAppoint(progressAppoint.filter((item) => item.order._id.$oid !== selectedOrder._id.$oid))
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Không thể hủy",
+          text2: "Vui lòng thử lại sau.",
+        });
+      }
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Chưa chọn đơn hàng",
+        text2: "Vui lòng thử lại sau.",
+      });
+    }
+    setVisible(false);
+  }
+
+  const handleDetails = () => {
+    //navigation.navigate("Details");
+  }
+  if (role === null) return  <ActivityIndicator animating={true} color={MD2Colors.red800} />
 
   return (
+    <Provider>
     <View style={styles.container}>
-      <Header title="All appointment" onBackPress={() => console.log('Back Pressed')} />
-      <AppointmentTabs selectedTab={selectedTab} onTabPress={handleTabPress} />
+      <Header title="Đơn hàng" onBackPress={() => console.log('Back Pressed')} />
+      <AppointmentTabs selectedTab={'Đang thực hiện'} />
       <FlatList
-        data={appointments}
+        data={progressAppoint}
         renderItem={({ item }) => (
           <AppointmentProgressCard
+            role={role}
             appointment={item}
-            onCancelPress={() => console.log('Cancel pressed')}
+            onCancelPress={() => handleOpenDialog(item.order)}
             onFavoritePress={() => console.log('Favorite pressed')}
+            onDetailsPress={handleDetails}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.order._id.$oid}
         contentContainerStyle={styles.listContainer}
       />
+      <Portal>
+            <Dialog visible={visible} onDismiss={handleHieDialog}>
+              <Dialog.Title>Nhập Lý do</Dialog.Title>
+              <Dialog.Content>
+                <TextInput
+                  label="Lý do"
+                  value={cancel}
+                  onChangeText={(text) => setCancel(text)}
+                />
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={handleHieDialog}>Hủy</Button>
+                <Button
+                  onPress={() => handleSubmitDialog()}
+                >
+                  Xác Nhận
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
     </View>
+    </Provider>
   );
 };
 

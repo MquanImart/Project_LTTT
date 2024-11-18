@@ -2,61 +2,57 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Colors from '@/src/styles/Color';
-
-interface Appointment {
-  id: string;
-  name: string;
-  service: string;
-  rating: number;
-  avatar: string;
-  date: string;
-  time: string;
-  cancellationReason: string;
-}
+import { OrderWithService } from '@/src/interface/ordersInterface';
 
 interface AppointmentCancelCardProps {
-  appointment: Appointment;
-  onRebookPress: () => void;
+  role: string;
+  appointment: OrderWithService;
   onFavoritePress: () => void;
+  onDetailsPress: () => void;
 }
 
 const AppointmentCancelCard: React.FC<AppointmentCancelCardProps> = ({
+  role,
   appointment,
-  onRebookPress,
   onFavoritePress,
+  onDetailsPress
 }) => {
+  const date = new Date(appointment.order.startDate.$date);
   return (
     <View style={styles.card}>
-      <Image source={{ uri: appointment.avatar }} style={styles.avatar} />
+      <Image source={role==="Customer"? { uri: appointment.employee.avatar }:{ uri: appointment.customer.avatar }} style={styles.avatar} />
       <View style={styles.infoContainer}>
-        <Text style={styles.name}>{appointment.name}</Text>
-        <Text style={styles.service}>{appointment.service}</Text>
+        <Text style={styles.name}>
+        {role==="Customer"?`${appointment.employee.personalInfo.firstName} ${appointment.employee.personalInfo.lastName}`
+          :`${appointment.customer.personalInfo.firstName} ${appointment.customer.personalInfo.lastName}`}
+        </Text>
+        <Text style={styles.service}>{appointment.service.name}</Text>
         <View style={styles.ratingContainer}>
           {[...Array(5)].map((_, i) => (
             <Icon
               key={i}
               name="star"
               size={16}
-              color={i < appointment.rating ? '#FFD700' : Colors.icon}
+              color={i < (appointment.employeeM.rating?appointment.employeeM.rating:0) ? '#FFD700' : Colors.icon}
             />
           ))}
         </View>
         <View style={styles.dateTimeContainer}>
           <View style={styles.dateContainer}>
             <Icon name="event" size={14} color={Colors.icon} />
-            <Text style={styles.dateText}>{appointment.date}</Text>
+            <Text style={styles.dateText}>{date.toDateString()}</Text>
           </View>
           <View style={styles.timeContainer}>
             <Icon name="access-time" size={14} color={Colors.icon} />
-            <Text style={styles.timeText}>{appointment.time}</Text>
+            <Text style={styles.timeText}>{date.toTimeString().split(' ')[0]}</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.rebookButton} onPress={onRebookPress}>
-          <Text style={styles.buttonText}>Re-book</Text>
-        </TouchableOpacity>
-        <Text style={styles.reasonLabel}>Reason for cancellation</Text>
+        <TouchableOpacity style={styles.detailsButton} onPress={onDetailsPress}>
+            <Text style={styles.buttonText}>Chi tiết</Text>
+          </TouchableOpacity>
+        <Text style={styles.reasonLabel}>Lý do hủy</Text>
         <View style={styles.reasonContainer}>
-          <Text style={styles.reasonText}>{appointment.cancellationReason}</Text>
+          <Text style={styles.reasonText}>{appointment.order.cancelReason}</Text>
         </View>
       </View>
       <TouchableOpacity style={styles.favoriteButton} onPress={onFavoritePress}>
@@ -165,6 +161,14 @@ const styles = StyleSheet.create({
     favoriteButton: {
       alignSelf: 'flex-start',
       marginLeft: 10,
+    },
+    detailsButton: {
+      backgroundColor: Colors.mainColor1,
+      borderRadius: 5,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      flex: 1,
+      marginRight: 10,
     },
 });
   

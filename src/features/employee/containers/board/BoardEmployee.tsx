@@ -5,7 +5,7 @@ import { Button, List, Provider, Searchbar } from "react-native-paper";
 import styles, { pickerSelectStyles } from "./stylesBoard";
 import RNPickerSelect from 'react-native-picker-select';
 import useBoard, { EmployeeDisplay } from "./useBoard";
-import { CompositeNavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
 
@@ -36,6 +36,10 @@ const BoardEmployee = () => {
         navigation.navigate("Details");
       };
 
+    const handleRegister = () => {
+      navigation.navigate("RegisterEmployee");
+    }
+
     if (currentEmployees.length <= 0) {return <></>}
     return (
         <Provider>
@@ -44,7 +48,7 @@ const BoardEmployee = () => {
                 <Text style={styles.textTitle}>Nhân viên</Text>
                 <Button 
                 style={styles.buttonTitle}
-                icon="account-plus" mode="contained" onPress={() => console.log('Pressed')}>
+                icon="account-plus" mode="contained" onPress={() =>handleRegister()}>
                   Tạo tài khoản
                 </Button>
             </View>
