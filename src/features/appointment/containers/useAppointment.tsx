@@ -51,8 +51,9 @@ const useAppointment = () => {
         }
     }
     return {
+        role,
         completeAppoint, upcomingAppoint, progressAppoint, cancelAppoint,
-        role
+        setComplelteAppoint, setUpcomingAppoint, setProgressAppoint, setCancelAppoint
     }
 }
 

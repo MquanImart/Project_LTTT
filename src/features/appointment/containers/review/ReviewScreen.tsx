@@ -5,6 +5,8 @@ import Colors from '@/src/styles/Color';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import Header from '@/src/shared/components/header/Header';
 import { AppointmentStackParamList } from '@/src/shared/routes/AppointmentNavigation';
+import restClient from '@/src/shared/services/RestClient';
+import Toast from 'react-native-toast-message';
 
 type ReviewScreenRouteProp = RouteProp<AppointmentStackParamList, 'Review'>;
 
@@ -19,6 +21,30 @@ const ReviewScreen: React.FC = () => {
     setRating(value);
   };
 
+  const handleSubmit = async () => {
+    const reviewClient = restClient.apiClient.service("reviews");
+    const result = await reviewClient.create({
+      customerId: appointment.customer._id.$oid, 
+      employeeId: appointment.employee._id.$oid,
+      content: comment,
+      rating: rating
+    })
+
+    if (result.success){
+      Toast.show({
+        type: "success",
+        text1: "Đánh giá thành công",
+        text2: "Đánh giá của bạn đã được cập nhật.",
+      });
+      navigation.goBack();
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Đánh giá thất bại",
+        text2: "Vui lòng thử lại sau.",
+      });
+    }
+  }
   return (
     <View style={styles.container}>
       <Header title="Đánh giá" onBackPress={() => navigation.goBack()} />
@@ -46,7 +72,7 @@ const ReviewScreen: React.FC = () => {
           onChangeText={setComment}
           multiline
         />
-        <TouchableOpacity style={styles.submitButton}>
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitButtonText}>Đánh giá</Text>
         </TouchableOpacity>
       </View>
