@@ -7,7 +7,6 @@ export const handleLogin = async (phoneNumber, password, navigation) => {
 
     if (result.success) {
         const userRole = result.data.role;
-        console.log('userRole', userRole);
 
         if (userRole === UserRole.Employee) {
             navigation.navigate("HomeTabEmployee");
@@ -22,6 +21,7 @@ export const handleLogin = async (phoneNumber, password, navigation) => {
                 text2: "Không xác định được quyền người dùng",
             });
         }
+
     } else {
         Toast.show({
             type: "error",

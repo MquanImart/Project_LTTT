@@ -39,7 +39,7 @@ const DetailEmployee = () => {
   
       if (updateResult.success) {
         const userService = restClient.apiClient.service("/users");
-        const deleteResult = await userService.patch(employeeId, { deletedAt: new Date().toISOString() });
+        const deleteResult = await userService.remove(employeeId);
   
         if (deleteResult.success) {
           navigation.reset({
