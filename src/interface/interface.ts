@@ -1,3 +1,5 @@
+import { Key } from "react";
+
 export enum UserRole {
     Admin = "Admin",
     Employee = "Employee",
