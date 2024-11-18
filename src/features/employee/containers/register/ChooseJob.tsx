@@ -1,64 +1,118 @@
-import { View, Image, Text } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import Styles from "./Styles";
 import { Service } from "@/src/interface/interface";
 import { useEffect, useState } from "react";
-import { Button, List } from "react-native-paper";
 import restClient from "@/src/shared/services/RestClient";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
+import Toast from "react-native-toast-message";
+import { EmployeeStatus } from "@/src/interface/interface";
+
+type DetailEmployeeNavigationProp = NativeStackNavigationProp<ManageEmployeeStackParamList, 'Employee'>;
 
 const ChooseJob = () => {
+    const navigation = useNavigation<DetailEmployeeNavigationProp>();
     const [services, setServices] = useState<Service[]>([]);
     const [choose, setChoose] = useState<Service[]>([]);
-  
-    useEffect(()=> {
+    const route = useRoute();
+    const { userId } = route.params as { userId: string};
+
+    useEffect(() => {
         getServices();
     }, []);
 
     const getServices = async () => {
         const serviceClient = restClient.apiClient.service("services");
         const result = await serviceClient.find({});
-        if (result.success){
+        if (result.success) {
             setServices(result.resData);
         }
-    }
+    };
+
     const handlePress = (index: number) => {
-      const selectedService = services[index];
-      const isChosen = choose.findIndex((item) => item._id === selectedService._id);
-    
-      if (isChosen === -1) {
-        // Nếu chưa tồn tại, thêm vào choose
-        setChoose((prev) => [...prev, selectedService]);
-      } else {
-        // Nếu đã tồn tại, xóa khỏi choose
-        setChoose((prev) => prev.filter((item) => item._id !== selectedService._id));
-      }
+        const selectedService = services[index];
+        const isChosen = choose.findIndex((item) => item._id === selectedService._id);
+
+        if (isChosen === -1) {
+            setChoose((prev) => [...prev, selectedService]);
+        } else {
+            setChoose((prev) => prev.filter((item) => item._id !== selectedService._id));
+        }
     };
 
     const isChoose = (index: number) => {
         const selectedService = services[index];
-        const isChosen = choose.findIndex((item) => item._id === selectedService._id);
-        console.log(selectedService);
-        console.log(isChosen);
-        if (isChosen === -1) return false;
-        else return true;
-    }
+        return choose.some((item) => item._id === selectedService._id);
+    };
+
+    const handleSubmit = async () => {
+        const jobIds = choose.map((item) => item._id);
+    
+        if (jobIds.length === 0) {
+            Toast.show({
+                type: "info",
+                text1: "Thông báo",
+                text2: "Bạn chưa chọn công việc nào.",
+            });
+            return;
+        }
+    
+        try {
+            const employeeClient = restClient.apiClient.service("/employees");
+            const result = await employeeClient.create({
+                userId,
+                jobIds,
+                status: EmployeeStatus.Active,
+            });
+    
+            if (result.success) {
+                Toast.show({
+                    type: "success",
+                    text1: "Thành công",
+                    text2: "Nhân viên được tạo thành công.",
+                });
+                navigation.navigate("Employee");
+            } else {
+                Toast.show({
+                    type: "error",
+                    text1: "Thất bại",
+                    text2: result.message || "Tạo nhân viên không thành công.",
+                });
+            }
+        } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Lỗi",
+                text2: "Không thể tạo nhân viên. Vui lòng thử lại sau.",
+            });
+        }
+    };    
+
     return (
         <View style={Styles.container}>
-            <Image
-                source={require("../../../../assets/images/login.png")}
-                style={{ width: 150, height: 150, marginBottom: 20, alignContent: "center" }}
-            />
             <Text style={Styles.texttitle}>Chọn công việc</Text>
-            {services.map((service, index) => (
-              <List.Item
-                style={isChoose(index)?Styles.chooseItem: {}}
-                key={service._id}
-                title={service.name}
-                onPress={() => handlePress(index)}
-              />
-            ))}
-            
+            <FlatList
+                data={services}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                        style={[Styles.item, isChoose(index) && Styles.chooseItem]}
+                        onPress={() => handlePress(index)}
+                    >
+                        <Text style={[Styles.itemText, isChoose(index) && Styles.itemTextChosen]}>
+                            {item.name}
+                        </Text>
+                    </TouchableOpacity>
+                )}
+                contentContainerStyle={Styles.listContainer}
+                initialNumToRender={10}
+            />
+            <TouchableOpacity style={Styles.submitButton} onPress={handleSubmit}>
+                <Text style={Styles.submitButtonText}>Xác nhận</Text>
+            </TouchableOpacity>
         </View>
-    )
-}
+    );
+};
 
 export default ChooseJob;

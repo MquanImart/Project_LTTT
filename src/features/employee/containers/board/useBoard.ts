@@ -1,40 +1,60 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import restClient from "@/src/shared/services/RestClient";
 
 export interface EmployeeDisplay {
     id: string;
     firstName: string;
     lastName: string;
     phone: string;
-}
-
-const useBoard = () => {
+    avatar: string; // Thêm thuộc tính avatar
+  }
+  
+  const useBoard = () => {
     const [listEmployee, setListEmployee] = useState<EmployeeDisplay[]>([]);
-
-    useEffect(()=> {
-        setListEmployee(employees);
-    },[]);
-
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [totalPages, setTotalPages] = useState(1);
+  
+    const fetchEmployees = async ({ page = 0, searchQuery = '', filterType = '1' }) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const employeesClient = restClient.apiClient.service("/users/employees");
+        const result = await employeesClient.find({
+          page,
+          perPage: 10, 
+          searchQuery,
+          filterType,
+        });
+  
+        if (result.success) {
+          const employees = result.resData.map((employee: any) => ({
+            id: employee._id,
+            firstName: employee.personalInfo.firstName || "",
+            lastName: employee.personalInfo.lastName || "",
+            phone: employee.account.phoneNumber || "",
+            avatar: employee.avatar || "", // Lấy avatar từ API
+          }));
+          setListEmployee(employees);
+          setTotalPages(result.totalPages); // Tổng số trang từ API
+        } else {
+          setError(result.message || "Lỗi không xác định.");
+        }
+      } catch (err: any) {
+        setError(err.message || "Lỗi hệ thống.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
     return {
-        listEmployee
-    }
-}
-
-export default useBoard;
-
-const employees: EmployeeDisplay[] = [
-    { id: '1', firstName: 'John', lastName: 'Doe', phone: '123-456-7890' },
-    { id: '2', firstName: 'Jane', lastName: 'Smith', phone: '098-765-4321' },
-    { id: '3', firstName: 'John', lastName: 'Doe', phone: '123-456-7890' },
-    { id: '4', firstName: 'Jane', lastName: 'Smith', phone: '098-765-4321' },
-    { id: '5', firstName: 'Alice', lastName: 'Johnson', phone: '555-555-5555' },
-    { id: '6', firstName: 'Bob', lastName: 'Brown', phone: '666-666-6666' },
-    { id: '7', firstName: 'Charlie', lastName: 'Davis', phone: '777-777-7777' },
-    { id: '8', firstName: 'Eve', lastName: 'Clark', phone: '888-888-8888' },
-    { id: '9', firstName: 'John', lastName: 'Doe', phone: '123-456-7890' },
-    { id: '10', firstName: 'Jane', lastName: 'Smith', phone: '098-765-4321' },
-    { id: '11', firstName: 'Alice', lastName: 'Johnson', phone: '555-555-5555' },
-    { id: '12', firstName: 'Bob', lastName: 'Brown', phone: '666-666-6666' },
-    { id: '13', firstName: 'Charlie', lastName: 'Davis', phone: '777-777-7777' },
-    { id: '14', firstName: 'Eve', lastName: 'Clark', phone: '888-888-8888' },
-    // Thêm các nhân viên khác nếu cần
-  ];
+      listEmployee,
+      loading,
+      error,
+      fetchEmployees,
+      totalPages,
+    };
+  };
+  
+  export default useBoard;
+  

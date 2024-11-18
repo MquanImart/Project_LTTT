@@ -14,10 +14,10 @@ const ServiceEmployee = ({services}: ServiceEmployeeProps) => {
             <ScrollView>
             {services.map((service)=> (
                 <List.Item
-                    key={service.id}
-                  title={service.name}
-                  style={styles.item}
-                  titleStyle={styles.title}
+                    key={service._id}
+                    title={service.name}
+                    style={styles.item}
+                    titleStyle={styles.title}
                 />
             ))}
             </ScrollView>

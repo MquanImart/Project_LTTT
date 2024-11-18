@@ -10,10 +10,10 @@ const Stack = createStackNavigator();
 
 export type ManageEmployeeStackParamList = {
   Employee: undefined;
-  Details: undefined;
+  Details: { employeeId: string };
   RegisterEmployee: undefined;
   RegisterInfoEmployee: {userId: string};
-  ChooseJob: undefined;
+  ChooseJob: {userId: string};
 };
 
 function ManageEmployee() {

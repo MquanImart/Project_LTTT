@@ -10,6 +10,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RadioButton, Button } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
 import { CalendarDate } from "react-native-paper-dates/lib/typescript/Date/Calendar";
+import * as FileSystem from "expo-file-system";
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, "Login">;
 
@@ -43,20 +44,38 @@ const RegisterInformation = () => {
             });
             return;
         }
-
+    
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
         });
-
+    
         if (!result.canceled && result.assets && result.assets.length > 0) {
-            setUserInfo((prevUserInfo) => ({
-                ...prevUserInfo,
-                avatar: result.assets[0].uri,
-            }));
-            setImageUri(result.assets[0].uri);
+            const imageUri = result.assets[0].uri;
+    
+            try {
+                // Chuyển đổi sang Base64
+                const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+    
+                // Lưu Base64 vào state
+                setUserInfo((prevUserInfo) => ({
+                    ...prevUserInfo,
+                    avatar: `data:image/jpeg;base64,${base64Image}`,
+                }));
+    
+                setImageUri(imageUri);
+            } catch (error) {
+                console.error("Error converting image to Base64:", error);
+                Toast.show({
+                    type: "error",
+                    text1: "Lỗi khi chuyển đổi ảnh",
+                    text2: "Không thể chuyển đổi ảnh sang Base64.",
+                });
+            }
         }
     };
 

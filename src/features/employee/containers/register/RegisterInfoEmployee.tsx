@@ -10,6 +10,7 @@ import { DatePickerModal } from "react-native-paper-dates";
 import { CalendarDate } from "react-native-paper-dates/lib/typescript/Date/Calendar";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
+import * as FileSystem from "expo-file-system";
 
 type DetailEmployeeNavigationProp = NativeStackNavigationProp<ManageEmployeeStackParamList, 'Employee'>;
 
@@ -43,20 +44,38 @@ const RegisterInformationEmployee = () => {
             });
             return;
         }
-
+    
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
         });
-
+    
         if (!result.canceled && result.assets && result.assets.length > 0) {
-            setUserInfo((prevUserInfo) => ({
-                ...prevUserInfo,
-                avatar: result.assets[0].uri,
-            }));
-            setImageUri(result.assets[0].uri);
+            const imageUri = result.assets[0].uri;
+    
+            try {
+                // Chuyển đổi sang Base64
+                const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+    
+                // Lưu Base64 vào state
+                setUserInfo((prevUserInfo) => ({
+                    ...prevUserInfo,
+                    avatar: `data:image/jpeg;base64,${base64Image}`,
+                }));
+    
+                setImageUri(imageUri);
+            } catch (error) {
+                console.error("Error converting image to Base64:", error);
+                Toast.show({
+                    type: "error",
+                    text1: "Lỗi khi chuyển đổi ảnh",
+                    text2: "Không thể chuyển đổi ảnh sang Base64.",
+                });
+            }
         }
     };
 
@@ -75,7 +94,7 @@ const RegisterInformationEmployee = () => {
         try {
             const result = await handleUpdateUserInfo(userId, userInfo);
             if (result.success){
-                navigation.navigate("ChooseJob");
+                navigation.navigate("ChooseJob", {userId});
             }
             console.log("Điều hướng đến ChooseJob");
         } catch (error) {

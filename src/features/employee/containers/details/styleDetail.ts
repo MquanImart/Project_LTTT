@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     boxInfo: {
         width: '68%',
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'flex-start',
+        marginLeft: 30, 
         justifyContent: 'space-around',
     },
     cardLabel: {
