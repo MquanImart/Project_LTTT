@@ -3,7 +3,7 @@ import Colors from '@/src/styles/Color';
 
 const styles = StyleSheet.create({
     container: {
-
+        flex: 1,
     },
     body: {
         padding: 20,
@@ -37,19 +37,21 @@ const styles = StyleSheet.create({
     },
     timeContainer: {
         flexDirection: 'row',
+        justifyContent: 'space-between', // Đảm bảo không gian giữa hai button
         marginBottom: 15,
-        justifyContent: 'space-around'
     },
     dateButton: {
-        borderWidth: 1,
-        borderColor: '#ccc',
+        flex: 1, // Chia đều không gian cho hai button
+        marginHorizontal: 5, // Thêm khoảng cách giữa hai button
         padding: 10,
         borderRadius: 5,
+        backgroundColor: Colors.mainColor1,
         alignItems: 'center',
     },
     dateButtonText: {
         fontSize: 16,
-        color: '#000',
+        color: '#fff',
+        fontWeight: 'bold',
     },
     noteInput: {
         borderWidth: 1,
@@ -59,20 +61,23 @@ const styles = StyleSheet.create({
         height: 100,
         textAlignVertical: 'top',
     },
-    conteainerpass: {
-        alignItems: 'center',
-        marginTop: 20,
-    },
     btn: {
         backgroundColor: Colors.mainColor1,
         padding: 10,
         borderRadius: 5,
+        alignItems: 'center',
     },
     testpass: {
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
     },
+    scrollView: {
+        flexGrow: 1,
+        paddingHorizontal: 16,
+        paddingVertical: 20,
+    },
 });
+
 
 export default styles;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, ScrollView, TouchableOpacity } from "react-native";
 import { Button } from "react-native-paper";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import Toast from "react-native-toast-message";
@@ -133,83 +133,89 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
   };
 
   return (
-    <View style={styles.body}>
-      <Text style={styles.jobTitle}>Dịch vụ: {jobName}</Text>
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <View style={styles.body}>
+        <Text style={styles.jobTitle}>Dịch vụ: {jobName}</Text>
 
-      <Text style={styles.label}>Địa chỉ:</Text>
-      <View style={styles.addressContainer}>
+        <Text style={styles.label}>Địa chỉ:</Text>
+        <View style={styles.addressContainer}>
+          <TextInput
+            placeholder="Tỉnh/TP"
+            style={styles.addressInput}
+            value={address.city}
+            onChangeText={(text) => setAddress({ ...address, city: text })}
+          />
+          <TextInput
+            placeholder="Quận/Huyện"
+            style={styles.addressInput}
+            value={address.district}
+            onChangeText={(text) => setAddress({ ...address, district: text })}
+          />
+          <TextInput
+            placeholder="Phường/Xã"
+            style={styles.addressInput}
+            value={address.ward}
+            onChangeText={(text) => setAddress({ ...address, ward: text })}
+          />
+          <TextInput
+            placeholder="Số nhà"
+            style={styles.addressInput}
+            value={address.street}
+            onChangeText={(text) => setAddress({ ...address, street: text })}
+          />
+        </View>
+
+        <Text style={styles.label}>Số điện thoại:</Text>
         <TextInput
-          placeholder="Tỉnh/TP"
-          style={styles.addressInput}
-          value={address.city}
-          onChangeText={(text) => setAddress({ ...address, city: text })}
+          placeholder="Số điện thoại"
+          keyboardType="phone-pad"
+          style={styles.input}
+          value={phone}
+          onChangeText={setPhone}
         />
-        <TextInput
-          placeholder="Quận/Huyện"
-          style={styles.addressInput}
-          value={address.district}
-          onChangeText={(text) => setAddress({ ...address, district: text })}
-        />
-        <TextInput
-          placeholder="Phường/Xã"
-          style={styles.addressInput}
-          value={address.ward}
-          onChangeText={(text) => setAddress({ ...address, ward: text })}
-        />
-        <TextInput
-          placeholder="Số nhà"
-          style={styles.addressInput}
-          value={address.street}
-          onChangeText={(text) => setAddress({ ...address, street: text })}
-        />
+
+        <Text style={styles.label}>Thời gian:</Text>
+        <View style={styles.timeContainer}>
+          <TouchableOpacity style={styles.dateButton} onPress={() => setOpenDatePicker(true)}>
+            <Text style={styles.dateButtonText}>
+              {date ? date.toLocaleDateString("vi-VN") : "Chọn Ngày"}
+            </Text>
+          </TouchableOpacity>
+          <DatePickerModal
+            locale="vi"
+            mode="single"
+            visible={openDatePicker}
+            onDismiss={() => setOpenDatePicker(false)}
+            date={date}
+            onConfirm={(params) => {
+              setDate(params.date);
+              setOpenDatePicker(false);
+            }}
+            validRange={{ startDate: today }}
+          />
+
+          <TouchableOpacity style={styles.dateButton} onPress={() => setOpenTimePicker(true)}>
+            <Text style={styles.dateButtonText}>
+              {time ? `${time.hours}:${time.minutes}` : "Chọn Giờ"}
+            </Text>
+          </TouchableOpacity>
+          <TimePickerModal
+            visible={openTimePicker}
+            onDismiss={() => setOpenTimePicker(false)}
+            onConfirm={(params) => {
+              setTime({ hours: params.hours, minutes: params.minutes });
+              setOpenTimePicker(false);
+            }}
+            hours={time ? time.hours : today.getHours()}
+            minutes={time ? time.minutes : today.getMinutes()}
+          />
+        </View>
+
+        <TouchableOpacity style={styles.btn} onPress={handleBooking}>
+          <Text style={styles.testpass}>Đặt dịch vụ</Text>
+        </TouchableOpacity>
       </View>
-
-      <Text style={styles.label}>Số điện thoại:</Text>
-      <TextInput
-        placeholder="Số điện thoại"
-        keyboardType="phone-pad"
-        style={styles.input}
-        value={phone}
-        onChangeText={setPhone}
-      />
-
-      <Text style={styles.label}>Thời gian:</Text>
-      <View style={styles.timeContainer}>
-        <Button mode="contained" onPress={() => setOpenDatePicker(true)}>
-          Chọn Ngày: {date ? date.toLocaleDateString("vi-VN") : "Chưa chọn"}
-        </Button>
-        <DatePickerModal
-          locale="vi"
-          mode="single"
-          visible={openDatePicker}
-          onDismiss={() => setOpenDatePicker(false)}
-          date={date}
-          onConfirm={(params) => {
-            setDate(params.date);
-            setOpenDatePicker(false);
-          }}
-          validRange={{ startDate: today }}
-        />
-
-        <Button mode="contained" onPress={() => setOpenTimePicker(true)}>
-          Chọn Giờ: {time ? `${time.hours}:${time.minutes}` : "Chưa chọn"}
-        </Button>
-        <TimePickerModal
-          visible={openTimePicker}
-          onDismiss={() => setOpenTimePicker(false)}
-          onConfirm={(params) => {
-            setTime({ hours: params.hours, minutes: params.minutes });
-            setOpenTimePicker(false);
-          }}
-          hours={time ? time.hours : today.getHours()}
-          minutes={time ? time.minutes : today.getMinutes()}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.btn} onPress={handleBooking}>
-        <Text style={styles.testpass}>Đặt dịch vụ</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
