@@ -56,12 +56,13 @@ const styles = StyleSheet.create({
   tabsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingVertical: 10,
+    paddingVertical: 5,
     backgroundColor: Colors.background,
   },
   tab: {
+    marginHorizontal: 5,
     paddingHorizontal: 15,
-    paddingVertical: 5,
+    paddingVertical: 10,
     borderRadius: 20,
     backgroundColor: Colors.mainColor2,
   },
