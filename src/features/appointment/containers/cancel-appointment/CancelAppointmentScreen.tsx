@@ -30,7 +30,7 @@ const CancelAppointmentScreen = () => {
             onDetailsPress={handleDetails}          
           />
         )}
-        keyExtractor={(item) => item.order._id.$oid}
+        keyExtractor={(item) => item.order._id}
         contentContainerStyle={styles.listContainer}
       />
     </View>
