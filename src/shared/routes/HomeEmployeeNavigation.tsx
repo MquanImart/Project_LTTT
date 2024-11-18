@@ -1,8 +1,10 @@
+import ChatDetailScreen from "@/src/features/chat/containers/detail-chat/ChatDetailScreen";
 import CalendarDay from "@/src/features/home/containers/home-employee/calendar-day/CalendarDay";
 import CalendarMonth from "@/src/features/home/containers/home-employee/calendar-month/CalendarMonth";
 import CalendarYear from "@/src/features/home/containers/home-employee/calendar-year/CalendarYear";
 import HomeEmplyee from "@/src/features/home/containers/home-employee/HomeEmployee";
 import DetailService from "@/src/features/services/containers/details/DetailService";
+import { Order, Service } from "@/src/interface/interface";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
@@ -13,7 +15,7 @@ export type HomeEmployeeStackParamList = {
   CalendarYear: { startMonth: number };
   CalendarMonth: { startMonth: number, currYear: number };
   CalendarDay: { currDay: number, currMonth: number, currYear: number };
-  DetailService: undefined;
+  DetailService: { service: Service; order: Order };
 };
 
 function HomeEmployeeNavigation() {

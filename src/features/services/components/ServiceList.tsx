@@ -26,13 +26,13 @@ const ServiceList: React.FC<ServiceListProps> = ({
       renderItem={({ item }) => (
         <ServiceItem
           service={item}
-          expanded={expandedService === item.id}
+          expanded={expandedService === item._id}
           onExpand={handleExpand}
           onEdit={() => onEdit(item)}
           onDelete={() => onDelete(item)}
         />
       )}
-      keyExtractor={(item, index) => item.id ? String(item.id) : String(index)}
+      keyExtractor={(item, index) => item._id ? String(item._id) : String(index)}
       contentContainerStyle={styles.listContainer}
     />
   );

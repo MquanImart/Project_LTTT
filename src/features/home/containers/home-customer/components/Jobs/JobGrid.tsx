@@ -61,7 +61,7 @@ const JobGrid: React.FC = () => {
     <ScrollView>
       <View style={styles.grid}>
         {jobs.map((job) => (
-        <JobCard key={job.id} service={job} />
+        <JobCard key={job._id} service={job} />
         ))}
       </View>
     </ScrollView>

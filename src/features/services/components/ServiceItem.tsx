@@ -20,7 +20,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
   onDelete,
 }) => {
   const serviceName = service.name || "Unnamed Service"; // Đặt giá trị mặc định
-  const serviceId = service.id ? String(service.id) : "unknown"; // Chuyển id thành chuỗi
+  const serviceId = service._id ? String(service._id) : "unknown"; // Chuyển id thành chuỗi
 
   return (
     <View>

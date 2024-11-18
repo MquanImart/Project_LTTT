@@ -7,7 +7,8 @@ import ChatDetailScreen from '@/src/features/chat/containers/detail-chat/ChatDet
 export type RootStackParamList = {
   FavoriteEmployee: undefined;
   ChatScreen: undefined;
-  ChatDetailScreen: { contactId: string; 
+  ChatDetailScreen: { 
+    contactId: string; 
     contactName: string,
     onNewMessage: () => void; // Thêm onNewMessage callback
    };

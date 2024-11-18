@@ -4,14 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import styles from "./Styles";
 import { Service } from "@/src/interface/interface"; // Import interface Service
-
-type RootStackParamList = {
-  BookJob: {
-    jobName: string;
-    jobImage: string;
-    jobId: string;
-  };
-};
+import { RootStackParamList } from "@/src/shared/routes/HomeCustomerNavigation";
 
 type NavigationProp = StackNavigationProp<RootStackParamList, "BookJob">;
 
@@ -26,7 +19,7 @@ const JobCard: React.FC<JobCardProps> = ({ service }) => {
     navigation.navigate("BookJob", {
       jobName: service.name,
       jobImage: service.img,
-      jobId: service.id, // Truyền jobId
+      jobId: service._id, // Truyền jobId
     });
   };
 

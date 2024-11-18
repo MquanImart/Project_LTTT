@@ -91,7 +91,7 @@ export enum UserRole {
     }; // Optional field
     address: string;
     phoneNumber: string;
-    jobDetail: JobDetail;
+    jobDetail: JobDetail[];
   }
   export enum EmployeeStatus {
     Active = "Active",
@@ -154,6 +154,7 @@ export enum UserRole {
   }
   export interface Bill {
     _id: string;
+    idOrder: string;
     jobs: JobDetail[];
     status: string; // Da thanh toan , chua thanh toans
     createAt: {
