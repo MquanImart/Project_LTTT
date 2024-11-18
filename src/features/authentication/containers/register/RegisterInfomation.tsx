@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
 import { handleUpdateUserInfo } from "./handleRegister";
@@ -95,97 +95,107 @@ const RegisterInformation = () => {
     };
 
     return (
-        <View style={Styles.container}>
-            <View style={Styles.img}>
-                <TouchableOpacity onPress={handleChooseImage}>
-                    {imageUri ? (
-                        <Image source={{ uri: imageUri }} style={Styles.selectimg} />
-                    ) : (
-                        <View style={Styles.selectimg} />
-                    )}
-                </TouchableOpacity>
-            </View>
-            <Text style={Styles.texttitle}>Thông tin cá nhân</Text>
-
-            <Text style={Styles.textfield}>Họ:</Text>
-            <TextInput
-                style={Styles.textinput}
-                placeholder="Nhập họ của bạn"
-                value={userInfo.firstName}
-                onChangeText={(value) => handleInputChange("firstName", value)}
-            />
-
-            <Text style={Styles.textfield}>Tên:</Text>
-            <TextInput
-                style={Styles.textinput}
-                placeholder="Nhập tên của bạn"
-                value={userInfo.lastName}
-                onChangeText={(value) => handleInputChange("lastName", value)}
-            />
-
-            <Text style={Styles.textfield}>Giới tính:</Text>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <RadioButton
-                    value="Nam"
-                    status={userInfo.gender ? "checked" : "unchecked"}
-                    onPress={() => handleInputChange("gender", true)}
-                />
-                <Text>Nam</Text>
-                <RadioButton
-                    value="Nu"
-                    status={!userInfo.gender ? "checked" : "unchecked"}
-                    onPress={() => handleInputChange("gender", false)}
-                />
-                <Text>Nữ</Text>
-            </View>
-
-            <Text style={Styles.textfield}>Ngày sinh:</Text>
-            <Button
-                mode="contained"
-                onPress={() => setOpenDatePicker(true)}
-                contentStyle={{ backgroundColor: "#4CAF50" }}
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : undefined} // On iOS, we use padding to avoid the keyboard covering inputs
             >
-                Chọn Ngày: {userInfo.birthDate ? userInfo.birthDate : "Chưa chọn"}
-            </Button>
-            <DatePickerModal
-                locale="vi"
-                mode="single"
-                visible={openDatePicker}
-                onDismiss={() => setOpenDatePicker(false)}
-                date={date}
-                onConfirm={(params) => onConfirmDate(params.date ?? null)} // Chuyển undefined thành null
-                validRange={{ endDate: new Date() }}
-            />
-            <Text style={Styles.textfield}>Địa chỉ:</Text>
-            <TextInput
-                style={Styles.textinput}
-                placeholder="Tỉnh/TP"
-                value={userInfo.province}
-                onChangeText={(value) => handleInputChange("province", value)}
-            />
-            <TextInput
-                style={Styles.textinput}
-                placeholder="Quận/Huyện"
-                value={userInfo.district}
-                onChangeText={(value) => handleInputChange("district", value)}
-            />
-            <TextInput
-                style={Styles.textinput}
-                placeholder="Phường/Xã"
-                value={userInfo.ward}
-                onChangeText={(value) => handleInputChange("ward", value)}
-            />
-            <TextInput
-                style={Styles.textinput}
-                placeholder="Số nhà"
-                value={userInfo.street}
-                onChangeText={(value) => handleInputChange("street", value)}
-            />
-
-            <TouchableOpacity style={Styles.btn} onPress={handleSubmit}>
-                <Text style={{ color: "#fff", fontSize: 16 }}>Cập nhật thông tin cá nhân</Text>
-            </TouchableOpacity>
-        </View>
+                <ScrollView>
+                <View style={Styles.container}>
+                    <View style={Styles.img}>
+                        <TouchableOpacity onPress={handleChooseImage}>
+                            {imageUri ? (
+                                <Image source={{ uri: imageUri }} style={Styles.selectimg} />
+                            ) : (
+                                <View style={Styles.selectimg} />
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={Styles.texttitle}>Thông tin cá nhân</Text>
+                        
+                    <Text style={Styles.textfield}>Họ:</Text>
+                    <TextInput
+                        style={Styles.textinput}
+                        placeholder="Nhập họ của bạn"
+                        value={userInfo.firstName}
+                        onChangeText={(value) => handleInputChange("firstName", value)}
+                    />
+        
+                    <Text style={Styles.textfield}>Tên:</Text>
+                    <TextInput
+                        style={Styles.textinput}
+                        placeholder="Nhập tên của bạn"
+                        value={userInfo.lastName}
+                        onChangeText={(value) => handleInputChange("lastName", value)}
+                    />
+        
+                    <Text style={Styles.textfield}>Giới tính:</Text>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <RadioButton
+                            value="Nam"
+                            status={userInfo.gender ? "checked" : "unchecked"}
+                            onPress={() => handleInputChange("gender", true)}
+                        />
+                        <Text>Nam</Text>
+                        <RadioButton
+                            value="Nu"
+                            status={!userInfo.gender ? "checked" : "unchecked"}
+                            onPress={() => handleInputChange("gender", false)}
+                        />
+                        <Text>Nữ</Text>
+                    </View>
+                        
+                    <Text style={Styles.textfield}>Ngày sinh:</Text>
+                    <Button
+                        mode="contained"
+                        onPress={() => setOpenDatePicker(true)}
+                        contentStyle={{ backgroundColor: "#4CAF50" }}
+                    >
+                        Chọn Ngày: {userInfo.birthDate ? userInfo.birthDate : "Chưa chọn"}
+                    </Button>
+                    <DatePickerModal
+                        locale="vi"
+                        mode="single"
+                        visible={openDatePicker}
+                        onDismiss={() => setOpenDatePicker(false)}
+                        date={date}
+                        onConfirm={(params) => onConfirmDate(params.date ?? null)} // Chuyển undefined thành null
+                        validRange={{ endDate: new Date() }}
+                    />
+                    <Text style={Styles.textfield}>Địa chỉ:</Text>
+                    <TextInput
+                        style={Styles.textinput}
+                        placeholder="Tỉnh/TP"
+                        value={userInfo.province}
+                        onChangeText={(value) => handleInputChange("province", value)}
+                    />
+                    <TextInput
+                        style={Styles.textinput}
+                        placeholder="Quận/Huyện"
+                        value={userInfo.district}
+                        onChangeText={(value) => handleInputChange("district", value)}
+                    />
+                    <TextInput
+                        style={Styles.textinput}
+                        placeholder="Phường/Xã"
+                        value={userInfo.ward}
+                        onChangeText={(value) => handleInputChange("ward", value)}
+                    />
+                    <TextInput
+                        style={Styles.textinput}
+                        placeholder="Số nhà"
+                        value={userInfo.street}
+                        onChangeText={(value) => handleInputChange("street", value)}
+                    />
+        
+                    <TouchableOpacity style={Styles.btn} onPress={handleSubmit}>
+                        <Text style={{ color: "#fff", fontSize: 16 }}>Cập nhật thông tin cá nhân</Text>
+                    </TouchableOpacity>
+                </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+        
     );
 };
 

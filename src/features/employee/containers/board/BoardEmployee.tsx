@@ -7,6 +7,7 @@ import useBoard, { EmployeeDisplay } from "./useBoard";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ManageEmployeeStackParamList } from "@/src/shared/routes/ManageEmployeeNav";
+import Dropdown from "@/src/shared/components/dropdown/Dropdown";
 
 type DetailEmployeeNavigationProp = NativeStackNavigationProp<ManageEmployeeStackParamList, 'Details'>;
 

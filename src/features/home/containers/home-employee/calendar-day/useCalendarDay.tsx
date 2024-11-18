@@ -1,4 +1,4 @@
-import { Service } from "@/src/interface/interface";
+import { Order, Service } from "@/src/interface/interface";
 import { OrderWithService } from "@/src/interface/ordersInterface";
 import restClient from "@/src/shared/services/RestClient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +13,7 @@ export type JobDay = {
     second: number;
     service: Service;
     address: string;
+    order: Order;    
 }
 
 interface useCalendarDayProps{
@@ -47,7 +48,7 @@ const useCalendarDay = ({year, month, day} : useCalendarDayProps) => {
 
     const getDataAllJob = () => {
         const newAllJob : JobDay[] = allOrder.map((item)=> {
-            const timestamp = item.order.startDate.$date;
+            const timestamp = item.order.startDate;
             const date = new Date(timestamp);
             const day = date.getDate(); // Ngày (1-31)
             const month = date.getMonth() + 1; // Tháng (0-11, cần +1 để thành 1-12)
@@ -63,7 +64,8 @@ const useCalendarDay = ({year, month, day} : useCalendarDayProps) => {
                 minute,
                 second,
                 service: item.service,
-                address: item.order.address
+                address: item.order.address,
+                order: item.order,
             }   
         })
         setAllJob(newAllJob);

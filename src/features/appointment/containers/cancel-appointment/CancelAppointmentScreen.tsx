@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Header from '@/src/shared/components/header/Header';
 import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
-import AppointmentUpcomingCard from '@/src/features/appointment/components/AppointmentUpcomingCard';
-import Colors from '@/src/styles/Color'; // Đảm bảo đường dẫn chính xác
+import AppointmentCancelCard from '@/src/features/appointment/components/AppointmentCancelCard';
+import Colors from '@/src/styles/Color';
 import useAppointment from '../useAppointment';
 import { ActivityIndicator, MD2Colors } from 'react-native-paper';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { AppointmentStackParamList } from '@/src/shared/routes/AppointmentNavigation';
 
-const UpcomingAppointmentScreen = () => {
-  const {upcomingAppoint, role} = useAppointment();
-
+const CancelAppointmentScreen = () => {
+  const navigation = useNavigation<NavigationProp<AppointmentStackParamList>>();
+  const {cancelAppoint, role} = useAppointment();
   const handleDetails = () => {
     //navigation.navigate("Details");
   }
@@ -17,17 +19,15 @@ const UpcomingAppointmentScreen = () => {
   return (
     <View style={styles.container}>
       <Header title="Đơn hàng" onBackPress={() => console.log('Back Pressed')} />
-      <AppointmentTabs selectedTab={'Chờ duyệt'}/>
+      <AppointmentTabs selectedTab={'Đã hủy'} />
       <FlatList
-        data={upcomingAppoint}
+        data={cancelAppoint}
         renderItem={({ item }) => (
-          <AppointmentUpcomingCard
+          <AppointmentCancelCard
             role={role}
             appointment={item}
-            onAcceptPress={() => console.log('Accept pressed')}
-            onRejectPress={() => console.log('Reject pressed')}
-            onFavoritePress={() => console.log('Favorite pressed')}
-            onDetailsPress={handleDetails}
+            onFavoritePress={() => console.log('Favorite pressed')} 
+            onDetailsPress={handleDetails}          
           />
         )}
         keyExtractor={(item) => item.order._id}
@@ -40,11 +40,11 @@ const UpcomingAppointmentScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background, 
+    backgroundColor: Colors.background,
   },
   listContainer: {
-    paddingBottom: 70, 
+    paddingBottom: 70,
   },
 });
 
-export default UpcomingAppointmentScreen;
+export default CancelAppointmentScreen;

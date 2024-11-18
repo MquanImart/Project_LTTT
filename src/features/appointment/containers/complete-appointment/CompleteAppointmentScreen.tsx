@@ -6,34 +6,35 @@ import AppointmentCard from '@/src/features/appointment/components/AppointmentCo
 import Colors from '@/src/styles/Color';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { AppointmentStackParamList } from '@/src/shared/routes/AppointmentNavigation';
-
-const appointments = [
-  { id: '1', name: 'Olivia Turner, M.D.', service: 'Clean House', rating: 3, avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg' },
-  { id: '2', name: 'Olivia Turner, M.D.', service: 'Clean House', rating: 4, avatar: 'https://www.prudentialuniforms.com/wp-content/uploads/2016/09/Automotive-Repair-Shops.jpg' },
-];
+import useAppointment from '../useAppointment';
+import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
 const CompleteAppointmentScreen = () => {
-  const [selectedTab, setSelectedTab] = useState<string>('Complete');
   const navigation = useNavigation<NavigationProp<AppointmentStackParamList>>();
 
-  const handleTabPress = (tab: string) => {
-    setSelectedTab(tab);
-  };
+  const {completeAppoint, role} = useAppointment();
+
+  const handleDetails = () => {
+    //navigation.navigate("Details");
+  }
+  if (role === null) return  <ActivityIndicator animating={true} color={MD2Colors.red800} />
 
   return (
     <View style={styles.container}>
-      <Header title="All appointment" onBackPress={() => console.log('Back Pressed')} />
-      <AppointmentTabs selectedTab={selectedTab} onTabPress={handleTabPress} />
+      <Header title="Đơn hàng" onBackPress={() => console.log('Back Pressed')} />
+      <AppointmentTabs selectedTab={'Hoàn thành'} />
       <FlatList
-        data={appointments}
+        data={completeAppoint}
         renderItem={({ item }) => (
           <AppointmentCard
+            role={role}
             appointment={item}
             onChatPress={() => console.log('Chat pressed')}
             onReviewPress={() => navigation.navigate('Review', { appointment: item })}
+            onDetailsPress={handleDetails}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.order._id}
       />
     </View>
   );

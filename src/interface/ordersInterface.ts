@@ -1,15 +1,12 @@
-import { Order, Service, User } from "./interface";
+import { Employee, Order, Service, User } from "./interface";
 
 export interface ScheduleOrder{ 
-    day: string;
-    month: string;
-    year: string;
-    count: number;
-}
-export interface ServiceOrder{ 
-  id: string;
+  idOrder: string;
+  day: number;
+  month: number;
+  year: number;
+  idServie: string;
   name: string;
-  count: number;
 }
 
 export interface OrderWithService {
@@ -17,4 +14,5 @@ export interface OrderWithService {
   service: Service;
   employee: User;
   customer: User;
+  employeeM: Employee;
 }

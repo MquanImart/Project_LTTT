@@ -1,7 +1,11 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+const screenHeight = Dimensions.get('window').height;
+
 const styles = StyleSheet.create({
     container:{
         flex: 1, 
+        height: screenHeight,
         justifyContent: "center", 
         alignItems: "center", 
         padding: 20, 

@@ -5,6 +5,8 @@ import Colors from '@/src/styles/Color';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import Header from '@/src/shared/components/header/Header';
 import { AppointmentStackParamList } from '@/src/shared/routes/AppointmentNavigation';
+import restClient from '@/src/shared/services/RestClient';
+import Toast from 'react-native-toast-message';
 
 type ReviewScreenRouteProp = RouteProp<AppointmentStackParamList, 'Review'>;
 
@@ -12,21 +14,45 @@ const ReviewScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<AppointmentStackParamList>>();
   const route = useRoute<ReviewScreenRouteProp>();
   const { appointment } = route.params;
-  const [rating, setRating] = useState(appointment.rating || 0);
+  const [rating, setRating] = useState(appointment.employeeM.rating || 0);
   const [comment, setComment] = useState('');
 
   const handleStarPress = (value: number) => {
     setRating(value);
   };
 
+  const handleSubmit = async () => {
+    const reviewClient = restClient.apiClient.service("reviews");
+    const result = await reviewClient.create({
+      customerId: appointment.customer._id, 
+      employeeId: appointment.employee._id,
+      content: comment,
+      rating: rating
+    })
+
+    if (result.success){
+      Toast.show({
+        type: "success",
+        text1: "Đánh giá thành công",
+        text2: "Đánh giá của bạn đã được cập nhật.",
+      });
+      navigation.goBack();
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Đánh giá thất bại",
+        text2: "Vui lòng thử lại sau.",
+      });
+    }
+  }
   return (
     <View style={styles.container}>
-      <Header title="Review" onBackPress={() => navigation.goBack()} />
+      <Header title="Đánh giá" onBackPress={() => navigation.goBack()} />
 
       <View style={styles.content}>
-        <Image source={{ uri: appointment.avatar }} style={styles.avatar} />
-        <Text style={styles.name}>{appointment.name}</Text>
-        <Text style={styles.service}>{appointment.service}</Text>
+        <Image source={{ uri: appointment.employee.avatar }} style={styles.avatar} />
+        <Text style={styles.name}>{`${appointment.employee.personalInfo.firstName} ${appointment.employee.personalInfo.lastName}`}</Text>
+        <Text style={styles.service}>{appointment.service.name}</Text>
         <View style={styles.ratingContainer}>
           {[1, 2, 3, 4, 5].map((value) => (
             <TouchableOpacity key={value} onPress={() => handleStarPress(value)}>
@@ -40,14 +66,14 @@ const ReviewScreen: React.FC = () => {
         </View>
         <TextInput
           style={styles.commentInput}
-          placeholder="Enter Your Comment Here..."
+          placeholder="Nhập đánh giá của bạn..."
           placeholderTextColor={Colors.mainColor1}
           value={comment}
           onChangeText={setComment}
           multiline
         />
-        <TouchableOpacity style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Add Review</Text>
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <Text style={styles.submitButtonText}>Đánh giá</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -109,6 +135,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  
 });
 
 export default ReviewScreen;

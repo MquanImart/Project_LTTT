@@ -5,13 +5,7 @@ import styles from "./Styles";
 import Header from "@/src/shared/components/header/Header";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
-
-type RootStackParamList = {
-  BookJob: {
-    jobName: string;
-    jobId: string;
-  };
-};
+import { RootStackParamList } from "@/src/shared/routes/HomeCustomerNavigation";
 
 type BookJobNavigationProp = StackNavigationProp<RootStackParamList, "BookJob">;
 type BookJobRouteProp = RouteProp<RootStackParamList, "BookJob">;
