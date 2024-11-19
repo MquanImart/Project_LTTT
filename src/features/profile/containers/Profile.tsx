@@ -8,8 +8,14 @@ import Header from '@/src/shared/components/header/Header';
 import restClient from '@/src/shared/services/RestClient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '@/src/shared/routes/LoginNavigation';
+import { useNavigation } from '@react-navigation/native';
+
+type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, "Profile">;
 
 const Profile = () => {
+    const navigation = useNavigation<LoginScreenNavigationProp>();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [userName, setUserName] = useState("");
@@ -149,6 +155,14 @@ const Profile = () => {
         }
     };
 
+    const handleLogout = async () => {
+        const userId = await AsyncStorage.getItem("userId");
+        const logoutResponse = await restClient.apiClient.logout({ userId });
+        if (logoutResponse.success) {
+            navigation.navigate("Login");
+        }
+    };
+
     if (loading) {
         return (
             <View>
@@ -177,8 +191,11 @@ const Profile = () => {
                     setPassword={isEditable ? setPassword : () => {}}
                     isEditable={isEditable}
                 />
-                <ActionButtons onEditOrSave={handleEditOrSave} buttonText={buttonText} />
-            </View>
+                <ActionButtons
+                    onEditOrSave={handleEditOrSave}
+                    buttonText={buttonText}
+                    onLogout={handleLogout} // Truyền hàm logout
+                />            </View>
             <Toast />
         </View>
     );
