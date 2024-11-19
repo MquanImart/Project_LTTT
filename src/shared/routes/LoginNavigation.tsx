@@ -16,7 +16,7 @@ export type RootStackParamList = {
     Login: undefined;
     RegisterInfomation: {userId: string};
     Register: undefined;
-    Verify: undefined;
+    Verify: { phoneNumber: string };
     ResetPassword: undefined;
     HomeTabCustomer: undefined;
     DetailsEmployee: {id: string};

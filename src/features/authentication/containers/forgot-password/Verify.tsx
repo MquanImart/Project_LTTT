@@ -1,15 +1,29 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, Alert, Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Image,
+    Alert,
+    Keyboard,
+    TouchableWithoutFeedback,
+} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { RootStackParamList } from "@/src/shared/routes/LoginNavigation";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import Styles from "./Styles";
+import restClient from "@/src/shared/services/RestClient"; // Import your API client
 
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Verify'>;
+type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, "Verify">;
+type VerifyScreenRouteProp = RouteProp<RootStackParamList, "Verify">;
 
 const Verify = () => {
     const navigation = useNavigation<LoginScreenNavigationProp>();
+    const route = useRoute<VerifyScreenRouteProp>();
+    const phoneNumber = route.params.phoneNumber; // Get phoneNumber from route.params
+
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -23,7 +37,7 @@ const Verify = () => {
         setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
     };
 
-    const handlePasswordReset = () => {
+    const handlePasswordReset = async () => {
         if (!newPassword || !confirmNewPassword) {
             Alert.alert("Thông báo", "Vui lòng nhập đầy đủ thông tin.");
             return;
@@ -34,8 +48,23 @@ const Verify = () => {
             return;
         }
 
-        Alert.alert("Thành công", "Mật khẩu của bạn đã được đặt lại.");
-        navigation.navigate("Login");
+        try {
+            const result = await restClient.apiClient
+                .service("auths/reset-password")
+                .create({
+                    phoneNumber,
+                    newPassword,
+                });
+
+            if (result.success) {
+                Alert.alert("Thành công", "Mật khẩu của bạn đã được đặt lại.");
+                navigation.navigate("Login");
+            } else {
+                Alert.alert("Thông báo", result.message || "Đặt lại mật khẩu thất bại.");
+            }
+        } catch (error) {
+            Alert.alert("Thông báo", "Đã xảy ra lỗi khi đặt lại mật khẩu.");
+        }
     };
 
     return (
@@ -46,7 +75,7 @@ const Verify = () => {
                     style={Styles.logo}
                 />
 
-                <Text style={Styles.texttitle}>Quên mật khẩu</Text>
+                <Text style={Styles.texttitle}>Đặt lại mật khẩu</Text>
 
                 <Text style={Styles.textfield}>Mật khẩu mới:</Text>
 
