@@ -66,10 +66,10 @@ const CompleteAppointmentScreen = () => {
         });
       } else {
         Toast.show({
-          type: "error",
-          text1: "Lỗi",
+          type: "info", 
+          text1: "Cảnh báo",
           text2: result.messages || "Không thể thêm nhân viên vào danh sách yêu thích.",
-        });
+        });        
       }
     } catch (error) {
       console.error("Error adding favorite employee:", error);
@@ -98,7 +98,7 @@ const CompleteAppointmentScreen = () => {
             onChatPress={() => handleChat(item)} 
             onReviewPress={() => navigation.navigate('Review', { appointment: item })}
             onDetailsPress={() => handleDetails(item)} 
-            onFavouritePress={() => addFavoriteEmployee(item.order.employeeId)}
+            onFavouritePress={() => addFavoriteEmployee(item.employeeM._id)}
           />
         )}
         keyExtractor={(item) => item.order._id}

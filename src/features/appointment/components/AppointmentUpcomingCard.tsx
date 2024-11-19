@@ -10,7 +10,6 @@ interface AppointmentUpcomingCardProps {
   onDetailsPress: () => void;
   onAcceptPress: () => void;
   onRejectPress: () => void;
-  onFavoritePress: () => void;
 }
 
 const AppointmentUpcomingCard: React.FC<AppointmentUpcomingCardProps> = ({
@@ -19,7 +18,6 @@ const AppointmentUpcomingCard: React.FC<AppointmentUpcomingCardProps> = ({
   onDetailsPress,
   onAcceptPress,
   onRejectPress,
-  onFavoritePress,
 }) => {
   const date = new Date(appointment.order.startDate);
 
@@ -32,16 +30,16 @@ const AppointmentUpcomingCard: React.FC<AppointmentUpcomingCardProps> = ({
           :`${appointment.customer.personalInfo.firstName} ${appointment.customer.personalInfo.lastName}`}
         </Text>
         <Text style={styles.service}>{appointment.service.name}</Text>
-        <View style={styles.ratingContainer}>
+        {role !== "Employee"  && <View style={styles.ratingContainer}>
           {[...Array(5)].map((_, i) => (
             <Icon
               key={i}
               name="star"
               size={16}
-              color={i < (appointment.employeeM.rating?appointment.employeeM.rating:0) ? Colors.mainColor1 : Colors.icon}
+              color={i < (appointment.employeeM.rating?appointment.employeeM.rating:0) ? '#FFD700' : '#C0C0C0'}
             />
           ))}
-        </View>
+        </View> }
         <View style={styles.dateTimeContainer}>
           <View style={styles.dateContainer}>
             <Icon name="event" size={14} color={Colors.icon} />
@@ -67,9 +65,6 @@ const AppointmentUpcomingCard: React.FC<AppointmentUpcomingCardProps> = ({
         </View>}
         </View>
       </View>
-      <TouchableOpacity style={styles.favoriteButton} onPress={onFavoritePress}>
-        <Icon name="favorite-border" size={24} color={Colors.red} />
-      </TouchableOpacity>
     </View>
   );
 };

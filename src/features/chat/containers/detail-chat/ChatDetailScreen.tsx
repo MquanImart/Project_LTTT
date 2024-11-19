@@ -39,9 +39,8 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
     const params = new URLSearchParams();
     params.append('participants', userId);
     params.append('participants', contactId);
-
     try {
-      const result = await restClient.chatClients.find(params);
+      const result = await restClient.apiClient.service("chats/messages").find(params)
       if (result.success) {
         setMessages(result.resData);
       } else {
@@ -64,8 +63,8 @@ const ChatDetailScreen: React.FC<ChatDetailScreenProps> = ({ navigation, route }
       senderId: currentUserId,
     };
 
-    try {
-      const result = await restClient.chatClient.create(chatRequest);
+    try {    
+      const result = await restClient.apiClient.service("chats").create(chatRequest)
       if (result.success) {
         setMessages((prev) => [...prev, result.resData]); // Update local messages
         setInputText('');

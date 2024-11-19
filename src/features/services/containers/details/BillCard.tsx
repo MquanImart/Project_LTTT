@@ -9,9 +9,16 @@ interface BillCardProps {
   setJobs: (value: JobDetail[]) => void;
   updateJob: (index: number, updatedField: Partial<JobDetail>) => Promise<void>;
   disableDelete?: boolean; // Thêm prop để kiểm soát việc xóa
+  disableActions?: boolean;
 }
 
-const BillCard = ({ jobs, setJobs, updateJob, disableDelete = false }: BillCardProps) => {
+const BillCard = ({
+   jobs, 
+   setJobs, 
+   updateJob, 
+   disableDelete = false,
+   disableActions = false,
+   }: BillCardProps) => {
   const [errors, setErrors] = useState<string[]>([]);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
 
@@ -66,7 +73,7 @@ const BillCard = ({ jobs, setJobs, updateJob, disableDelete = false }: BillCardP
           <Text style={styles.textJob}>{job.jobName}</Text>
           <TextInput
             value={job.price.toString()}
-            editable={userRole === UserRole.Admin || userRole === UserRole.Employee}
+            editable={!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee)}
             onChangeText={(text) => handlePriceChange(text, index)}
             style={styles.inputPrice}
             keyboardType="numeric"

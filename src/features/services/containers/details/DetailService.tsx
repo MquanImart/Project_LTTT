@@ -14,6 +14,7 @@ import Colors from "@/src/styles/Color";
 import styles from "./styleDetail";
 import { JobDetail, Order, Service, UserRole } from "@/src/interface/interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from 'react-native-toast-message';
 import restClient from "@/src/shared/services/RestClient";
 
 type DetailServiceNavigationProp = CompositeNavigationProp<
@@ -28,17 +29,26 @@ const DetailService = () => {
   const [loading, setLoading] = useState(false);
   const [jobs, setJobs] = useState<JobDetail[]>(order?.jobDetail || []);
   const [tab, setTab] = useState<number>(0);
+  const [hasBill, setHasBill] = useState(false);
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const [billStatus, setBillStatus] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserRole = async () => {
       const role = await AsyncStorage.getItem("role");
       setUserRole(role as UserRole);
-    };
+  };
+  const fetchBillStatus = async () => {
+    const { hasBill, billStatus } = await checkBillForService();
+    setHasBill(hasBill);
+    setBillStatus(billStatus); // Lưu trạng thái hóa đơn
+  };
+  
     fetchUserRole();
-  }, []);
+    fetchBillStatus();
+  }, [order]);
 
   const showDialog = (text: string) => {
     setVisible(true);
@@ -49,10 +59,45 @@ const DetailService = () => {
     setVisible(false);
     setMessage("");
   };
-
+  const checkBillForService = async (): Promise<{ hasBill: boolean; billStatus: string | null }> => {
+    try {
+      const orderId = order._id;
+  
+      if (!orderId) {
+        console.error("Order ID is missing.");
+        return { hasBill: false, billStatus: null };
+      }
+  
+      const response = await restClient.apiClient.get(`/bills/order/${orderId}`);
+  
+      if (response.success && response.data) {
+        return {
+          hasBill: true,
+          billStatus: response.data.status, // Trả về trạng thái của hóa đơn
+        };
+      }
+  
+      return { hasBill: false, billStatus: null }; // Không tìm thấy hóa đơn
+    } catch (error) {
+      console.error("Error checking bill for service:", error);
+  
+      Toast.show({
+        type: "error",
+        text1: "Lỗi",
+        text2: "Không thể kiểm tra hóa đơn cho dịch vụ này.",
+      });
+  
+      return { hasBill: false, billStatus: null }; // Mặc định trả về false khi có lỗi
+    }
+  };
+  
   const handleUpdateJob = async (index: number, updatedField: Partial<JobDetail>) => {
     if (userRole !== UserRole.Admin && userRole !== UserRole.Employee) {
-      showDialog("Bạn không có quyền chỉnh sửa công việc.");
+      Toast.show({
+        type: "error",
+        text1: "Thông báo",
+        text2: "Bạn không có quyền chỉnh sửa công việc.",
+      });
       return;
     }
 
@@ -71,9 +116,16 @@ const DetailService = () => {
       const client = restClient.apiClient.service("orders");
       const response = await client.patch(orderId, { jobDetail: updatedJobs });
 
-      if (!response.success) throw new Error(response.message);
+      if (!response.success) {
+        throw new Error(response.message);
+      }
     } catch (error) {
       console.error("Error updating job:", error);
+      Toast.show({
+        type: "error",
+        text1: "Lỗi",
+        text2: "Đã xảy ra lỗi khi chỉnh sửa công việc.",
+      });
     }
   };
 
@@ -86,20 +138,47 @@ const DetailService = () => {
         idCustomer: order.customerId,
         idEmployee: order.employeeId,
       };
-
+  
       const client = restClient.apiClient.service("bills");
       const response = await client.create(billData);
-
+  
       if (response.success) {
-        showDialog("Hóa đơn đã được tạo thành công.");
+        setHasBill(true);
+
+        Toast.show({
+          type: "success",
+          text1: "Thành công",
+          text2: "Hóa đơn đã được tạo thành công.",
+        });
+        setJobs((prevJobs) => [...prevJobs]); // Gọi lại để làm mới giao diện
       } else {
-        showDialog("Tạo hóa đơn thất bại.");
+        const errorMessage = response.messages || "Tạo hóa đơn thất bại.";
+        Toast.show({
+          type: "info",
+          text1: "Thông báo",
+          text2: errorMessage,
+        });
       }
-    } catch (error) {
-      showDialog("Đã xảy ra lỗi khi tạo hóa đơn.");
+    } catch (error: unknown) {
+      let errorMessage = "Đã xảy ra lỗi khi tạo hóa đơn.";
+  
+      // Kiểm tra và xử lý nếu lỗi là một object với `message`
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "object" && error !== null && "response" in error) {
+        // Kiểm tra lỗi từ `response` (nếu API trả về lỗi)
+        const apiError = error as { response?: { data?: { message?: string } } };
+        errorMessage = apiError.response?.data?.message || errorMessage;
+      }
+
+      Toast.show({
+        type: "error",
+        text1: "Lỗi",
+        text2: errorMessage,
+      });
     }
   };
-
+  
   const updateBillStatus = async () => {
     try {
       setLoading(true);
@@ -113,6 +192,7 @@ const DetailService = () => {
         const updateResponse = await client.patch(billId, { status: "Paid" });
 
         if (updateResponse.success) {
+          setBillStatus("Paid");
           showDialog("Trạng thái hóa đơn đã được cập nhật thành Đã thanh toán.");
         } else {
           showDialog("Cập nhật trạng thái hóa đơn thất bại.");
@@ -229,6 +309,7 @@ const DetailService = () => {
                 addJob={handleAddJob}
                 deleteJob={handleDeleteJob}
                 orderId={(order._id as any)?.$oid || order._id}
+                disableActions={hasBill}
               />
             )}
             {tab === 1 && (
@@ -237,6 +318,7 @@ const DetailService = () => {
                 setJobs={setJobs}
                 updateJob={handleUpdateJob}
                 disableDelete={true}
+                disableActions={hasBill}
               />
             )}
           </ScrollView>
@@ -244,6 +326,7 @@ const DetailService = () => {
 
         {tab === 1 && (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
           <View style={styles.boxButton}>
+            {!hasBill &&
             <Button
               style={[styles.buttonsubmit, { backgroundColor: Colors.mainColor1 }]}
               mode="contained"
@@ -252,8 +335,8 @@ const DetailService = () => {
               disabled={loading}
             >
               {loading ? "Đang gửi..." : "Tạo hóa đơn"}
-            </Button>
-            <Button
+            </Button>}
+            { billStatus !== "Paid" && <Button
               style={[styles.buttonsubmit, { backgroundColor: Colors.mainColor1 }]}
               mode="contained"
               labelStyle={{ color: "#fff" }}
@@ -261,7 +344,7 @@ const DetailService = () => {
               disabled={loading}
             >
               {loading ? "Đang cập nhật..." : "Xác nhận thanh toán"}
-            </Button>
+            </Button>}
           </View>
         )}
 

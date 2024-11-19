@@ -40,7 +40,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
 
   const fetchChats = async () => {
     try {
-      const result = await restClient.chatClient.find({});
+      const result = await restClient.apiClient.service("chats").find({});
       if (result.success) {
         setChats(result.resData);
       } else {
@@ -53,7 +53,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
 
   const fetchUsers = async () => {
     try {
-      const result = await restClient.chatClientss.find({});
+      const result = await restClient.apiClient.service("chats/available-contacts").find({});
       if (result.success) {
         setUsers(result.resData);
       } else {
@@ -75,9 +75,9 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation }) => {
 
   const deleteChat = async (userId: string) => {
     try {
-      const result = await restClient.chatClient.remove(userId);
+      const result = await restClient.apiClient.service("chats").remove(userId);
       if (result.success) {
-        Alert.alert('Success', 'Chat deleted successfully.');
+        Alert.alert('Success', 'Xóa thành công.');
         fetchChats();
       } else {
         Alert.alert('Error', result.messages || 'Failed to delete chat.');

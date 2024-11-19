@@ -25,7 +25,7 @@ const AppointmentCancelCard: React.FC<AppointmentCancelCardProps> = ({
           :`${appointment.customer.personalInfo.firstName} ${appointment.customer.personalInfo.lastName}`}
         </Text>
         <Text style={styles.service}>{appointment.service.name}</Text>
-        <View style={styles.ratingContainer}>
+        {role !== "Employee"  && <View style={styles.ratingContainer}>
           {[...Array(5)].map((_, i) => (
             <Icon
               key={i}
@@ -34,7 +34,7 @@ const AppointmentCancelCard: React.FC<AppointmentCancelCardProps> = ({
               color={i < (appointment.employeeM.rating?appointment.employeeM.rating:0) ? '#FFD700' : Colors.icon}
             />
           ))}
-        </View>
+        </View>}
         <View style={styles.dateTimeContainer}>
           <View style={styles.dateContainer}>
             <Icon name="event" size={14} color={Colors.icon} />

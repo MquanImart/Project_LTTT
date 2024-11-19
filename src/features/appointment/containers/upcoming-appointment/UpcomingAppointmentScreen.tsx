@@ -38,7 +38,6 @@ const UpcomingAppointmentScreen = () => {
             appointment={item}
             onAcceptPress={() => console.log('Accept pressed')}
             onRejectPress={() => console.log('Reject pressed')}
-            onFavoritePress={() => console.log('Favorite pressed')}
             onDetailsPress={() => handleDetails(item)} // Truyền tham số
           />
         )}

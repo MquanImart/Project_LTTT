@@ -11,6 +11,7 @@ interface DetailCardProps {
   addJob: (newJob: JobDetail) => Promise<void>;
   deleteJob: (index: number) => Promise<void>;
   orderId: string;
+  disableActions?: boolean;
 }
 
 const DetailCard = ({
@@ -20,6 +21,7 @@ const DetailCard = ({
   addJob,
   deleteJob,
   orderId,
+  disableActions = false,
 }: DetailCardProps) => {
   const [newJobName, setNewJobName] = useState("");
   const [userRole, setUserRole] = useState<UserRole | null>(null);
@@ -86,7 +88,7 @@ const DetailCard = ({
 
   return (
     <View style={styles.card}>
-      {(userRole === UserRole.Admin || userRole === UserRole.Employee) && (
+      {!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Tên công việc"
@@ -105,9 +107,9 @@ const DetailCard = ({
             value={job.jobName}
             onChangeText={(text) => handleUpdateJob(index, { jobName: text })}
             style={styles.inputJobName}
-            editable={userRole === UserRole.Admin || userRole === UserRole.Employee}
+            editable={!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee)}
           />
-          {(userRole === UserRole.Admin || userRole === UserRole.Employee) && (
+          {!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
             <TouchableOpacity onPress={() => handleDeleteJob(index)} style={styles.deleteButton}>
               <Text style={{ color: "#fff", fontWeight: "bold" }}>Xóa</Text>
             </TouchableOpacity>

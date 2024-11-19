@@ -200,18 +200,12 @@ const apiClient = new RestClient();
 const customerClient = apiClient.service("users/customer");
 const employeeClient = apiClient.service("users/employee");
 const usersClient = apiClient.service("users");
-const chatClient = apiClient.service("chats");
-const chatClients = apiClient.service("chats/messages");
-const chatClientss = apiClient.service("chats/available-contacts");
 
 const restClient = {
   apiClient,
   usersClient,
   customerClient,
   employeeClient,
-  chatClient,
-  chatClients,
-  chatClientss
 }
 
 export default restClient;
