@@ -159,7 +159,7 @@ class RestClient {
     }
   }
 
-  public async logout() {
+  public async logout(p0: { userId: any; }) {
     try {
       const userId = await AsyncStorage.getItem("userId");
       if (!this.token) {

@@ -9,6 +9,7 @@ import React from "react";
 import HomeTabEmployee from "./HomeTabEmployee";
 import HomeTabCustomer from "./HomeTabCustomer";
 import HomeTabAdminNavigation from "./HomeTabAdmin";
+import Profile from "@/src/features/profile/containers/Profile";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ export type RootStackParamList = {
     DetailsEmployee: {id: string};
     HomeTabEmployee: undefined;
     HomeTabAdmin: undefined;
+    Profile:undefined;
 };
 
 export function LoginNavigator() {
@@ -39,6 +41,7 @@ export function LoginNavigator() {
           <Stack.Screen name="HomeTabCustomer" component={HomeTabCustomer} />
           <Stack.Screen name="HomeTabEmployee" component={HomeTabEmployee} />
           <Stack.Screen name="HomeTabAdmin" component={HomeTabAdminNavigation} />
+          <Stack.Screen name="Profile" component={Profile} />
       </Stack.Navigator>
       </NavigationContainer>
   );
