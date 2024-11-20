@@ -20,7 +20,7 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [openTimePicker, setOpenTimePicker] = useState(false);
   const [address, setAddress] = useState({
-    city: "",
+    province: "",
     district: "",
     ward: "",
     street: "",
@@ -30,7 +30,7 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
   const today = new Date();
 
   const validateFields = () => {
-    if (!address.city || !address.district || !address.ward || !address.street) {
+    if (!address.province || !address.district || !address.ward || !address.street) {
       Toast.show({
         type: "error",
         text1: "Thông báo",
@@ -89,7 +89,7 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
         const payload = {
           jobId,
           customerId,
-          address: `${address.street}, ${address.ward}, ${address.district}, ${address.city}`,
+          address: `${address.street}, ${address.ward}, ${address.district}, ${address.district}`,
           phoneNumber: phone,
           startDate,
         };
@@ -128,7 +128,7 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
   const resetFields = () => {
     setDate(undefined);
     setTime(undefined);
-    setAddress({ city: "", district: "", ward: "", street: "" });
+    setAddress({ province: "", district: "", ward: "", street: "" });
     setPhone("");
   };
 
@@ -142,8 +142,8 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
           <TextInput
             placeholder="Tỉnh/TP"
             style={styles.addressInput}
-            value={address.city}
-            onChangeText={(text) => setAddress({ ...address, city: text })}
+            value={address.province}
+            onChangeText={(text) => setAddress({ ...address, province: text })}
           />
           <TextInput
             placeholder="Quận/Huyện"

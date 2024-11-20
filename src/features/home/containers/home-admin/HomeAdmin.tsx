@@ -1,30 +1,60 @@
 import React, { useState } from 'react';
 import Header from '@/src/shared/components/header/Header';
 import { ActivityIndicator, MD2Colors, Provider } from 'react-native-paper';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import useHomeAdmin from './useHomeAdmin';
 import styles from './stylesAdmin';
 import { ScrollView } from 'react-native-gesture-handler';
 import { BarChart, PieChart } from 'react-native-gifted-charts';
 import Dropdown from '@/src/shared/components/dropdown/Dropdown';
-
+import Icon from "react-native-vector-icons/MaterialIcons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import restClient from '@/src/shared/services/RestClient';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '@/src/shared/routes/LoginNavigation';
+import { useNavigation } from '@react-navigation/native';
+type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, "Profile">;
 const HomeAdmin = () => {
-  const {setSortByMonth, setSortByYear,
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+  const { setSortByMonth, setSortByYear,
     setSortByMonthSer, setSortByYearSer, allSchedule,
-    optionMonth, optionYear, dataOrder, dataService} = useHomeAdmin();
-  
-  if (allSchedule === null || dataOrder === null || dataService === null) 
+    optionMonth, optionYear, dataOrder, dataService } = useHomeAdmin();
+
+  if (allSchedule === null || dataOrder === null || dataService === null)
     return <ActivityIndicator animating={true} color={MD2Colors.red800} />
     
+  const handleLogout = async () => {
+    const userId = await AsyncStorage.getItem("userId");
+    const logoutResponse = await restClient.apiClient.logout({ userId });
+    if (logoutResponse.success) {
+        navigation.navigate("Login");
+    }
+};
+
   return (
     <Provider>
-      <Header title={'Thống kê'} onBackPress={()=> {}}/>
+      <View >
+        <Header title={'Thống kê'} showBackButton={false} />
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: 40,
+            left: 50,
+            zIndex: 1
+          }}
+          onPress={() => {
+            handleLogout();
+          }}
+        >
+          <Icon name="logout" size={24} color="#000" />
+        </TouchableOpacity>
+      </View>
       <ScrollView nestedScrollEnabled={true}>
         <View style={styles.boxChart}>
           <Text style={styles.textTitle}>Số đơn hàng</Text>
           <View style={styles.boxTitle}>
-            <Dropdown data={optionMonth} setValue={setSortByMonth}/>
-            <Dropdown data={optionYear} setValue={setSortByYear}/>
+            <Dropdown data={optionMonth} setValue={setSortByMonth} />
+            <Dropdown data={optionYear} setValue={setSortByYear} />
           </View>
           <BarChart
             data={dataOrder}
@@ -42,12 +72,12 @@ const HomeAdmin = () => {
             isAnimated // hiệu ứng hoạt hình
             animationDuration={1000} // thời gian hoạt hình
           />
-        </View>  
+        </View>
         <View style={styles.boxChart}>
           <Text style={styles.textTitle}>Thống kê dịch vụ</Text>
           <View style={styles.boxTitle}>
-          <Dropdown data={optionMonth} setValue={setSortByMonthSer}/>
-          <Dropdown data={optionYear} setValue={setSortByYearSer}/>
+            <Dropdown data={optionMonth} setValue={setSortByMonthSer} />
+            <Dropdown data={optionYear} setValue={setSortByYearSer} />
           </View>
           <View style={styles.boxPie}>
             <PieChart
@@ -69,8 +99,8 @@ const HomeAdmin = () => {
                 </View>
               ))}
             </View>
-            </View>
-        </View>  
+          </View>
+        </View>
       </ScrollView>
     </Provider>
   );

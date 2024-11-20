@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import HeaderProfile from '../components/HeaderProfile';
 import UserDetail from '../components/UserDetail';
 import Styles from '../components/Styles';
@@ -23,9 +23,9 @@ const Profile = () => {
     const [birthDate, setBirthDate] = useState("");
     const [address, setAddress] = useState({
         province: "",
-        city: "",
+        district: "",
+        ward: "",
         street: "",
-        number: "",
     });
     const [avatar, setAvatar] = useState("");
     const [password, setPassword] = useState("");
@@ -59,9 +59,9 @@ const Profile = () => {
                     setBirthDate(user.personalInfo?.birthDate || "");
                     setAddress({
                         province: user.address?.province || "",
-                        city: user.address?.city || "",
+                        district: user.address?.district || "",
+                        ward: user.address?.ward || "",
                         street: user.address?.street || "",
-                        number: user.address?.number || "",
                     });
                     setAvatar(user.avatar || "");
                     setPassword(user.account?.password || "");
@@ -172,10 +172,21 @@ const Profile = () => {
     }
 
     return (
+        <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View>
             <Header title="Hồ sơ" showBackButton={false} />
             <View style={Styles.container}>
-                <HeaderProfile userName={userName} phoneNumber={phoneNumber} isEditable={isEditable} avatar={avatar} setAvatar={setAvatar} />
+                <HeaderProfile 
+                    userName={userName} 
+                    phoneNumber={phoneNumber} 
+                    isEditable={isEditable} 
+                    avatar={avatar} 
+                    setAvatar={setAvatar} 
+                />
                 <UserDetail
                     firstName={firstName}
                     setFirstName={isEditable ? setFirstName : () => {}}
@@ -194,11 +205,14 @@ const Profile = () => {
                 <ActionButtons
                     onEditOrSave={handleEditOrSave}
                     buttonText={buttonText}
-                    onLogout={handleLogout} // Truyền hàm logout
-                />            </View>
+                    onLogout={handleLogout} 
+                />
+            </View>
             <Toast />
         </View>
-    );
+        </ScrollView>
+        </KeyboardAvoidingView>
+    );    
 };
 
 export default Profile;
