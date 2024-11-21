@@ -3,12 +3,6 @@ import restClient from "@/src/shared/services/RestClient";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const enum StateOrder {
-    Pending = "Pending", 
-    InProgress = "InProgress",   
-    Completed = "Completed",     
-    Canceled = "Canceled"   
-}
 
 const useAppointment = () => {
     const [role, setRole] = useState<string | null>(null);
@@ -25,7 +19,6 @@ const useAppointment = () => {
     useEffect(()=> {
         if (allOrder.length > 0){
             setComplelteAppoint(allOrder.filter((it)=> it.order.state === "Completed"));
-            setUpcomingAppoint(allOrder.filter((it)=> it.order.state === "Pending"))
             setProgressAppoint(allOrder.filter((it)=> it.order.state === "InProgress"))
             setCancelAppoint(allOrder.filter((it)=> it.order.state === "Canceled"))
         }
@@ -47,7 +40,7 @@ const useAppointment = () => {
         if (result.success){
             setAllOrder(result.resData);
         } else {
-            console.log(result.message);
+
         }
     }
     return {

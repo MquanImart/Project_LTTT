@@ -32,7 +32,7 @@ const Login = () => {
                 style={{ flex: 1 }}
                 behavior={Platform.OS === "ios" ? "padding" : undefined} // On iOS, we use padding to avoid the keyboard covering inputs
             >
-                <ScrollView>
+                <ScrollView> 
                 <View style={Styles.container}>
                     <Image
                         source={require("../../../../assets/images/login.png")}

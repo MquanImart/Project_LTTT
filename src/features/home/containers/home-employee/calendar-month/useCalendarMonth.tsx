@@ -43,7 +43,7 @@ const useCalendarMonth = ({month, year} : useCalendarMonthProps) => {
         if (result.success){
             setAllOrder(result.resData);
         } else {
-            console.log(result.message);
+
         }
     }
 
@@ -65,7 +65,8 @@ const useCalendarMonth = ({month, year} : useCalendarMonthProps) => {
                 minute,
                 second,
                 service: item.service,
-                address: item.order.address
+                address: item.order.address,
+                order: item.order
             }   
         })
         setAllJob(newAllJob);

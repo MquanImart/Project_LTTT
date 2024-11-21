@@ -3,16 +3,17 @@ import { useEffect, useState } from "react";
 import { getRandomColor } from "../../utils/ColorRandom";
 import restClient from "@/src/shared/services/RestClient";
 import Toast from "react-native-toast-message";
-import { getAllServiceCounts, getMonthYearCounts, getYearCounts, getYearlyServiceCounts, getYearMonthServiceCounts } from "../../utils/CreateDataChart";
+import { getAllServiceCounts, getDayMonthYearCounts, getMonthYearCounts, getYearCounts, getYearlyServiceCounts, getYearMonthServiceCounts } from "../../utils/CreateDataChart";
 
-interface DropDown{
+export interface DropDown{
     label: string;
     value: string;
 }
-type DataChart = {
+export type DataChart = {
     label: string;
     value: number;
-    frontColor: string;
+    frontColor?: string;
+    color?: string;
 }
 const optionMonth:DropDown[] = [
     {label: 'Tất cả', value: 'all'},
@@ -88,7 +89,7 @@ const useHomeAdmin = () => {
     }, [sortByMonth, sortByYear]);
         
     useEffect(()=> {
-        getDataServiceChart()
+        getDataServiceChart();
     }, [sortByMonthSer, sortByYearSer]);
 
     const getDataOrderChart = () => {
@@ -111,10 +112,10 @@ const useHomeAdmin = () => {
                         frontColor: getRandomColor()
                     })))
                 } else {
-                    const allYear = getMonthYearCounts(allSchedule);
+                    const allYear = getDayMonthYearCounts(allSchedule);
                     const allDay = allYear.filter((item) => item.year === sortByYear && item.month === sortByMonth)
                     setDataOrder(allDay.map((item)=> ({
-                        label: item.year.toString(),
+                        label: item.day.toString(),
                         value: item.count,
                         frontColor: getRandomColor()
                     })))
@@ -129,25 +130,26 @@ const useHomeAdmin = () => {
                 setDataService(allService.map((item)=> ({
                     label: item.name,
                     value: item.count,
-                    frontColor: getRandomColor()
+                    color: getRandomColor()
                 })))
             }
             else {
                 if (sortByMonthSer === 'all'){
                     const allService = getYearlyServiceCounts(allSchedule);
-                    const allServiceYear = allService.filter((item) => item.name === sortByYear)
+                    const allServiceYear = allService.filter((item) => item.year === sortByYearSer)
                     setDataService(allServiceYear.map((item)=> ({
                         label: item.name,
                         value: item.count,
-                        frontColor: getRandomColor()
+                        color: getRandomColor()
                     })))
                 } else {
                     const allService = getYearMonthServiceCounts(allSchedule);
-                    const allServiceMonth = allService.filter((item) => item.name === sortByYear && item.month === sortByMonth)
+                    const allServiceMonth = allService.filter((item) => item.year === sortByYearSer && item.month === sortByMonthSer)
+
                     setDataService(allServiceMonth.map((item)=> ({
                         label: item.name,
                         value: item.count,
-                        frontColor: getRandomColor()
+                        color: getRandomColor()
                     })))
                 }
             }

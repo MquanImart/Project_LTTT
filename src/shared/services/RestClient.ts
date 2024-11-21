@@ -58,7 +58,7 @@ class RestClient {
   public async authentication(phoneNumber: string, password: string) {
     try {
       const response = await axios.post(`${this.baseURL}/auths/login`, { phoneNumber, password });
-      console.log('rs', response.data)
+
       if (response.data.success) {
         // Lưu thông tin người dùng
         await AsyncStorage.setItem("token", response.data.token);

@@ -18,7 +18,8 @@ const AppointmentCancelCard: React.FC<AppointmentCancelCardProps> = ({
   const date = new Date(appointment.order.startDate);
   return (
     <View style={styles.card}>
-      <Image source={role==="Customer"? { uri: appointment.employee.avatar }:{ uri: appointment.customer.avatar }} style={styles.avatar} />
+      <Image source={role==="Customer"? (appointment.employee.avatar !== ""? {uri: appointment.employee.avatar}: require("@/src/assets/images/user.png"))
+        :(appointment.customer.avatar !== ""? { uri: appointment.customer.avatar }:require("@/src/assets/images/user.png"))} style={styles.avatar} />
       <View style={styles.infoContainer}>
         <Text style={styles.name}>
         {role==="Customer"?`${appointment.employee.personalInfo.firstName} ${appointment.employee.personalInfo.lastName}`
@@ -31,7 +32,7 @@ const AppointmentCancelCard: React.FC<AppointmentCancelCardProps> = ({
               key={i}
               name="star"
               size={16}
-              color={i < (appointment.employeeM.rating?appointment.employeeM.rating:0) ? '#FFD700' : Colors.icon}
+              color={i < ((appointment.employeeM.rating && appointment.employeeM.rating !== null) ?appointment.employeeM.rating:0) ? '#FFD700' : Colors.icon}
             />
           ))}
         </View>}

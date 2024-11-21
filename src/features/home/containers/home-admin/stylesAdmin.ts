@@ -1,4 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+
+const { width } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   boxTitle: {
     flexDirection: 'row',
@@ -13,8 +16,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   boxChart: {
-    width: '90%', alignSelf: 'center',
-    minHeight: 450,
+    width: width, alignSelf: 'center',
+    minHeight: 600,
     marginVertical: 20,
     backgroundColor: '#fff',
     borderRadius: 30,
