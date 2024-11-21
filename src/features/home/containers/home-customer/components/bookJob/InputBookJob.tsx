@@ -89,7 +89,7 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
         const payload = {
           jobId,
           customerId,
-          address: `${address.street}, ${address.ward}, ${address.district}, ${address.district}`,
+          address: `${address.province}, ${address.district}, ${address.ward}, ${address.street}`,
           phoneNumber: phone,
           startDate,
         };
@@ -145,21 +145,31 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
         <View style={styles.addressContainer}>
           <TextInput
             placeholder="Tỉnh/TP"
+            placeholderTextColor="#A9A9A9"
             style={styles.addressInput}
             value={address.province}
             onChangeText={(text) => setAddress({ ...address, province: text })}
           />
           <TextInput
             placeholder="Quận/Huyện"
+            placeholderTextColor="#A9A9A9"
             style={styles.addressInput}
             value={address.district}
             onChangeText={(text) => setAddress({ ...address, district: text })}
           />
           <TextInput
             placeholder="Phường/Xã"
+            placeholderTextColor="#A9A9A9"
             style={styles.addressInput}
             value={address.ward}
             onChangeText={(text) => setAddress({ ...address, ward: text })}
+          />
+          <TextInput
+            placeholder="Số nhà"
+            placeholderTextColor="#A9A9A9"
+            style={styles.addressInput}
+            value={address.street}
+            onChangeText={(text) => setAddress({ ...address, street: text })}
           />
           <TextInput
             placeholder="Số điện thoại"
