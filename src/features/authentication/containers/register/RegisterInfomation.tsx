@@ -17,6 +17,7 @@ type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, "Log
 const RegisterInformation = () => {
     const navigation = useNavigation<RegisterScreenNavigationProp>();
     const [imageUri, setImageUri] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [userInfo, setUserInfo] = useState({
         firstName: "",
         lastName: "",
@@ -32,7 +33,7 @@ const RegisterInformation = () => {
     const [openDatePicker, setOpenDatePicker] = useState(false);
     const [date, setDate] = useState<CalendarDate>(undefined);
     const route = useRoute();
-    const { userId } = route.params as { userId: string};
+    const { userId } = route.params as { userId: string };
 
     const handleChooseImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -44,29 +45,27 @@ const RegisterInformation = () => {
             });
             return;
         }
-    
+
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
         });
-    
+
         if (!result.canceled && result.assets && result.assets.length > 0) {
             const imageUri = result.assets[0].uri;
-    
+
             try {
-                // Chuyển đổi sang Base64
                 const base64Image = await FileSystem.readAsStringAsync(imageUri, {
                     encoding: FileSystem.EncodingType.Base64,
                 });
-    
-                // Lưu Base64 vào state
+
                 setUserInfo((prevUserInfo) => ({
                     ...prevUserInfo,
                     avatar: `data:image/jpeg;base64,${base64Image}`,
                 }));
-    
+
                 setImageUri(imageUri);
             } catch (error) {
                 console.error("Error converting image to Base64:", error);
@@ -91,7 +90,26 @@ const RegisterInformation = () => {
     };
 
     const handleSubmit = async () => {
-        handleUpdateUserInfo(userId, userInfo, navigation);
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+        try {
+            await handleUpdateUserInfo(userId, userInfo, navigation);
+            Toast.show({
+                type: "success",
+                text1: "Thành công",
+                text2: "Cập nhật thông tin cá nhân thành công!",
+            });
+        } catch (error) {
+            console.error("Error updating user info:", error);
+            Toast.show({
+                type: "error",
+                text1: "Lỗi",
+                text2: "Không thể cập nhật thông tin. Vui lòng thử lại.",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -101,101 +119,109 @@ const RegisterInformation = () => {
                 behavior={Platform.OS === "ios" ? "padding" : undefined} // On iOS, we use padding to avoid the keyboard covering inputs
             >
                 <ScrollView>
-                <View style={Styles.container}>
-                    <View style={Styles.img}>
-                        <TouchableOpacity onPress={handleChooseImage}>
-                            {imageUri ? (
-                                <Image source={{ uri: imageUri }} style={Styles.selectimg} />
-                            ) : (
-                                <View style={Styles.selectimg} />
-                            )}
+                    <View style={Styles.container}>
+                        <View style={Styles.img}>
+                            <TouchableOpacity onPress={handleChooseImage}>
+                                {imageUri ? (
+                                    <Image source={{ uri: imageUri }} style={Styles.selectimg} />
+                                ) : (
+                                    <View style={Styles.selectimg} />
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={Styles.texttitle}>Thông tin cá nhân</Text>
+
+                        <Text style={Styles.textfield}>Họ:</Text>
+                        <TextInput
+                            style={Styles.textinput}
+                            placeholder="Nhập họ của bạn"
+                            value={userInfo.firstName}
+                            onChangeText={(value) => handleInputChange("firstName", value)}
+                        />
+
+                        <Text style={Styles.textfield}>Tên:</Text>
+                        <TextInput
+                            style={Styles.textinput}
+                            placeholder="Nhập tên của bạn"
+                            value={userInfo.lastName}
+                            onChangeText={(value) => handleInputChange("lastName", value)}
+                        />
+
+                        <Text style={Styles.textfield}>Giới tính:</Text>
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <RadioButton
+                                value="Nam"
+                                status={userInfo.gender ? "checked" : "unchecked"}
+                                onPress={() => handleInputChange("gender", true)}
+                            />
+                            <Text>Nam</Text>
+                            <RadioButton
+                                value="Nu"
+                                status={!userInfo.gender ? "checked" : "unchecked"}
+                                onPress={() => handleInputChange("gender", false)}
+                            />
+                            <Text>Nữ</Text>
+                        </View>
+
+                        <Text style={Styles.textfield}>Ngày sinh:</Text>
+                        <Button
+                            mode="contained"
+                            onPress={() => setOpenDatePicker(true)}
+                            contentStyle={{ backgroundColor: "#4CAF50" }}
+                        >
+                            Chọn Ngày: {userInfo.birthDate ? userInfo.birthDate : "Chưa chọn"}
+                        </Button>
+                        <DatePickerModal
+                            locale="vi"
+                            mode="single"
+                            visible={openDatePicker}
+                            onDismiss={() => setOpenDatePicker(false)}
+                            date={date}
+                            onConfirm={(params) => onConfirmDate(params.date ?? null)} // Chuyển undefined thành null
+                            validRange={{ endDate: new Date() }}
+                        />
+                        <Text style={Styles.textfield}>Địa chỉ:</Text>
+                        <TextInput
+                            style={Styles.textinput}
+                            placeholder="Tỉnh/TP"
+                            value={userInfo.province}
+                            onChangeText={(value) => handleInputChange("province", value)}
+                        />
+                        <TextInput
+                            style={Styles.textinput}
+                            placeholder="Quận/Huyện"
+                            value={userInfo.district}
+                            onChangeText={(value) => handleInputChange("district", value)}
+                        />
+                        <TextInput
+                            style={Styles.textinput}
+                            placeholder="Phường/Xã"
+                            value={userInfo.ward}
+                            onChangeText={(value) => handleInputChange("ward", value)}
+                        />
+                        <TextInput
+                            style={Styles.textinput}
+                            placeholder="Số nhà"
+                            value={userInfo.street}
+                            onChangeText={(value) => handleInputChange("street", value)}
+                        />
+                        <TouchableOpacity
+                            style={[
+                                Styles.btn,
+                                isSubmitting && { backgroundColor: "#ccc" }, // Đổi màu nếu đang xử lý
+                            ]}
+                            onPress={handleSubmit}
+                            disabled={isSubmitting} // Vô hiệu hóa nút nếu đang xử lý
+                        >
+                            <Text style={{ color: "#fff", fontSize: 16 }}>
+                                {isSubmitting ? "Đang xử lý..." : "Cập nhật thông tin cá nhân"}
+                            </Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={Styles.texttitle}>Thông tin cá nhân</Text>
-                        
-                    <Text style={Styles.textfield}>Họ:</Text>
-                    <TextInput
-                        style={Styles.textinput}
-                        placeholder="Nhập họ của bạn"
-                        value={userInfo.firstName}
-                        onChangeText={(value) => handleInputChange("firstName", value)}
-                    />
-        
-                    <Text style={Styles.textfield}>Tên:</Text>
-                    <TextInput
-                        style={Styles.textinput}
-                        placeholder="Nhập tên của bạn"
-                        value={userInfo.lastName}
-                        onChangeText={(value) => handleInputChange("lastName", value)}
-                    />
-        
-                    <Text style={Styles.textfield}>Giới tính:</Text>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <RadioButton
-                            value="Nam"
-                            status={userInfo.gender ? "checked" : "unchecked"}
-                            onPress={() => handleInputChange("gender", true)}
-                        />
-                        <Text>Nam</Text>
-                        <RadioButton
-                            value="Nu"
-                            status={!userInfo.gender ? "checked" : "unchecked"}
-                            onPress={() => handleInputChange("gender", false)}
-                        />
-                        <Text>Nữ</Text>
-                    </View>
-                        
-                    <Text style={Styles.textfield}>Ngày sinh:</Text>
-                    <Button
-                        mode="contained"
-                        onPress={() => setOpenDatePicker(true)}
-                        contentStyle={{ backgroundColor: "#4CAF50" }}
-                    >
-                        Chọn Ngày: {userInfo.birthDate ? userInfo.birthDate : "Chưa chọn"}
-                    </Button>
-                    <DatePickerModal
-                        locale="vi"
-                        mode="single"
-                        visible={openDatePicker}
-                        onDismiss={() => setOpenDatePicker(false)}
-                        date={date}
-                        onConfirm={(params) => onConfirmDate(params.date ?? null)} // Chuyển undefined thành null
-                        validRange={{ endDate: new Date() }}
-                    />
-                    <Text style={Styles.textfield}>Địa chỉ:</Text>
-                    <TextInput
-                        style={Styles.textinput}
-                        placeholder="Tỉnh/TP"
-                        value={userInfo.province}
-                        onChangeText={(value) => handleInputChange("province", value)}
-                    />
-                    <TextInput
-                        style={Styles.textinput}
-                        placeholder="Quận/Huyện"
-                        value={userInfo.district}
-                        onChangeText={(value) => handleInputChange("district", value)}
-                    />
-                    <TextInput
-                        style={Styles.textinput}
-                        placeholder="Phường/Xã"
-                        value={userInfo.ward}
-                        onChangeText={(value) => handleInputChange("ward", value)}
-                    />
-                    <TextInput
-                        style={Styles.textinput}
-                        placeholder="Số nhà"
-                        value={userInfo.street}
-                        onChangeText={(value) => handleInputChange("street", value)}
-                    />
-        
-                    <TouchableOpacity style={Styles.btn} onPress={handleSubmit}>
-                        <Text style={{ color: "#fff", fontSize: 16 }}>Cập nhật thông tin cá nhân</Text>
-                    </TouchableOpacity>
-                </View>
                 </ScrollView>
             </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
-        
+
     );
 };
 

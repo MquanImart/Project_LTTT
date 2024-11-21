@@ -1,8 +1,7 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView} from "react-native";
 import Styles from "./Styles";
 import { useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
-import { Button } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
 
 interface UserDetailProps {
@@ -14,11 +13,11 @@ interface UserDetailProps {
     setBirthDate: (value: string) => void;
     phoneNumber: string;
     setPhoneNumber: (value: string) => void;
-    address: { province: string; city: string; street: string; number: string };
-    setAddress: (value: { province: string; city: string; street: string; number: string }) => void;
+    address: { province: string; district: string; ward: string; street: string };
+    setAddress: (value: { province: string; district: string; ward: string; street: string }) => void;
     password: string;
     setPassword: (value: string) => void;
-    isEditable: boolean; 
+    isEditable: boolean;
 }
 
 const UserDetail = ({
@@ -39,14 +38,13 @@ const UserDetail = ({
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [openDatePicker, setOpenDatePicker] = useState(false);
 
-
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
 
     const handleDateConfirm = (date: Date | undefined) => {
         if (date) {
-            setBirthDate(date.toISOString().split("T")[0]); // Format yyyy-MM-dd
+            setBirthDate(date.toISOString().split("T")[0]);
         }
         setOpenDatePicker(false);
     };
@@ -60,8 +58,9 @@ const UserDetail = ({
                         style={Styles.input}
                         value={firstName}
                         onChangeText={setFirstName}
-                        editable={isEditable} 
+                        editable={isEditable}
                         placeholder="Họ"
+                        placeholderTextColor="#A9A9A9"
                     />
                 </View>
                 <View style={Styles.inputGroup}>
@@ -70,21 +69,26 @@ const UserDetail = ({
                         style={Styles.input}
                         value={lastName}
                         onChangeText={setLastName}
-                        editable={isEditable} 
+                        editable={isEditable}
                         placeholder="Tên"
+                        placeholderTextColor="#A9A9A9"
                     />
                 </View>
             </View>
 
             <Text>Ngày sinh:</Text>
-            <Button
-                mode="contained"
+            <TouchableOpacity
                 onPress={() => setOpenDatePicker(true)}
                 disabled={!isEditable}
-                contentStyle={{ backgroundColor: isEditable ? "#4CAF50" : "#ccc" }}
+                style={{
+                    backgroundColor: isEditable ? "#4CAF50" : "#ccc",
+                    padding: 10,
+                    borderRadius: 5,
+                    alignItems: "center",
+                }}
             >
-                Ngày sinh: {birthDate || "Chưa chọn"}
-            </Button>
+                <Text style={{ color: "white" }}>{birthDate || "Chưa chọn"}</Text>
+            </TouchableOpacity>
             <DatePickerModal
                 locale="vi" // Tiếng Việt
                 mode="single"
@@ -95,7 +99,7 @@ const UserDetail = ({
                 validRange={{ endDate: new Date() }}
             />
 
-            <Text>Số điện thoại:</Text>
+            <Text style={{ marginTop: 20 }}>Số điện thoại:</Text>
             <TextInput
                 style={Styles.input}
                 value={phoneNumber}
@@ -105,24 +109,36 @@ const UserDetail = ({
             />
 
             <Text>Địa chỉ:</Text>
-            <View style={Styles.row}>
+            <View style={Styles.column}>
                 <TextInput
                     style={Styles.addressInput}
                     value={address.province}
                     onChangeText={(value) =>
                         setAddress({ ...address, province: value })
                     }
-                    editable={isEditable} 
+                    editable={isEditable}
                     placeholder="Tỉnh/TP"
+                    placeholderTextColor="#A9A9A9"
                 />
                 <TextInput
                     style={Styles.addressInput}
-                    value={address.city}
+                    value={address.district}
                     onChangeText={(value) =>
-                        setAddress({ ...address, city: value })
+                        setAddress({ ...address, district: value })
                     }
-                    editable={isEditable} 
+                    editable={isEditable}
                     placeholder="Quận/Huyện"
+                    placeholderTextColor="#A9A9A9"
+                />
+                <TextInput
+                    style={Styles.addressInput}
+                    value={address.ward}
+                    onChangeText={(value) =>
+                        setAddress({ ...address, ward: value })
+                    }
+                    editable={isEditable}
+                    placeholder="Phường/Xã"
+                    placeholderTextColor="#A9A9A9"
                 />
                 <TextInput
                     style={Styles.addressInput}
@@ -130,17 +146,9 @@ const UserDetail = ({
                     onChangeText={(value) =>
                         setAddress({ ...address, street: value })
                     }
-                    editable={isEditable} 
-                    placeholder="Phường/Xã"
-                />
-                <TextInput
-                    style={Styles.addressInput}
-                    value={address.number}
-                    onChangeText={(value) =>
-                        setAddress({ ...address, number: value })
-                    }
-                    editable={isEditable} 
+                    editable={isEditable}
                     placeholder="Số nhà"
+                    placeholderTextColor="#A9A9A9"
                 />
             </View>
             <View style={{ width: "100%", position: "relative", marginTop: 20 }}>
@@ -150,8 +158,8 @@ const UserDetail = ({
                     placeholder="Mật khẩu"
                     value={password}
                     secureTextEntry={!isPasswordVisible}
-                    onChangeText={setPassword} 
-                    editable={isEditable} 
+                    onChangeText={setPassword}
+                    editable={isEditable}
                 />
                 <TouchableOpacity
                     onPress={togglePasswordVisibility}

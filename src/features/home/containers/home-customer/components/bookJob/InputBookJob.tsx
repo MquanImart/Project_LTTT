@@ -20,7 +20,7 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [openTimePicker, setOpenTimePicker] = useState(false);
   const [address, setAddress] = useState({
-    city: "",
+    province: "",
     district: "",
     ward: "",
     street: "",
@@ -30,7 +30,7 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
   const today = new Date();
 
   const validateFields = () => {
-    if (!address.city || !address.district || !address.ward || !address.street) {
+    if (!address.province || !address.district || !address.ward || !address.street) {
       Toast.show({
         type: "error",
         text1: "Thông báo",
@@ -89,7 +89,7 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
         const payload = {
           jobId,
           customerId,
-          address: `${address.street}, ${address.ward}, ${address.district}, ${address.city}`,
+          address: `${address.street}, ${address.ward}, ${address.district}, ${address.district}`,
           phoneNumber: phone,
           startDate,
         };
@@ -128,52 +128,39 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
   const resetFields = () => {
     setDate(undefined);
     setTime(undefined);
-    setAddress({ city: "", district: "", ward: "", street: "" });
+    setAddress({ province: "", district: "", ward: "", street: "" });
     setPhone("");
   };
 
   return (
-    <KeyboardAvoidingView
+ <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <View style={styles.body}>
-          <Text style={styles.jobTitle}>Dịch vụ: {jobName}</Text>
+      <View style={styles.body}>
+        <Text style={styles.jobTitle}>Dịch vụ: {jobName}</Text>
 
-          <Text style={styles.label}>Địa chỉ:</Text>
-          <View style={styles.addressContainer}>
-            <TextInput
-              placeholder="Tỉnh/TP"
-              placeholderTextColor="#A9A9A9" // Màu placeholder dễ nhìn
-              style={styles.addressInput}
-              value={address.city}
-              onChangeText={(text) => setAddress({ ...address, city: text })}
-            />
-            <TextInput
-              placeholder="Quận/Huyện"
-              placeholderTextColor="#A9A9A9" // Màu placeholder dễ nhìn
-              style={styles.addressInput}
-              value={address.district}
-              onChangeText={(text) => setAddress({ ...address, district: text })}
-            />
-            <TextInput
-              placeholder="Phường/Xã"
-              placeholderTextColor="#A9A9A9" // Màu placeholder dễ nhìn
-              style={styles.addressInput}
-              value={address.ward}
-              onChangeText={(text) => setAddress({ ...address, ward: text })}
-            />
-            <TextInput
-              placeholder="Số nhà"
-              placeholderTextColor="#A9A9A9" // Màu placeholder dễ nhìn
-              style={styles.addressInput}
-              value={address.street}
-              onChangeText={(text) => setAddress({ ...address, street: text })}
-            />
-          </View>
-
-          <Text style={styles.label}>Số điện thoại:</Text>
+        <Text style={styles.label}>Địa chỉ:</Text>
+        <View style={styles.addressContainer}>
+          <TextInput
+            placeholder="Tỉnh/TP"
+            style={styles.addressInput}
+            value={address.province}
+            onChangeText={(text) => setAddress({ ...address, province: text })}
+          />
+          <TextInput
+            placeholder="Quận/Huyện"
+            style={styles.addressInput}
+            value={address.district}
+            onChangeText={(text) => setAddress({ ...address, district: text })}
+          />
+          <TextInput
+            placeholder="Phường/Xã"
+            style={styles.addressInput}
+            value={address.ward}
+            onChangeText={(text) => setAddress({ ...address, ward: text })}
+          />
           <TextInput
             placeholder="Số điện thoại"
             placeholderTextColor="#A9A9A9" // Màu placeholder dễ nhìn

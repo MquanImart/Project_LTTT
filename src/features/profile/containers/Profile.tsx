@@ -23,9 +23,9 @@ const Profile = () => {
     const [birthDate, setBirthDate] = useState("");
     const [address, setAddress] = useState({
         province: "",
-        city: "",
+        district: "",
+        ward: "",
         street: "",
-        number: "",
     });
     const [avatar, setAvatar] = useState("");
     const [password, setPassword] = useState("");
@@ -59,9 +59,9 @@ const Profile = () => {
                     setBirthDate(user.personalInfo?.birthDate || "");
                     setAddress({
                         province: user.address?.province || "",
-                        city: user.address?.city || "",
+                        district: user.address?.district || "",
+                        ward: user.address?.ward || "",
                         street: user.address?.street || "",
-                        number: user.address?.number || "",
                     });
                     setAvatar(user.avatar || "");
                     setPassword(user.account?.password || "");
@@ -181,7 +181,13 @@ const Profile = () => {
         <View>
             <Header title="Hồ sơ" showBackButton={false} />
             <View style={Styles.container}>
-                <HeaderProfile userName={userName} phoneNumber={phoneNumber} isEditable={isEditable} avatar={avatar} setAvatar={setAvatar} />
+                <HeaderProfile 
+                    userName={userName} 
+                    phoneNumber={phoneNumber} 
+                    isEditable={isEditable} 
+                    avatar={avatar} 
+                    setAvatar={setAvatar} 
+                />
                 <UserDetail
                     firstName={firstName}
                     setFirstName={isEditable ? setFirstName : () => {}}

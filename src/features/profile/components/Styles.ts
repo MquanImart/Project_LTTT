@@ -19,10 +19,12 @@ export default StyleSheet.create({
     profileImagePlaceholder: {
         width: 150,
         height: 150,
-        borderRadius: 100,
+        borderRadius: 75, 
         backgroundColor: "#ddd",
         marginBottom: 10,
-    },
+        justifyContent: "center", 
+        alignItems: "center",
+    },    
     userName: {
         fontSize: 20,
         fontWeight: "bold",
@@ -39,6 +41,11 @@ export default StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
     },
+    column: {
+        flexDirection: "column",
+        justifyContent: "space-between",
+        gap: 10,
+    },
     inputGroup: {
         flex: 1,
         marginRight: 10,
@@ -54,7 +61,7 @@ export default StyleSheet.create({
         flex: 1,
         borderWidth: 1,
         borderColor: "#ccc",
-        padding: 8,
+        padding: 16,
         borderRadius: 5,
         marginRight: 5,
     },

@@ -35,16 +35,16 @@ const Register = () => {
             });
             return;
         }
-
-        if (password.length < 6) {
+    
+        if (password.length < 8) {
             Toast.show({
                 type: "error",
                 text1: "Lỗi mật khẩu",
-                text2: "Mật khẩu phải có ít nhất 6 ký tự.",
+                text2: "Mật khẩu phải có ít nhất 8 ký tự.",
             });
             return;
         }
-
+    
         if (password !== confirmPassword) {
             Toast.show({
                 type: "error",
@@ -53,9 +53,18 @@ const Register = () => {
             });
             return;
         }
-
+    
+        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        // if (!passwordRegex.test(password)) {
+        //     Toast.show({
+        //         type: "error",
+        //         text1: "Lỗi mật khẩu",
+        //         text2: "Mật khẩu phải chứa ít nhất 1 chữ cái thường, 1 chữ cái hoa, 1 số và 1 ký tự đặc biệt.",
+        //     });
+        //     return;
+        // }
         await handleRegister(phoneNumber, password, navigation);
-    };
+    };    
 
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -139,7 +148,6 @@ const Register = () => {
                 </ScrollView>
             </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
-        
     );
 };
 
