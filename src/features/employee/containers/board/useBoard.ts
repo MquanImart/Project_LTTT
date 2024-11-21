@@ -34,7 +34,7 @@ export interface EmployeeDisplay {
         const employeesClient = restClient.apiClient.service("/users/employees");
         const result = await employeesClient.find({
           page,
-          perPage: 10,
+          perPage: 100, 
           firstName,
           lastName,
           filterType,

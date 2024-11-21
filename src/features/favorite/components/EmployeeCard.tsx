@@ -81,30 +81,31 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.mainColor1,
     borderRadius: 8,
-    margin: 10,
-    padding: 10,
+    margin: 8,
+    padding: 8,
     backgroundColor: Colors.background,
-    elevation: 2,
+    elevation: 1,
   },
   avatarContainer: {
-    marginRight: 10,
+    marginRight: 8,
   },
   image: {
-    width: 140,
-    height: 140,
+    width: 80, // Giảm kích thước ảnh
+    height: 80,
+    borderRadius: 40, // Thêm bo tròn cho ảnh
   },
   detailsContainer: {
     flex: 1,
-    justifyContent: "flex-start",
+    justifyContent: "center",
   },
   nameFavoriteContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 5,
+    marginBottom: 4,
   },
   name: {
-    fontSize: 20,
+    fontSize: 16, // Giảm kích thước chữ
     fontWeight: "bold",
     color: Colors.text,
   },
@@ -112,10 +113,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 5,
+    marginBottom: 4,
   },
   rating: {
-    fontSize: 25,
+    fontSize: 18, // Giảm kích thước sao
   },
   ratingStar: {
     color: "gold",
@@ -126,17 +127,19 @@ const styles = StyleSheet.create({
   chatButton: {
     backgroundColor: Colors.mainColor1,
     borderRadius: 5,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    paddingVertical: 6, // Giảm padding nút
+    paddingHorizontal: 8,
   },
   favoriteButton: {
-    marginLeft: 10,
+    marginLeft: 8,
   },
   buttonText: {
+    fontSize: 14, // Giảm kích thước chữ trên nút
     color: "#fff",
     fontWeight: "bold",
     textAlign: "center",
   },
 });
+
 
 export default EmployeeCard;

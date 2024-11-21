@@ -96,6 +96,7 @@ const BoardEmployee = () => {
       <View style={{ minHeight: 300, width: "100%", padding: 10 }}>
         <FlatList
           data={listEmployee}
+          style = {{height: 550}}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <List.Item
@@ -119,27 +120,6 @@ const BoardEmployee = () => {
             />
           )}
         />
-      </View>
-      <View style={styles.pagination}>
-        <Button
-          mode="contained"
-          onPress={handlePreviousPage}
-          disabled={currentPage === 0}
-          style={styles.button}
-        >
-          Previous
-        </Button>
-        <Text style={styles.pageNumber}>
-          Page {currentPage + 1} of {totalPages}
-        </Text>
-        <Button
-          mode="contained"
-          onPress={handleNextPage}
-          disabled={currentPage + 1 >= totalPages}
-          style={styles.button}
-        >
-          Next
-        </Button>
       </View>
     </Provider>
   );
