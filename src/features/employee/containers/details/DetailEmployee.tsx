@@ -70,7 +70,6 @@ const DetailEmployee = () => {
       const result = await serviceService.find({ ids: jobIds.join(",") });
 
       if (result.success) {
-        console.log("Danh sách dịch vụ:", result.resData);
         return result.resData;
       } else {
         console.error("Failed to fetch services:", result.message);
@@ -87,7 +86,6 @@ const DetailEmployee = () => {
       const reviewService = restClient.apiClient.service("/reviews");
       const result = await reviewService.find({ employeeId });
       if (result.success) {
-        console.log("Danh sách đánh giá:", result.resData);
         return result.resData;
       } else {
         console.error("Failed to fetch reviews:", result.message);
@@ -169,7 +167,6 @@ const DetailEmployee = () => {
     const refresh = () => {
       console.log("Refreshing appointments...");
     };
-    console.log('employeeDetail', employeeDetail)
       navigation.navigate('ChatDetailScreen', {
         contactId: employeeDetail.userId, 
         contactName: employeeDetail.personalInfo.firstName + " " + employeeDetail.personalInfo.lastName,
@@ -178,7 +175,6 @@ const DetailEmployee = () => {
   };
 
   useEffect(() => {
-    console.log("Employee ID:", employeeId);
     fetchEmployeeDetail();
   }, [employeeId]);
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Platform, ScrollView } from 'react-native';
 import HeaderProfile from '../components/HeaderProfile';
 import UserDetail from '../components/UserDetail';
 import Styles from '../components/Styles';
@@ -172,6 +172,12 @@ const Profile = () => {
     }
 
     return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined} // On iOS, we use padding to avoid the keyboard covering inputs
+      >
+        <ScrollView>
         <View>
             <Header title="Hồ sơ" showBackButton={false} />
             <View style={Styles.container}>
@@ -195,9 +201,14 @@ const Profile = () => {
                     onEditOrSave={handleEditOrSave}
                     buttonText={buttonText}
                     onLogout={handleLogout} // Truyền hàm logout
-                />            </View>
+                />
+                </View>
             <Toast />
         </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
+        
     );
 };
 

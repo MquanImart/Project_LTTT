@@ -42,7 +42,7 @@ const useCalendarDay = ({year, month, day} : useCalendarDayProps) => {
         if (result.success){
             setAllOrder(result.resData);
         } else {
-            console.log(result.message);
+ 
         }
     }
 

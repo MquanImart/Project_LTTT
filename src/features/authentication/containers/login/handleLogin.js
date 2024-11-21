@@ -9,11 +9,20 @@ export const handleLogin = async (phoneNumber, password, navigation) => {
         const userRole = result.data.role;
 
         if (userRole === UserRole.Employee) {
-            navigation.navigate("HomeTabEmployee");
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "HomeTabEmployee" }],
+              });
         } else if (userRole === UserRole.Customer) {
-            navigation.navigate("HomeTabCustomer");
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "HomeTabCustomer" }],
+              });
         } else if (userRole === UserRole.Admin) {
-            navigation.navigate("HomeTabAdmin");
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "HomeTabAdmin" }],
+              });
         } else {
             Toast.show({
                 type: "error",

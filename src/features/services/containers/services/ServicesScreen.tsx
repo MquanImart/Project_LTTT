@@ -226,6 +226,7 @@ const ServicesScreen = () => {
       <Header
         title="Quản lý dịch vụ"
         showBackButton={false} // Ẩn nút mũi tên quay lại
+        showLogout={true}
       />
       <ServiceList
         services={services}

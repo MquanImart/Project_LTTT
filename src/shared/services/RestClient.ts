@@ -3,10 +3,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 class RestClient {
   //baseURL: string = "http://192.168.1.16:8080"; // Điều chỉnh URL khi build app
-  //baseURL: string = "http://192.168.1.60:8080"; // Điều chỉnh URL khi build app
+  baseURL: string = "http://192.168.1.60:8080"; // Điều chỉnh URL khi build app
   //baseURL: string = "http://192.168.1.22:8080"; // Điều chỉnh URL khi build app
   // baseURL: string = "http://172.20.10.2:8080"; // Hung
-  baseURL: string = "http://localhost:8080"; // Điều chỉnh URL khi build app
+  //baseURL: string = "http://localhost:8080"; // Điều chỉnh URL khi build app
   path: string = "";
   token: string = "";
 
@@ -58,7 +58,7 @@ class RestClient {
   public async authentication(phoneNumber: string, password: string) {
     try {
       const response = await axios.post(`${this.baseURL}/auths/login`, { phoneNumber, password });
-      console.log('rs', response.data)
+
       if (response.data.success) {
         // Lưu thông tin người dùng
         await AsyncStorage.setItem("token", response.data.token);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Header from '@/src/shared/components/header/Header';
-import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
 import AppointmentCancelCard from '@/src/features/appointment/components/AppointmentCancelCard';
 import Colors from '@/src/styles/Color';
 import useAppointment from '../useAppointment';
@@ -24,8 +23,6 @@ const CancelAppointmentScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header title="Đơn hàng" showBackButton={false}/>
-      <AppointmentTabs selectedTab={'Đã hủy'} />
       <FlatList
         data={cancelAppoint}
         renderItem={({ item }) => (
