@@ -277,7 +277,10 @@ const DetailService = () => {
           <ScrollView>
             {/* General Information */}
             <View style={styles.infoOrder}>
-              <Image source={{ uri: service.img }} style={styles.img} />
+            <Image
+                source={{ uri: service.img.startsWith("data:image") ? service.img : `data:image/png;base64,${service.img}` }}
+                style={styles.img}
+              />
               <View style={styles.boxInfo}>
                 <Text style={styles.textTitle}>{service.name}</Text>
                 <View style={styles.cardLabel}>

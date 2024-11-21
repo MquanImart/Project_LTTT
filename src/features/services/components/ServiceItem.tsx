@@ -25,7 +25,10 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
   return (
     <View>
       <View style={styles.serviceItem}>
-        <Image source={{ uri: service.img }} style={styles.serviceImage} />
+        <Image
+            source={{ uri: `data:image/png;base64,${service.img}` }}
+            style={styles.serviceImage} 
+          />
         <View style={styles.serviceContent}>
           <Text style={styles.serviceText}>{serviceName}</Text>
           <TouchableOpacity onPress={() => onExpand(serviceId)}>

@@ -23,9 +23,13 @@ const JobCard: React.FC<JobCardProps> = ({ service }) => {
     });
   };
 
+  const imageUri = service.img.startsWith("data:image")
+  ? service.img
+  : `data:image/png;base64,${service.img}`;
+
   return (
     <TouchableOpacity onPress={handlePress} style={styles.card}>
-      <Image source={{ uri: service.img }} style={styles.image} />
+       <Image source={{ uri: imageUri }} style={styles.image} />
       <View style={styles.overlay}>
         <Text style={styles.title}>{service.name}</Text>
       </View>

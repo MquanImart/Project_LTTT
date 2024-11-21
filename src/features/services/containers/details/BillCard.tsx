@@ -1,5 +1,5 @@
 import Colors from "@/src/styles/Color";
-import { View, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { useState, useEffect } from "react";
 import { JobDetail, UserRole } from "@/src/interface/interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -67,32 +67,35 @@ const BillCard = ({
   };
 
   return (
-    <View style={styles.card}>
-      {jobs.map((job, index) => (
-        <View style={styles.boxJob} key={index}>
-          <Text style={styles.textJob}>{job.jobName}</Text>
-          <TextInput
-            value={job.price.toString()}
-            editable={!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee)}
-            onChangeText={(text) => handlePriceChange(text, index)}
-            style={styles.inputPrice}
-            keyboardType="numeric"
-            placeholder="Nhập giá"
-          />
-          <Text style={styles.textCurrency}>đ</Text>
-          {!disableDelete &&
-            (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
-              <TouchableOpacity
-                onPress={() => handleDeleteJob(index)}
-                style={styles.deleteButton}
-              >
-                <Text style={styles.deleteButtonText}>Xóa</Text>
-              </TouchableOpacity>
-            )}
-          {errors[index] && <Text style={styles.errorText}>{errors[index]}</Text>}
-        </View>
-      ))}
-    </View>
+    <KeyboardAvoidingView
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View style={styles.card}>
+        {jobs.map((job, index) => (
+          <View style={styles.boxJob} key={index}>
+            <Text style={styles.textJob}>{job.jobName}</Text>
+            <TextInput
+              value={job.price.toString()}
+              editable={!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee)}
+              onChangeText={(text) => handlePriceChange(text, index)}
+              style={styles.inputPrice}
+              keyboardType="numeric"
+              placeholder="Nhập giá"
+            />
+            <Text style={styles.textCurrency}>đ</Text>
+            {!disableDelete &&
+              (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
+                <TouchableOpacity
+                  onPress={() => handleDeleteJob(index)}
+                  style={styles.deleteButton}
+                >
+                  <Text style={styles.deleteButtonText}>Xóa</Text>
+                </TouchableOpacity>
+              )}
+            {errors[index] && <Text style={styles.errorText}>{errors[index]}</Text>}
+          </View>
+        ))}
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

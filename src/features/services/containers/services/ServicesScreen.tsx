@@ -7,6 +7,8 @@ import {
   Text,
   TextInput,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Toast from "react-native-toast-message";
@@ -16,12 +18,15 @@ import ServiceList from "@/src/features/services/components/ServiceList";
 import restClient from "@/src/shared/services/RestClient";
 import * as ImagePicker from "expo-image-picker";
 import { Service } from "@/src/interface/interface";
+import * as FileSystem from 'expo-file-system';
 
 const ServicesScreen = () => {
+  
   const [services, setServices] = useState<Service[]>([]);
   const [isAddModalVisible, setAddModalVisible] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [newServiceName, setNewServiceName] = useState("");
+  const [imageUri, setImageUri] = useState<string>(""); 
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null);
@@ -46,9 +51,11 @@ const ServicesScreen = () => {
   // Reset form
   const resetForm = () => {
     setNewServiceName("");
-    setSelectedImage("");
+    setImageUri(""); // Reset URI
+    setSelectedImage(""); // Reset base64
     setEditingService(null);
   };
+  
 
   // Fetch danh sách dịch vụ từ backend
   useEffect(() => {
@@ -91,9 +98,16 @@ const ServicesScreen = () => {
       allowsEditing: true,
       quality: 1,
     });
-
+  
     if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      const imageUri = result.assets[0].uri; // Lấy URI của ảnh
+      setImageUri(imageUri); // Lưu URI để hiển thị ảnh
+  
+      // Chuyển đổi ảnh sang base64 để gửi đến server
+      const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      setSelectedImage(base64Image); // Lưu base64 để gửi server
     } else {
       Toast.show({
         type: "info",
@@ -102,6 +116,8 @@ const ServicesScreen = () => {
       });
     }
   };
+  
+  
 
   // Thêm dịch vụ mới
   const handleAddService = async () => {
@@ -113,12 +129,12 @@ const ServicesScreen = () => {
       });
       return;
     }
-
+  
     try {
-      const newService = { name: newServiceName, img: selectedImage };
+      const newService = { name: newServiceName, img: selectedImage }; // Gửi base64
       const serviceClient = restClient.apiClient.service("services");
       const response = await serviceClient.create(newService);
-
+  
       if (response.success) {
         setServices((prev) => [...prev, response.resData]);
         toggleAddModal();
@@ -142,6 +158,7 @@ const ServicesScreen = () => {
       });
     }
   };
+  
 
   // Cập nhật dịch vụ
   const handleEditService = async () => {
@@ -153,19 +170,21 @@ const ServicesScreen = () => {
       });
       return;
     }
-
+  
     if (!editingService) return;
-
+  
     try {
-      const updatedData = { name: newServiceName, img: selectedImage };
+      const updatedData = { name: newServiceName, img: selectedImage }; // Gửi base64
       const serviceClient = restClient.apiClient.service("services");
       const response = await serviceClient.patch(editingService._id, updatedData);
-
+  
       if (response.success) {
         setServices((prev) =>
-          prev.map((item) => (item._id === editingService._id ? { ...item, ...updatedData } : item))
+          prev.map((item) =>
+            item._id === editingService._id ? { ...item, ...updatedData } : item
+          )
         );
-        toggleEditModal(null);
+        toggleEditModal(null); // Đóng modal sau khi cập nhật
         Toast.show({
           type: "success",
           text1: "Thành công",
@@ -186,6 +205,8 @@ const ServicesScreen = () => {
       });
     }
   };
+  
+  
 
   // Xóa dịch vụ
   const handleDeleteService = async () => {
@@ -222,125 +243,135 @@ const ServicesScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Header
-        title="Quản lý dịch vụ"
-        showBackButton={false} // Ẩn nút mũi tên quay lại
-        showLogout={true}
-      />
-      <ServiceList
-        services={services}
-        onEdit={(service) => toggleEditModal(service)}
-        onDelete={(service) => {
-          setServiceToDelete(service);
-          setDeleteModalVisible(true);
-        }}
-      />
-      <TouchableOpacity style={styles.addButton} onPress={toggleAddModal}>
-        <Icon name="add" size={24} color={Colors.white} />
-      </TouchableOpacity>
+    <KeyboardAvoidingView
+    style={styles.container}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  >
+      <View style={styles.container}>
+        <Header
+          title="Quản lý dịch vụ"
+          showBackButton={false} // Ẩn nút mũi tên quay lại
+        />
+        <ServiceList
+          services={services}
+          onEdit={(service) => toggleEditModal(service)}
+          onDelete={(service) => {
+            setServiceToDelete(service);
+            setDeleteModalVisible(true);
+          }}
+        />
+        <TouchableOpacity style={styles.addButton} onPress={toggleAddModal}>
+          <Icon name="add" size={24} color={Colors.white} />
+        </TouchableOpacity>
 
-      {/* Modal thêm dịch vụ */}
-      <Modal visible={isAddModalVisible} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Thêm dịch vụ</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Tên dịch vụ"
-              value={newServiceName}
-              onChangeText={setNewServiceName}
-            />
-            <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-              {selectedImage ? (
-                <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
-              ) : (
-                <Icon name="photo-camera" size={40} color={Colors.mainColor1} />
-              )}
-            </TouchableOpacity>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={[styles.actionButton, styles.cancelButton]}
-                onPress={toggleAddModal}
-              >
-                <Text style={styles.actionButtonText}>Hủy</Text>
+        {/* Modal thêm dịch vụ */}
+        <Modal visible={isAddModalVisible} transparent={true} animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Thêm dịch vụ</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Tên dịch vụ"
+                value={newServiceName}
+                onChangeText={setNewServiceName}
+              />
+              <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+                {imageUri ? (
+                  <Image
+                    source={{ uri: imageUri }} // Sử dụng URI để hiển thị ảnh
+                    style={styles.imagePreview}
+                  />
+                ) : (
+                  <Icon name="photo-camera" size={40} color={Colors.mainColor1} />
+                )}
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.actionButton, styles.confirmButton]}
-                onPress={handleAddService}
-              >
-                <Text style={styles.actionButtonText}>Thêm</Text>
-              </TouchableOpacity>
+              <View style={styles.buttonRow}>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.cancelButton]}
+                  onPress={toggleAddModal}
+                >
+                  <Text style={styles.actionButtonText}>Hủy</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.confirmButton]}
+                  onPress={handleAddService}
+                >
+                  <Text style={styles.actionButtonText}>Thêm</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Modal cập nhật dịch vụ */}
-      <Modal visible={!!editingService} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Cập nhật dịch vụ</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Tên dịch vụ"
-              value={newServiceName}
-              onChangeText={setNewServiceName}
-            />
-            <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-              {selectedImage ? (
-                <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
-              ) : (
-                <Icon name="photo-camera" size={40} color={Colors.mainColor1} />
-              )}
-            </TouchableOpacity>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={[styles.actionButton, styles.cancelButton]}
-                onPress={() => toggleEditModal(null)}
-              >
-                <Text style={styles.actionButtonText}>Hủy</Text>
+        {/* Modal cập nhật dịch vụ */}
+        <Modal visible={!!editingService} transparent={true} animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Cập nhật dịch vụ</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Tên dịch vụ"
+                value={newServiceName}
+                onChangeText={setNewServiceName}
+              />
+              <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+                {imageUri ? (
+                  <Image
+                    source={{ uri: imageUri }} // Sử dụng URI để hiển thị ảnh
+                    style={styles.imagePreview}
+                  />
+                ) : (
+                  <Icon name="photo-camera" size={40} color={Colors.mainColor1} />
+                )}
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.actionButton, styles.confirmButton]}
-                onPress={handleEditService}
-              >
-                <Text style={styles.actionButtonText}>Cập nhật</Text>
-              </TouchableOpacity>
+              <View style={styles.buttonRow}>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.cancelButton]}
+                  onPress={() => toggleEditModal(null)}
+                >
+                  <Text style={styles.actionButtonText}>Hủy</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.confirmButton]}
+                  onPress={handleEditService}
+                >
+                  <Text style={styles.actionButtonText}>Cập nhật</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Modal xác nhận xóa */}
-      <Modal visible={isDeleteModalVisible} transparent={true} animationType="fade">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Xác nhận xóa</Text>
-            <Text style={styles.modalText}>
-              Bạn có chắc chắn muốn xóa dịch vụ{" "}
-              <Text style={{ fontWeight: "bold" }}>{serviceToDelete?.name}</Text> không?
-            </Text>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                style={[styles.actionButton, styles.cancelButton]}
-                onPress={() => setDeleteModalVisible(false)}
-              >
-                <Text style={styles.actionButtonText}>Hủy</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.actionButton, styles.deleteButton]}
-                onPress={handleDeleteService}
-              >
-                <Text style={styles.actionButtonText}>Xóa</Text>
-              </TouchableOpacity>
+        {/* Modal xác nhận xóa */}
+        <Modal visible={isDeleteModalVisible} transparent={true} animationType="fade">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Xác nhận xóa</Text>
+              <Text style={styles.modalText}>
+                Bạn có chắc chắn muốn xóa dịch vụ{" "}
+                <Text style={{ fontWeight: "bold" }}>{serviceToDelete?.name}</Text> không?
+              </Text>
+              <View style={styles.buttonRow}>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.cancelButton]}
+                  onPress={() => setDeleteModalVisible(false)}
+                >
+                  <Text style={styles.actionButtonText}>Hủy</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.actionButton, styles.deleteButton]}
+                  onPress={handleDeleteService}
+                >
+                  <Text style={styles.actionButtonText}>Xóa</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      <Toast />
-    </View>
+        <Toast />
+      </View>
+      </KeyboardAvoidingView>
   );
 };
 
