@@ -70,7 +70,7 @@ const BoardEmployee = () => {
 
   return (
     <Provider>
-      <Header title={"Quản lý nhân viên"} onBackPress={() => {}} />
+      <Header title={"Quản lý nhân viên"} showBackButton={false} />
       <View style={styles.boxTitle}>
         <Text style={styles.textTitle}>Nhân viên</Text>
         <Button

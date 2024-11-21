@@ -211,6 +211,7 @@ const InputBookJob: React.FC<InputBookJobProps> = ({ jobName, jobId, onSubmit, g
             <Text style={styles.testpass}>Đặt dịch vụ</Text>
           </TouchableOpacity>
         </View>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
