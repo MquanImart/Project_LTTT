@@ -54,15 +54,15 @@ const Register = () => {
             return;
         }
     
-        // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        // if (!passwordRegex.test(password)) {
-        //     Toast.show({
-        //         type: "error",
-        //         text1: "Lỗi mật khẩu",
-        //         text2: "Mật khẩu phải chứa ít nhất 1 chữ cái thường, 1 chữ cái hoa, 1 số và 1 ký tự đặc biệt.",
-        //     });
-        //     return;
-        // }
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            Toast.show({
+                type: "error",
+                text1: "Lỗi mật khẩu",
+                text2: "Ít nhất 1 chữ cái thường, 1 chữ cái hoa, 1 số và 1 ký tự đặc biệt.",
+            });
+            return;
+        }
         await handleRegister(phoneNumber, password, navigation);
     };    
 
@@ -105,6 +105,7 @@ const Register = () => {
                         <TextInput
                             style={Styles.textinput}
                             placeholder="Nhập mật khẩu"
+                            placeholderTextColor="#A9A9A9"
                             secureTextEntry={!isPasswordVisible}
                             value={password}
                             onChangeText={setPassword}
@@ -120,6 +121,7 @@ const Register = () => {
                     <View style={{ width: "100%", position: "relative" }}>
                         <TextInput
                             style={Styles.textinput}
+                            placeholderTextColor="#A9A9A9"
                             placeholder="Nhập lại mật khẩu"
                             secureTextEntry={!isConfirmPasswordVisible}
                             value={confirmPassword}
