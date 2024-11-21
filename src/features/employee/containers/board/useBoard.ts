@@ -11,46 +11,49 @@ export interface EmployeeDisplay {
   
   const useBoard = () => {
     const [listEmployee, setListEmployee] = useState<EmployeeDisplay[]>([]);
+    const [allEmployees, setAllEmployees] = useState<EmployeeDisplay[]>([]); // Lưu toàn bộ danh sách nhân viên
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [totalPages, setTotalPages] = useState(1);
+  
+    const normalizeString = (str: string) => {
+      return str
+        .normalize("NFD") // Chuyển các ký tự có dấu thành dạng tổ hợp
+        .replace(/[\u0300-\u036f]/g, "") // Xóa các dấu tổ hợp
+        .toLowerCase(); // Chuyển thành chữ thường
+    };
   
     const fetchEmployees = async ({
-      page = 0,
-      firstName = "",
-      lastName = "",
-      filterType = "1",
       searchQuery = "",
+      filterType = "1",
     }: {
-      page?: number;
-      firstName?: string;
-      lastName?: string;
+      searchQuery?: string;
       filterType?: string;
-      searchQuery?: string; // Thêm searchQuery
-    }) => {
+    } = {}) => {
       setLoading(true);
       setError(null);
       try {
         const employeesClient = restClient.apiClient.service("/users/employees");
         const result = await employeesClient.find({
-          page,
-          perPage: 100, 
-          firstName,
-          lastName,
-          filterType,
-          searchQuery, // Bao gồm searchQuery nếu cần gửi cùng với API
+          page: 0,
+          perPage: 100,
         });
-    
+  
         if (result.success) {
           const employees = result.resData.map((employee: any) => ({
             id: employee._id,
             firstName: employee.personalInfo.firstName || "",
             lastName: employee.personalInfo.lastName || "",
             phone: employee.account.phoneNumber || "",
-            avatar: employee.avatar || "", // Lấy avatar từ API
+            avatar: employee.avatar || "",
           }));
-          setListEmployee(employees);
-          setTotalPages(result.totalPages); // Tổng số trang từ API
+  
+          setAllEmployees(employees); // Lưu toàn bộ danh sách nhân viên
+          const normalizedSearchQuery = normalizeString(searchQuery);
+          const filteredEmployees = employees.filter((employee: { firstName: any; lastName: any; }) => {
+            const fullName = normalizeString(`${employee.firstName} ${employee.lastName}`);
+            return fullName.includes(normalizedSearchQuery); // Tìm kiếm trong họ tên đầy đủ
+          });
+          setListEmployee(filteredEmployees); // Lọc và hiển thị danh sách tìm kiếm
         } else {
           setError(result.message || "Lỗi không xác định.");
         }
@@ -59,16 +62,26 @@ export interface EmployeeDisplay {
       } finally {
         setLoading(false);
       }
-    };     
+    };
+  
+    const handleSearch = (searchQuery: string) => {
+      const normalizedSearchQuery = normalizeString(searchQuery);
+      const filteredEmployees = allEmployees.filter((employee) => {
+        const fullName = normalizeString(`${employee.firstName} ${employee.lastName}`);
+        return fullName.includes(normalizedSearchQuery); // Tìm kiếm trong họ tên đầy đủ
+      });
+      setListEmployee(filteredEmployees); // Hiển thị kết quả tìm kiếm
+    };
   
     return {
       listEmployee,
       loading,
       error,
       fetchEmployees,
-      totalPages,
+      handleSearch,
     };
   };
   
-  export default useBoard;
+  export default useBoard;  
+  
   
