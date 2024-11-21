@@ -28,7 +28,7 @@ const AppointmentProgressCard: React.FC<AppointmentProgressCardProps> = ({
           :`${appointment.customer.personalInfo.firstName} ${appointment.customer.personalInfo.lastName}`}
         </Text>
         <Text style={styles.service}>{appointment.service.name}</Text>
-        {role !== "Employee"  && <View style={styles.ratingContainer}>
+        {role === "Customer"  && <View style={styles.ratingContainer}>
           {[...Array(5)].map((_, i) => (
             <Icon
               key={i}
@@ -49,9 +49,10 @@ const AppointmentProgressCard: React.FC<AppointmentProgressCardProps> = ({
           </View>
         </View>
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.reviewButton} onPress={onCancelPress}>
+          {role !== "Admin" &&
+            <TouchableOpacity style={styles.reviewButton} onPress={onCancelPress}>
             <Text style={styles.buttonText}>Hủy</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>}
           <TouchableOpacity style={styles.reviewButton} onPress={onDetailsPress}>
             <Text style={styles.buttonText}>Chi tiết</Text>
           </TouchableOpacity>

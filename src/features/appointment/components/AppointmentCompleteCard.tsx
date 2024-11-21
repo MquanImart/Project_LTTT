@@ -24,7 +24,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({ role, appointment, on
           :`${appointment.customer.personalInfo.firstName} ${appointment.customer.personalInfo.lastName}`}
         </Text>
         <Text style={styles.service}>{appointment.service.name}</Text>
-        { role !== "Employee" && <View style={styles.ratingContainer}>
+        {role === "Customer" && <View style={styles.ratingContainer}>
           {[...Array(5)].map((_, i) => (
             <Icon
               key={i}
