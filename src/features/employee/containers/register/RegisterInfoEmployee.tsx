@@ -124,6 +124,7 @@ const RegisterInformationEmployee = () => {
                     <TextInput
                         style={Styles.textinput}
                         placeholder="Nhập họ của bạn"
+                        placeholderTextColor="#A9A9A9"
                         value={userInfo.firstName}
                         onChangeText={(value) => handleInputChange("firstName", value)}
                     />
@@ -132,6 +133,7 @@ const RegisterInformationEmployee = () => {
                     <TextInput
                         style={Styles.textinput}
                         placeholder="Nhập tên của bạn"
+                        placeholderTextColor="#A9A9A9"
                         value={userInfo.lastName}
                         onChangeText={(value) => handleInputChange("lastName", value)}
                     />
@@ -173,24 +175,28 @@ const RegisterInformationEmployee = () => {
                     <TextInput
                         style={Styles.textinput}
                         placeholder="Tỉnh/TP"
+                        placeholderTextColor="#A9A9A9"
                         value={userInfo.province}
                         onChangeText={(value) => handleInputChange("province", value)}
                     />
                     <TextInput
                         style={Styles.textinput}
                         placeholder="Quận/Huyện"
+                        placeholderTextColor="#A9A9A9"
                         value={userInfo.district}
                         onChangeText={(value) => handleInputChange("district", value)}
                     />
                     <TextInput
                         style={Styles.textinput}
                         placeholder="Phường/Xã"
+                        placeholderTextColor="#A9A9A9"
                         value={userInfo.ward}
                         onChangeText={(value) => handleInputChange("ward", value)}
                     />
                     <TextInput
                         style={Styles.textinput}
                         placeholder="Số nhà"
+                        placeholderTextColor="#A9A9A9"
                         value={userInfo.street}
                         onChangeText={(value) => handleInputChange("street", value)}
                     />
