@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
       button: {
         flex: 1, // Để nút chiếm khoảng không
         marginHorizontal: 5, // Khoảng cách giữa các nút
-        backgroundColor: Colors.mainColor2
+        backgroundColor: Colors.mainColor1,
       },
   });
 

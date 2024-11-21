@@ -1,14 +1,22 @@
 import React, { useRef } from 'react';
 import Header from '@/src/shared/components/header/Header';
 import { ActivityIndicator, MD2Colors, Provider } from 'react-native-paper';
-import {  FlatList, Animated } from 'react-native';
 import useHomeAdmin from './useHomeAdmin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import restClient from '@/src/shared/services/RestClient';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '@/src/shared/routes/LoginNavigation';
+import { useNavigation } from '@react-navigation/native';
+import {  FlatList, Animated } from 'react-native';
 import Chart from './Chart';
 
+type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, "Profile">;
+
 const HomeAdmin = () => {
-  const {setSortByMonth, setSortByYear,
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+  const { setSortByMonth, setSortByYear,
     setSortByMonthSer, setSortByYearSer, allSchedule,
-    optionMonth, optionYear, dataOrder, dataService} = useHomeAdmin();
+    optionMonth, optionYear, dataOrder, dataService } = useHomeAdmin();
 
   const scrollX = useRef(new Animated.Value(0)).current;  
   const handleOnScroll = Animated.event(
@@ -17,8 +25,9 @@ const HomeAdmin = () => {
     );
 
   if (allSchedule === null || dataOrder === null || dataService === null) 
+
     return <ActivityIndicator animating={true} color={MD2Colors.red800} />
-    
+
   return (
   <Provider>
     <Header title={'Thống kê'} showLogout={true} showBackButton={false} />
