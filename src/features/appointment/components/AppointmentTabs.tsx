@@ -1,34 +1,18 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
 import Colors from '@/src/styles/Color';
-import { AppointmentStackParamList } from '@/src/shared/routes/AppointmentNavigation';
 
 interface AppointmentTabsProps {
   selectedTab: string;
+  setTab: (value: string) => void;
 }
 
-const tabs = ['Hoàn thành', 'Chờ duyệt', 'Đang thực hiện', 'Đã hủy'];
+const tabs = ['Hoàn thành', 'Đang thực hiện', 'Đã hủy'];
 
-const AppointmentTabs: React.FC<AppointmentTabsProps> = ({ selectedTab }) => {
-  const navigation = useNavigation<NavigationProp<AppointmentStackParamList>>();
+const AppointmentTabs: React.FC<AppointmentTabsProps> = ({ selectedTab, setTab }) => {
 
   const handleTabPress = (tab: string) => {
-    // Điều hướng theo từng tab
-    switch (tab) {
-      case 'Hoàn thành':
-        navigation.navigate('Complete');
-        break;
-      case 'Chờ duyệt':
-        navigation.navigate('Upcoming');
-        break;
-      case 'Đang thực hiện':
-        navigation.navigate('Progress');
-        break;
-      case 'Đã hủy':
-        navigation.navigate('Cancel');
-        break;
-    }
+    setTab(tab);
   };
 
   return (

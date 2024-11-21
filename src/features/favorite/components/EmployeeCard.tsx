@@ -28,11 +28,15 @@ const EmployeeCard: React.FC<EmployeeCardProps> = ({
     await onFavorite();
     setLoading(false);
   };
+  
+  const imageUri = avatar.startsWith("data:image")
+    ? avatar
+    : `data:image/png;base64,${avatar}`;
 
   return (
     <View style={styles.card}>
       <View style={styles.avatarContainer}>
-        <Image source={{ uri: avatar }} style={styles.image} />
+        <Image source={{ uri: imageUri }} style={styles.image} />
       </View>
       <View style={styles.detailsContainer}>
         <View style={styles.nameFavoriteContainer}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, View } from "react-native";
 import InputBookJob from "./InputBookJob";
 import styles from "./Styles";
 import Header from "@/src/shared/components/header/Header";
@@ -28,10 +28,19 @@ const BookJob: React.FC<BookJobProps> = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Header title="Đặt dịch vụ" onBackPress={handleBackPress} />
-      <InputBookJob jobName={jobName} jobId={jobId} onSubmit={handleSubmit} goBack={navigation.goBack} />
-    </View>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined} // On iOS, we use padding to avoid the keyboard covering inputs
+      >
+        <ScrollView>
+          <View style={styles.container}>
+            <Header title="Đặt dịch vụ" onBackPress={handleBackPress} />
+            <InputBookJob jobName={jobName} jobId={jobId} onSubmit={handleSubmit} goBack={navigation.goBack} />
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 

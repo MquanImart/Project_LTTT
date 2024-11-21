@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Header from '@/src/shared/components/header/Header';
-import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
 import AppointmentCard from '@/src/features/appointment/components/AppointmentCompleteCard';
 import Colors from '@/src/styles/Color';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -87,8 +86,6 @@ const CompleteAppointmentScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header title="Đơn hàng" onBackPress={() => console.log('Back Pressed')} />
-      <AppointmentTabs selectedTab={'Hoàn thành'} />
       <FlatList
         data={completeAppoint}
         renderItem={({ item }) => (

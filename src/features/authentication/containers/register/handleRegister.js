@@ -54,7 +54,6 @@ export const handleUpdateUserInfo = async (userId, userInfo, navigation) => {
           avatar: avatar || "",
       };
 
-      console.log("Payload gửi lên server:", dataUpdate); // Debug để kiểm tra dữ liệu
 
       const result = await restClient.usersClient.patch(userId, dataUpdate);
 

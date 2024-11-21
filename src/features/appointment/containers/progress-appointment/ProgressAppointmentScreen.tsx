@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Header from '@/src/shared/components/header/Header';
-import AppointmentTabs from '@/src/features/appointment/components/AppointmentTabs';
 import AppointmentProgressCard from '@/src/features/appointment/components/AppointmentProgressCard';
 import Colors from '@/src/styles/Color';
 import useAppointment from '../useAppointment';
@@ -73,8 +72,6 @@ const ProgressAppointmentScreen = () => {
   return (
     <Provider>
       <View style={styles.container}>
-        <Header title="Đơn hàng" showBackButton={false} />
-        <AppointmentTabs selectedTab={'Đang thực hiện'} />
         <FlatList
           data={progressAppoint}
           renderItem={({ item }) => (
