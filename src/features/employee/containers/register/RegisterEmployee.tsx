@@ -35,11 +35,11 @@ const RegisterEmployee = () => {
             return;
         }
 
-        if (password.length < 6) {
+        if (password.length < 8) {
             Toast.show({
                 type: "error",
                 text1: "Lỗi mật khẩu",
-                text2: "Mật khẩu phải có ít nhất 6 ký tự.",
+                text2: "Mật khẩu phải có ít nhất 8 ký tự.",
             });
             return;
         }
@@ -49,6 +49,16 @@ const RegisterEmployee = () => {
                 type: "error",
                 text1: "Lỗi mật khẩu",
                 text2: "Mật khẩu và nhập lại mật khẩu không khớp.",
+            });
+            return;
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            Toast.show({
+                type: "error",
+                text1: "Lỗi mật khẩu",
+                text2: "Ít nhất 1 chữ cái thường, 1 chữ cái hoa, 1 số và 1 ký tự đặc biệt.",
             });
             return;
         }
@@ -92,6 +102,7 @@ const RegisterEmployee = () => {
                 <TextInput
                     style={Styles.textinput}
                     placeholder="Nhập mật khẩu"
+                    placeholderTextColor="#A9A9A9"
                     secureTextEntry={!isPasswordVisible}
                     value={password}
                     onChangeText={setPassword}
@@ -108,6 +119,7 @@ const RegisterEmployee = () => {
                 <TextInput
                     style={Styles.textinput}
                     placeholder="Nhập lại mật khẩu"
+                    placeholderTextColor="#A9A9A9"
                     secureTextEntry={!isConfirmPasswordVisible}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}

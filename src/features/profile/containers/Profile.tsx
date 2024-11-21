@@ -172,49 +172,48 @@ const Profile = () => {
     }
 
     return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : undefined} // On iOS, we use padding to avoid the keyboard covering inputs
-      >
-        <ScrollView>
-        <View>
-            <Header title="Hồ sơ" showBackButton={false} />
-            <View style={Styles.container}>
-                <HeaderProfile 
-                    userName={userName} 
-                    phoneNumber={phoneNumber} 
-                    isEditable={isEditable} 
-                    avatar={avatar} 
-                    setAvatar={setAvatar} 
-                />
-                <UserDetail
-                    firstName={firstName}
-                    setFirstName={isEditable ? setFirstName : () => {}}
-                    lastName={lastName}
-                    setLastName={isEditable ? setLastName : () => {}}
-                    birthDate={birthDate}
-                    setBirthDate={isEditable ? setBirthDate : () => {}}
-                    phoneNumber={phoneNumber}
-                    setPhoneNumber={isEditable ? setPhoneNumber : () => {}}
-                    address={address}
-                    setAddress={isEditable ? setAddress : () => {}}
-                    password={password}
-                    setPassword={isEditable ? setPassword : () => {}}
-                    isEditable={isEditable}
-                />
-                <ActionButtons
-                    onEditOrSave={handleEditOrSave}
-                    buttonText={buttonText}
-                    onLogout={handleLogout} // Truyền hàm logout
-                />
-                </View>
-            <Toast />
-        </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
-        
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : undefined} // On iOS, we use padding to avoid the keyboard covering inputs
+            >
+                <ScrollView>
+                    <View>
+                        <Header title="Hồ sơ" showBackButton={false} />
+                        <View style={Styles.container}>
+                            <HeaderProfile
+                                userName={userName}
+                                phoneNumber={phoneNumber}
+                                isEditable={isEditable}
+                                avatar={avatar}
+                                setAvatar={setAvatar}
+                            />
+                            <UserDetail
+                                firstName={firstName}
+                                setFirstName={isEditable ? setFirstName : () => { }}
+                                lastName={lastName}
+                                setLastName={isEditable ? setLastName : () => { }}
+                                birthDate={birthDate}
+                                setBirthDate={isEditable ? setBirthDate : () => { }}
+                                phoneNumber={phoneNumber}
+                                setPhoneNumber={isEditable ? setPhoneNumber : () => { }}
+                                address={address}
+                                setAddress={isEditable ? setAddress : () => { }}
+                                password={password}
+                                setPassword={isEditable ? setPassword : () => { }}
+                                isEditable={isEditable}
+                            />
+                            <ActionButtons
+                                onEditOrSave={handleEditOrSave}
+                                buttonText={buttonText}
+                                onLogout={handleLogout}
+                            />
+                        </View>
+                        <Toast />
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     );
 };
 

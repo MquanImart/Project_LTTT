@@ -16,32 +16,12 @@ type DetailEmployeeNavigationProp = NativeStackNavigationProp<
 const BoardEmployee = () => {
   const navigation = useNavigation<DetailEmployeeNavigationProp>();
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState("1");
-  const [currentPage, setCurrentPage] = useState(0);
 
-  const { listEmployee, loading, error, fetchEmployees, totalPages } = useBoard();
+  const { listEmployee, loading, error, fetchEmployees, handleSearch } = useBoard();
 
-  // Gọi API khi trang hoặc filterType thay đổi
   useEffect(() => {
-    fetchEmployees({ page: currentPage, searchQuery, filterType });
-  }, [currentPage, filterType]);
-
-  const handleSearch = () => {
-    setCurrentPage(0); // Reset về trang đầu tiên khi tìm kiếm mới
-    fetchEmployees({ page: 0, searchQuery, filterType });
-  };
-
-  const handleNextPage = () => {
-    if (currentPage + 1 < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+    fetchEmployees();
+  }, []);
 
   const handleNavigateDetails = (employeeId: string) => {
     navigation.navigate("Details", { employeeId });
@@ -49,6 +29,11 @@ const BoardEmployee = () => {
 
   const handleRegister = () => {
     navigation.navigate("RegisterEmployee");
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    handleSearch(query); // Thực hiện tìm kiếm cục bộ
   };
 
   if (loading) {
@@ -86,8 +71,8 @@ const BoardEmployee = () => {
       <View style={styles.boxTitle}>
         <Searchbar
           placeholder="Tìm kiếm theo tên"
-          onChangeText={(value) => setSearchQuery(value)}
-          onSubmitEditing={handleSearch} // Chỉ tìm kiếm khi nhấn Enter
+          onChangeText={handleSearchChange} // Tìm kiếm theo thời gian thực
+          onSubmitEditing={() => handleSearch(searchQuery)} // Tìm kiếm khi nhấn Enter
           value={searchQuery}
           style={{ backgroundColor: "white", minWidth: "98%" }}
           inputStyle={{ color: "black" }}
@@ -96,6 +81,7 @@ const BoardEmployee = () => {
       <View style={{ minHeight: 300, width: "100%", padding: 10 }}>
         <FlatList
           data={listEmployee}
+          style={{ height: 550 }}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <List.Item
@@ -119,27 +105,6 @@ const BoardEmployee = () => {
             />
           )}
         />
-      </View>
-      <View style={styles.pagination}>
-        <Button
-          mode="contained"
-          onPress={handlePreviousPage}
-          disabled={currentPage === 0}
-          style={styles.button}
-        >
-          Previous
-        </Button>
-        <Text style={styles.pageNumber}>
-          Page {currentPage + 1} of {totalPages}
-        </Text>
-        <Button
-          mode="contained"
-          onPress={handleNextPage}
-          disabled={currentPage + 1 >= totalPages}
-          style={styles.button}
-        >
-          Next
-        </Button>
       </View>
     </Provider>
   );
