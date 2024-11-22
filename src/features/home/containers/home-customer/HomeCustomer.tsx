@@ -6,7 +6,7 @@ import Header from '@/src/shared/components/header/Header';
 const HomeCustomer = () => {
     return (
         <View >
-            <Header title="Home" onBackPress={() => {}} />
+            <Header title="Trang chủ" onBackPress={() => {}} />
             <View style={Styles.container}>
                 <JobGrid/>
             </View>

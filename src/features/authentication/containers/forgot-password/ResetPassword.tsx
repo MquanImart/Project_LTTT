@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
     View,
     Text,
@@ -8,6 +8,11 @@ import {
     Alert,
     Keyboard,
     TouchableWithoutFeedback,
+    NativeSyntheticEvent,
+    TextInputKeyPressEventData,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -21,7 +26,7 @@ const ResetPassword = () => {
     const navigation = useNavigation<LoginScreenNavigationProp>();
     const [phoneNumber, setPhoneNumber] = useState("");
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-
+    const inputs = useRef<(TextInput | null)[]>([]);
     // Chuẩn hóa số điện thoại
     const formatPhoneNumber = (phone: string): string => {
         if (phone.startsWith("0")) {
@@ -74,10 +79,23 @@ const handleSendOtp = async () => {
     
 
     // Handle OTP input changes
-    const handleOtpChange = (value: string, index: number) => {
+     const handleOtpChange = (value: string, index: number) => {
         const newOtp = [...otp];
         newOtp[index] = value;
+
+        // Cập nhật trạng thái OTP
         setOtp(newOtp);
+
+        // Tự động chuyển sang ô tiếp theo nếu có
+        if (value && index < otp.length - 1) {
+            inputs.current[index + 1]?.focus();
+        }
+    };
+
+    const handleKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>, index: number) => {
+        if (e.nativeEvent.key === "Backspace" && index > 0 && !otp[index]) {
+            inputs.current[index - 1]?.focus();
+        }
     };
 
     // Handle OTP verification
@@ -109,69 +127,79 @@ const handleSendOtp = async () => {
     
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={Styles.container}>
-                <Image
-                    source={require("../../../../assets/images/resetpass.png")}
-                    style={{ width: 150, height: 150, marginBottom: 20 }}
-                />
-
-                <Text style={Styles.texttitle}>Quên mật khẩu</Text>
-
-                <Text style={Styles.textfield}>Số điện thoại:</Text>
-                <TextInput
-                    style={Styles.textinput}
-                    placeholder="Nhập số điện thoại"
-                    keyboardType="phone-pad"
-                    value={phoneNumber}
-                    onChangeText={setPhoneNumber}
-                />
-
-                <TouchableOpacity
-                    style={Styles.btnotp}
-                    onPress={handleSendOtp}
-                >
-                    <Text style={{ color: "#888", fontSize: 16 }}>Gửi mã OTP</Text>
-                </TouchableOpacity>
-
-                <Text style={{ fontSize: 14, marginBottom: 10 }}>
-                    Một đoạn mã OTP đã được gửi tới{" "}
-                    <Text style={{ color: "#4CAF50" }}>{phoneNumber}</Text>
-                </Text>
-
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        marginBottom: 20,
-                    }}
-                >
-                    {otp.map((digit, index) => (
-                        <TextInput
-                            key={index}
-                            style={Styles.inputotp}
-                            keyboardType="numeric"
-                            maxLength={1}
-                            value={digit}
-                            onChangeText={(value) => handleOtpChange(value, index)}
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : undefined} // On iOS, we use padding to avoid the keyboard covering inputs
+            >
+                <ScrollView> 
+                    <View style={Styles.container}>
+                        <Image
+                            source={require("../../../../assets/images/resetpass.png")}
+                            style={{ width: 150, height: 150, marginBottom: 20 }}
                         />
-                    ))}
-                </View>
-
-                <TouchableOpacity
-                    style={Styles.btn}
-                    onPress={handleVerifyOtp}
-                >
-                    <Text style={{ color: "#fff", fontSize: 16 }}>Xác nhận</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={handleSendOtp} style={{ marginTop: 10 }}>
-                    <Text>
-                        Chưa nhận được mã OTP? <Text style={{ color: "#4CAF50" }}>Gửi lại</Text>
-                    </Text>
-                </TouchableOpacity>
-            </View>
+        
+                        <Text style={Styles.texttitle}>Quên mật khẩu</Text>
+            
+                        <Text style={Styles.textfield}>Số điện thoại:</Text>
+                        <TextInput
+                            style={Styles.textinput}
+                            placeholder="Nhập số điện thoại"
+                            keyboardType="phone-pad"
+                            value={phoneNumber}
+                            onChangeText={setPhoneNumber}
+                        />
+        
+                        <TouchableOpacity
+                            style={Styles.btnotp}
+                            onPress={handleSendOtp}
+                        >
+                            <Text style={{ color: "#888", fontSize: 16 }}>Gửi mã OTP</Text>
+                        </TouchableOpacity>
+            
+                        <Text style={{ fontSize: 14, marginBottom: 10 }}>
+                            Một đoạn mã OTP đã được gửi tới{" "}
+                            <Text style={{ color: "#4CAF50" }}>{phoneNumber}</Text>
+                        </Text>
+            
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                marginBottom: 20,
+                            }}
+                        >
+                            {otp.map((digit, index) => (
+                                <TextInput
+                                    key={index}
+                                    ref={(ref) => (inputs.current[index] = ref)}
+                                    style={Styles.inputotp}
+                                    keyboardType="numeric"
+                                    maxLength={1}
+                                    value={digit}
+                                    onChangeText={(value) => handleOtpChange(value, index)}
+                                    onKeyPress={(e) => handleKeyPress(e, index)} // Truyền sự kiện với kiểu đúng
+                                />
+                            ))}
+                        </View>
+                        
+                        <TouchableOpacity
+                            style={Styles.btn}
+                            onPress={handleVerifyOtp}
+                        >
+                            <Text style={{ color: "#fff", fontSize: 16 }}>Xác nhận</Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity onPress={handleSendOtp} style={{ marginTop: 10 }}>
+                            <Text>
+                                Chưa nhận được mã OTP? <Text style={{ color: "#4CAF50" }}>Gửi lại</Text>
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
+       
     );
 };
 

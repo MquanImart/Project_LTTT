@@ -20,7 +20,7 @@ const ReviewEmployee = ({reviews}: ReviewEmployeeProps) => {
     return (
         <View>
             {reviews.map((review) => (
-                <ReviewCard key={review.reviewId} review={review} />
+                <ReviewCard key={review._id} review={review} />
             ))}
         </View>
     )
