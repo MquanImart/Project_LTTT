@@ -182,15 +182,23 @@ const DetailService = () => {
   const updateBillStatus = async () => {
     try {
       setLoading(true);
-
-      const client = restClient.apiClient.service("bills");
-      const response = await client.find({ idOrder: (order._id as any)?.$oid || order._id });
-
-      if (response.success && response.resData.length > 0) {
-        const billId = response.resData[0]._id;
-
-        const updateResponse = await client.patch(billId, { status: "Paid" });
-
+  
+      // Gọi API để lấy hóa đơn liên quan đến đơn hàng
+      const response = await restClient.apiClient.get(`bills/order/${order._id}`);
+  
+      // Đảm bảo API trả về thành công và có dữ liệu hóa đơn
+      if (response.success && response.data) {
+        const bill = response.data; // Lấy hóa đơn trực tiếp
+  
+        // Kiểm tra trạng thái của hóa đơn trước khi cập nhật
+        if (bill.status === "Paid") {
+          showDialog("Hóa đơn đã được thanh toán trước đó.");
+          return;
+        }
+  
+        // Cập nhật trạng thái hóa đơn thành "Paid"
+        const updateResponse = await restClient.apiClient.service("bills").patch(bill._id, { status: "Paid" });
+  
         if (updateResponse.success) {
           setBillStatus("Paid");
           showDialog("Trạng thái hóa đơn đã được cập nhật thành Đã thanh toán.");
@@ -201,11 +209,13 @@ const DetailService = () => {
         showDialog("Không tìm thấy hóa đơn liên quan để cập nhật trạng thái.");
       }
     } catch (error) {
+      console.error("Error updating bill status:", error);
       showDialog("Đã xảy ra lỗi khi cập nhật trạng thái hóa đơn.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleAddJob = async (newJob: JobDetail) => {
     if (userRole !== UserRole.Admin && userRole !== UserRole.Employee) {
