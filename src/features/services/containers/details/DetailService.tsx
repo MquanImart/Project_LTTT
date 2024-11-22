@@ -327,7 +327,7 @@ const DetailService = () => {
           </ScrollView>
         </KeyboardAwareScrollView>
 
-        {tab === 1 && (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
+        {tab === 1 && (userRole === UserRole.Employee) && (
           <View style={styles.boxButton}>
             {!hasBill &&
             <Button
@@ -339,15 +339,17 @@ const DetailService = () => {
             >
               {loading ? "Đang gửi..." : "Tạo hóa đơn"}
             </Button>}
-            { billStatus !== "Paid" && <Button
-              style={[styles.buttonsubmit, { backgroundColor: Colors.mainColor1 }]}
-              mode="contained"
-              labelStyle={{ color: "#fff" }}
-              onPress={updateBillStatus}
-              disabled={loading}
-            >
-              {loading ? "Đang cập nhật..." : "Xác nhận thanh toán"}
-            </Button>}
+            {hasBill && billStatus !== "Paid" && (
+              <Button
+                style={[styles.buttonsubmit, { backgroundColor: Colors.mainColor1 }]}
+                mode="contained"
+                labelStyle={{ color: "#fff" }}
+                onPress={updateBillStatus}
+                disabled={loading}
+              >
+                {loading ? "Đang cập nhật..." : "Xác nhận thanh toán"}
+              </Button>
+            )}
           </View>
         )}
 

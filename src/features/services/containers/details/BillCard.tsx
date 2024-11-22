@@ -31,7 +31,7 @@ const BillCard = ({
   }, []);
 
   const handlePriceChange = async (text: string, index: number) => {
-    if (userRole !== UserRole.Admin && userRole !== UserRole.Employee) {
+    if (userRole !== UserRole.Employee) {
       console.error("Bạn không có quyền chỉnh sửa giá.");
       return;
     }
@@ -57,7 +57,7 @@ const BillCard = ({
   };
 
   const handleDeleteJob = (index: number) => {
-    if (userRole !== UserRole.Admin && userRole !== UserRole.Employee) {
+    if (userRole !== UserRole.Employee) {
       console.error("Bạn không có quyền xóa công việc.");
       return;
     }
@@ -75,7 +75,7 @@ const BillCard = ({
             <Text style={styles.textJob}>{job.jobName}</Text>
             <TextInput
               value={job.price.toString()}
-              editable={!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee)}
+              editable={!disableActions && (userRole === UserRole.Employee)}
               onChangeText={(text) => handlePriceChange(text, index)}
               style={styles.inputPrice}
               keyboardType="numeric"
@@ -83,7 +83,7 @@ const BillCard = ({
             />
             <Text style={styles.textCurrency}>đ</Text>
             {!disableDelete &&
-              (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
+              (userRole === UserRole.Employee) && (
                 <TouchableOpacity
                   onPress={() => handleDeleteJob(index)}
                   style={styles.deleteButton}

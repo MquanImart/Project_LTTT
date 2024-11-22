@@ -65,7 +65,7 @@ const DetailCard = ({
   };
 
   const handleDeleteJob = async (index: number) => {
-    if (userRole !== UserRole.Admin && userRole !== UserRole.Employee) {
+    if (userRole !== UserRole.Employee) {
       console.error("Bạn không có quyền xóa công việc.");
       return;
     }
@@ -88,7 +88,7 @@ const DetailCard = ({
 
   return (
     <View style={styles.card}>
-      {!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
+      {!disableActions && ( userRole === UserRole.Employee) && (
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Tên công việc"
@@ -107,9 +107,9 @@ const DetailCard = ({
             value={job.jobName}
             onChangeText={(text) => handleUpdateJob(index, { jobName: text })}
             style={styles.inputJobName}
-            editable={!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee)}
+            editable={!disableActions && (userRole === UserRole.Employee)}
           />
-          {!disableActions && (userRole === UserRole.Admin || userRole === UserRole.Employee) && (
+          {!disableActions && (userRole === UserRole.Employee) && (
             <TouchableOpacity onPress={() => handleDeleteJob(index)} style={styles.deleteButton}>
               <Text style={{ color: "#fff", fontWeight: "bold" }}>Xóa</Text>
             </TouchableOpacity>
